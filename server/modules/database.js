@@ -6,19 +6,31 @@ dotenv.config({ path: '../.env' });
 const env = process.env;
 
 // For node-postgres
-const { Client } = pg
-const client = new Client({
 
-    // NOTE: at least my Macbook, the default database is 'postgres'
-    // and default login is just nothing... like literally `psql -d 'postgres'`
-    //user: env.DATABASE_USER,
-    // password: env.DATABASE_PASSWORD,
-    host: 'localhost',
-    port: env.DATABASE_PORT,
-    database: 'postgres' // default postgres db?
-});
+/**
+ * create a node-postgres client, this client has the credentials for checking
+ * if the database/user exists already, so it will try to use the database name 
+ * in the env.
+ * @returns postgres client object
+ */
+const createClient = () => {
+    const { Client } = pg
+    const client = new Client({
 
-// sequelize
+        // NOTE: at least my Macbook, the default database is 'postgres'
+        // and default login is just nothing... like literally `psql -d 'postgres'`
+        //user: env.DATABASE_USER,
+        // password: env.DATABASE_PASSWORD,
+        host: 'localhost',
+        port: env.DATABASE_PORT,
+        database: env.DATABASE_NAME.toLowerCase()
+    });
+    return client;
+}
+
+/**
+ * Sequelize connection 
+ */
 const sequelize = new Sequelize(env.DATABASE_NAME, env.DATABASE_USER, env.DATABASE_PASSWORD, {
     host: env.DATABASE_SERVER,
     dialect: 'postgres',
@@ -44,53 +56,78 @@ async function connectToDb(modelList) {
 }
 
 const checkDbExists = async () => {
+    const client = createClient();
     try {
         await client.connect();
-        const dbRes = await client.query(`SELECT 1 FROM pg_database WHERE datname='${env.DATABASE_NAME}';`);
-        const userRes = await client.query(`SELECT 1 FROM pg_roles WHERE rolname='${env.DATABASE_USER}';`)
-        client.end();
+        // postgres will auto lowercase, so if env had upper case letters, need to lower case it in the query.
+        const dbQuery = `SELECT 1 FROM pg_database WHERE datname='${env.DATABASE_NAME.toLowerCase()}';`;
+        const dbRes = await client.query(dbQuery);
+
+        const userQuery = `SELECT 1 FROM pg_roles WHERE rolname='${env.DATABASE_USER.toLowerCase()}';`;
+        const userRes = await client.query(userQuery);
+
         if (dbRes.rowCount > 0 && userRes.rowCount > 0) {
-            console.log('db and user already exist')
+            await client.end();
             return true;
         } else {
+            await client.end();
             return false;
         }
     } catch (e) {
-        console.log("db check failed", e);
-        client.end();
+        // todo: idk this is pretty bad. probably should think of a better way to 
+        // todo2: check for existing database/user 
+        console.log("db check failed/db does not exist");
+        await client.end();
         return false;
     }
 }
 
+/**
+ * init a postgres database for the app, creates the database with the user and password
+ * specified in the .env file
+ */
 const initDb = async () => {
+    // this is kinda jank, but on first time init, need to use the default postgres db,
+    //
+    const { Client } = pg
+    const client = new Client({
+
+        // NOTE: at least my Macbook, the default database is 'postgres'
+        // and default login is just nothing... like literally `psql -d 'postgres'`
+        //user: env.DATABASE_USER,
+        // password: env.DATABASE_PASSWORD,
+        host: 'localhost',
+        port: env.DATABASE_PORT,
+        database: 'postgres' // default postgres db?
+    });
     try {
         await client.connect();
 
         // create database for app
         console.log(`Postgres-INIT: creating database: ${env.DATABASE_NAME}`)
-        const dbCreateQuery = `CREATE DATABASE ${env.DATABASE_NAME}`
+        const dbCreateQuery = `CREATE DATABASE ${env.DATABASE_NAME};`
         await client.query(dbCreateQuery);
 
-        // create credentials for app
+        // create credentials for db
         console.log(`Postgres-INIT: creating user: ${env.DATABASE_USER}`)
-        const userCreateQuery = `CREATE USER ${env.DATABASE_USER} WITH PASSWORD '${env.DATABASE_PASSWORD}'`
+        const userCreateQuery = `CREATE USER ${env.DATABASE_USER} WITH PASSWORD '${env.DATABASE_PASSWORD}';`
         await client.query(userCreateQuery);
 
+
+        //todo: uhh idk what privleges to actually give?
         console.log(`Postgres-INIT: Granting privileges`)
-        const privilegeQuery = `GRANT ALL PRIVILEGES ON DATABASE ${env.DATABASE_NAME} TO ${env.DATABASE_USER}`
+        const privilegeQuery = `GRANT ALL PRIVILEGES ON DATABASE ${env.DATABASE_NAME} TO ${env.DATABASE_USER};`
         await client.query(privilegeQuery);
         await client.end();
         console.log(`Postgres-INIT: success`);
 
     } catch (e) {
-        console.log("Postgres-INIT: could not connect", e);
+        await client.end();
+        console.log("Postgres-INIT: could not init:\n", e);
     }
 };
 
-
-// don't call this one when starting the server. Use function in data/models/index.js
-// exports.connectToDb = connectToDb;
-// exports.database = sequelize;
-// es style exports?
+// NOTE: don't call this exported connectToDb this is for internal use.
+// use the one in data/models/index.js
 const database = sequelize;
 export { connectToDb, database, initDb, checkDbExists }

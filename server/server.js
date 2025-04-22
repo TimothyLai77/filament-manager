@@ -24,10 +24,13 @@ async function prepareApp() {
 
     // check if the database exists if not setup
     if (!(await checkDbExists())) {
+        console.log('db and user do not exist: ')
         await initDb();
+    } else {
+        console.log('db and user already exist, skipping DB init')
     }
-    //await initDb();
 
+    // connect to the database
     //await connectToDb();
 
     // app.listen(PORT, () => {
