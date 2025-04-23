@@ -7,7 +7,7 @@ const modelList = [
     Job,
     Spool,
     Inventory
-]
+];
 
 /**
  * connect to the database and then set the relations between
@@ -31,4 +31,4 @@ const connectAndAssociate = async () => {
 
 }
 
-exports.connectToDb = connectAndAssociate;
+exports.startSequelize = connectAndAssociate;

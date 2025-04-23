@@ -31,11 +31,17 @@ const createClient = () => {
 /**
  * Sequelize connection 
  */
-const sequelize = new Sequelize(env.DATABASE_NAME, env.DATABASE_USER, env.DATABASE_PASSWORD, {
-    host: env.DATABASE_SERVER,
-    dialect: 'postgres',
-    port: env.DATABASE_PORT,
-});
+
+const sequelize = new Sequelize(
+    env.DATABASE_NAME.toLowerCase(), // when creating the database and user postgres will auto lower case the names
+    env.DATABASE_USER.toLowerCase(),
+    env.DATABASE_PASSWORD, // password was set using double quotes so it should be case sensitive
+    {
+        host: env.DATABASE_SERVER,
+        dialect: 'postgres',
+        port: env.DATABASE_PORT,
+    }
+);
 
 // Connect to the data base and sync all the models 
 async function connectToDb(modelList) {
@@ -103,15 +109,18 @@ const initDb = async () => {
     try {
         await client.connect();
 
-        // create database for app
-        console.log(`Postgres-INIT: creating database: ${env.DATABASE_NAME}`)
-        const dbCreateQuery = `CREATE DATABASE ${env.DATABASE_NAME};`
-        await client.query(dbCreateQuery);
-
         // create credentials for db
-        console.log(`Postgres-INIT: creating user: ${env.DATABASE_USER}`)
+        console.log(`Postgres-INIT: creating user: ${env.DATABASE_USER.toLowerCase()}`)
         const userCreateQuery = `CREATE USER ${env.DATABASE_USER} WITH PASSWORD '${env.DATABASE_PASSWORD}';`
         await client.query(userCreateQuery);
+
+
+        // create database for app
+        console.log(`Postgres-INIT: creating database: ${env.DATABASE_NAME.toLowerCase()}`)
+        const dbCreateQuery = `CREATE DATABASE ${env.DATABASE_NAME} OWNER ${env.DATABASE_USER.toLowerCase()};`
+        await client.query(dbCreateQuery);
+
+
 
 
         //todo: uhh idk what privleges to actually give?

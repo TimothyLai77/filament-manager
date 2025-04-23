@@ -5,7 +5,7 @@ const path = require("path");
 
 const session = require('express-session');
 
-const { connectToDb } = require("./data/models/index");
+const { startSequelize } = require("./data/models/index");
 const { initDb, checkDbExists } = require('./modules/database');
 const env = process.env;
 const PORT = 8080;
@@ -30,8 +30,8 @@ async function prepareApp() {
         console.log('db and user already exist, skipping DB init')
     }
 
-    // connect to the database
-    //await connectToDb();
+    // Connect to postgres with sequelize for app functionality
+    await startSequelize();
 
     // app.listen(PORT, () => {
     //     console.log("express started");
