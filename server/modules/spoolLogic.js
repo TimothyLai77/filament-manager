@@ -1,6 +1,6 @@
 import { Sequelize, col } from "sequelize";
 import uniqid from 'uniqid';
-import { Spool } from '../data/models/Spool'
+import { Spool } from '../data/models/Spool.js'
 
 const createSpool = async (
     name,
@@ -22,7 +22,7 @@ const createSpool = async (
         filamentUsed: 0.0,
         filamentLeft: weight,
         cost: cost,
-        dateAdded: DataTypes.NOW
+        dateAdded: new Date()
     });
     console.log(`Added: ${newSpool.id} to database.`)
 }
@@ -40,4 +40,4 @@ const editSpool = async () => {
 }
 
 
-exports[createSpool];
+export { createSpool };
