@@ -81,8 +81,22 @@ const createSpool = async (
 
 }
 
+/**
+ * Delete a spool with the specified id
+ * @param {string} id 
+ * @returns  true if the spool was deleted, error otherwise
+ */
 const deleteSpool = async (id) => {
-
+    try {
+        Spool.destroy({
+            where: {
+                id: id
+            }
+        });
+        return true;
+    } catch (e) {
+        return e;
+    }
 }
 
 const adjustFilament = async () => {
