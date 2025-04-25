@@ -12,7 +12,23 @@ const getSpoolById = async (id) => {
         return null;
     }
 }
+/**
+ * 
+ * @param {int} limit returns first `limit` spools, null for all (default value)
+ */
+const getSpools = async (limit = null) => {
+    var spools;
+    if (limit) {
+        // return the first limit spools
+        spools = await Spool.findAll({ limit: limit })
+    } else {
+        // return all spools
+        spools = await Spool.findAll();
+    }
+    const formattedSpools = spools.map((spool) => spool.toJSON());
+    return formattedSpools;
 
+}
 
 const createSpool = async (
     name,
@@ -57,4 +73,4 @@ const editSpool = async () => {
 }
 
 
-export { createSpool, getSpoolById };
+export { createSpool, getSpoolById, getSpools };

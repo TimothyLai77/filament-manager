@@ -2,11 +2,18 @@ import * as util from "../modules/spoolLogic.js";
 Object.assign(global, util);
 
 const runTests = async () => {
-    await spoolCreationTest();
-
+    //await spoolCreationTest();
+    await getAllSpools();
+    //await getLimitedSpools(2);
 }
 
+const getAllSpools = async () => {
+    console.log(await getSpools());
+}
 
+const getLimitedSpools = async (limit) => {
+    console.log(await getSpools(limit));
+}
 
 const spoolCreationTest = async () => {
     try {
