@@ -1,7 +1,7 @@
 import { Sequelize, col } from "sequelize";
 import uniqid from 'uniqid';
 import { Spool } from '../data/models/Spool.js'
-
+import { NotEnoughFilamentError, SpoolNotFoundError } from '../errors/errors.js'
 /**
  * Get's spool when given an id. 
  * @param {string} id 
@@ -99,7 +99,17 @@ const deleteSpool = async (id) => {
     }
 }
 
-const adjustFilament = async () => {
+const decreaseFilament = async (id, amount) => {
+    try {
+        const spool = await Spool.findByPk(id);
+        if (!spool) throw new SpoolNotFoundError;
+
+        if (spool.filamentLeft - amount < 0.0) throw new NotEnoughFilamentError;
+        spool.filamentLeft = spool.filamentLeft - amount;
+        return spool.toJSON();
+    } catch (e) {
+        return new Error;
+    }
 
 }
 
@@ -108,4 +118,4 @@ const editSpool = async () => {
 }
 
 
-export { createSpool, getSpoolById, getSpools, deleteSpool, adjustFilament, editSpool };
+export { createSpool, getSpoolById, getSpools, deleteSpool, decreaseFilament, editSpool };
