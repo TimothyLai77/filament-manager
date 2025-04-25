@@ -3,7 +3,7 @@ Object.assign(global, util);
 
 const runTests = async () => {
     await spoolCreationTest();
-    //await getAllSpools();
+    await getAllSpools();
     //await getLimitedSpools(2);
 }
 
