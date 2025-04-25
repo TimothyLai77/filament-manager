@@ -2,6 +2,11 @@ import { Sequelize, col } from "sequelize";
 import uniqid from 'uniqid';
 import { Spool } from '../data/models/Spool.js'
 
+/**
+ * Get's spool when given an id. 
+ * @param {string} id 
+ * @returns the spool's dataValue object
+ */
 const getSpoolById = async (id) => {
     try {
         // only return the dataValues
@@ -13,8 +18,9 @@ const getSpoolById = async (id) => {
     }
 }
 /**
- * 
- * @param {int} limit returns first `limit` spools, null for all (default value)
+ * Gets all spools or first n spools
+ * @param {int} limit how many spools to return, null for all spools (default behaviour)
+ * @returns array of spools
  */
 const getSpools = async (limit = null) => {
     var spools;
