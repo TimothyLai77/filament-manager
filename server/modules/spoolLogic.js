@@ -7,6 +7,7 @@ const createSpool = async (
     brand,
     material,
     colour,
+    finish,
     weight,
     cost,
 ) => {
@@ -16,6 +17,7 @@ const createSpool = async (
         brand: brand,
         material: material,
         colour: colour,
+        finish: finish,
         weight: weight,
         filamentUsed: 0.0,
         filamentLeft: weight,
