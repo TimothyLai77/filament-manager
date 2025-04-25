@@ -7,7 +7,7 @@ const createSpool = async (
     brand,
     material,
     colour,
-    finish = 'normal',
+    finish,
     weight,
     cost,
 ) => {
