@@ -108,4 +108,4 @@ const editSpool = async () => {
 }
 
 
-export { createSpool, getSpoolById, getSpools };
+export { createSpool, getSpoolById, getSpools, deleteSpool, adjustFilament, editSpool };
