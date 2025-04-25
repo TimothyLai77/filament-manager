@@ -2,6 +2,11 @@ import { Sequelize, col } from "sequelize";
 import uniqid from 'uniqid';
 import { Spool } from '../data/models/Spool.js'
 
+const getSpool = async () => {
+
+}
+
+
 const createSpool = async (
     name,
     brand,
