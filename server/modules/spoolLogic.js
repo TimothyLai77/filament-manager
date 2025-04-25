@@ -103,18 +103,13 @@ const decreaseFilament = async (id, amount) => {
         return e;
     }
 }
-
-const editSpool = async (
-    name,
-    brand,
-    material,
-    colour,
-    finish,
-    initialWeight,
-    cost,
-    filamentUsed,
-    filamentLeft,
-) => {
+/**
+ * edit spool by id
+ * @param {string} id
+ * @param {object} newDataObj 
+ * @returns 
+ */
+const editSpool = async (id, newDataObj) => {
     try {
         const spool = await Spool.findByPk(id);
         if (!spool) throw new SpoolNotFoundError;
@@ -123,17 +118,19 @@ const editSpool = async (
          * todo: there should probably be some constraints as part of the table or some logic checking here
          * todo_continued: like if you were to edit filamentUsed such that filamentUsed > initialWeight
          * todo_continued: and like similar restraints.
+         * 
+         * todo: i also just don't like this in general...
          */
-        if (!spool) throw new SpoolNotFoundError;
-        if (name) { spool.name = name };
-        if (brand) { spool.brand = brand };
-        if (material) { spool.material = material };
-        if (colour) { spool.colour = colour };
-        if (finish) { spool.finish = finish };
-        if (initialWeight) { spool.initialWeight = weight };
-        if (cost) { spool.cost = cost };
-        if (filamentUsed) { spool.filamentUsed = filamentUsed };
-        if (filamentLeft) { spool.filamentLeft = filamentLeft };
+        if (!newDataObj.spool) throw new SpoolNotFoundError;
+        if (newDataObj.name) { spool.name = newDataObj.name };
+        if (newDataObj.brand) { spool.brand = newDataObj.brand };
+        if (newDataObj.material) { spool.material = newDataObj.material };
+        if (newDataObj.colour) { spool.colour = newDataObj.colour };
+        if (newDataObj.finish) { spool.finish = newDataObj.finish };
+        if (newDataObj.initialWeight) { spool.initialWeight = newDataObj.weight };
+        if (newDataObj.cost) { spool.cost = newDataObj.cost };
+        if (newDataObj.filamentUsed) { spool.filamentUsed = newDataObj.filamentUsed };
+        if (newDataObj.filamentLeft) { spool.filamentLeft = newDataObj.filamentLeft };
         return spool.toJSON();
     } catch (e) {
         return e;
