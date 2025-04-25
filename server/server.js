@@ -7,6 +7,7 @@ const session = require('express-session');
 
 const { startSequelize } = require("./data/models/index");
 const { initDb, checkDbExists } = require('./modules/database');
+const { runTests } = require('./tests/logicTest')
 const env = process.env;
 const PORT = 8080;
 
@@ -32,7 +33,7 @@ async function prepareApp() {
 
     // Connect to postgres with sequelize for app functionality
     await startSequelize();
-
+    await runTests();
     // app.listen(PORT, () => {
     //     console.log("express started");
     // })
