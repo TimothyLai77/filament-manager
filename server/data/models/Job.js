@@ -27,7 +27,7 @@ Job.init(
     },
     {
         sequelize: database,
-        modelName: 'Job'
+        modelName: 'job'
     }
 );
 

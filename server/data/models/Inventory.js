@@ -16,7 +16,7 @@ Inventory.init(
     },
     {
         sequelize: database,
-        modelName: 'Inventory'
+        modelName: 'inventory'
     }
 );
 

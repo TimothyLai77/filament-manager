@@ -53,7 +53,7 @@ Spool.init(
     },
     {
         sequelize: database,
-        modelName: 'Spool'
+        modelName: 'spool'
     }
 );
 
