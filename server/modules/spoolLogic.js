@@ -39,6 +39,18 @@ const getSpools = async (limit = null) => {
     }
 }
 
+
+/**
+ * create new spool
+ * @param {string} name 
+ * @param {string} brand 
+ * @param {string} material 
+ * @param {string} colour 
+ * @param {string} finish (use finish=null for nothing)
+ * @param {float} weight 
+ * @param {float} cost 
+ * @returns newly created spool
+ */
 const createSpool = async (
     name,
     brand,
