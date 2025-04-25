@@ -108,9 +108,8 @@ const decreaseFilament = async (id, amount) => {
         spool.filamentLeft = spool.filamentLeft - amount;
         return spool.toJSON();
     } catch (e) {
-        return new Error;
+        return e;
     }
-
 }
 
 const editSpool = async () => {
