@@ -42,42 +42,34 @@ const getSpools = async (limit = null) => {
 
 /**
  * create new spool
- * @param {string} name 
- * @param {string} brand 
- * @param {string} material 
- * @param {string} colour 
- * @param {string} finish (use finish=null for nothing)
- * @param {float} initialWeight 
- * @param {float} cost 
+   @param {object} newSpoolDataObj
  * @returns newly created spool
  */
-const createSpool = async (
-    name,
-    brand,
-    material,
-    colour,
-    finish,
-    initialWeight,
-    cost,
-) => {
-    const newSpool = await Spool.create({
-        id: uniqid('spool-'),
-        name: name,
-        brand: brand,
-        material: material,
-        colour: colour,
-        finish: finish,
-        initialWeight: initialWeight,
-        filamentUsed: 0.0,
-        filamentLeft: weight,
-        cost: cost,
-        dateAdded: new Date()
-    });
-    console.log(`Added: ${newSpool.id} to database.`);
+const createSpool = async (newSpoolDataObj) => {
+    try {
+        console.log(newSpoolDataObj)
+        const newSpool = await Spool.create({
+            id: uniqid('spool-'),
+            name: newSpoolDataObj.name,
+            brand: newSpoolDataObj.brand,
+            material: newSpoolDataObj.material,
+            colour: newSpoolDataObj.colour,
+            finish: newSpoolDataObj.finish,
+            initialWeight: newSpoolDataObj.initialWeight,
+            filamentUsed: 0.0,
+            filamentLeft: newSpoolDataObj.initialWeight,
+            cost: newSpoolDataObj.cost,
+            dateAdded: new Date()
+        });
+        console.log(`Added: ${newSpool.id} to database.`);
 
-    // toJSON() just returns the dataValues, and doesn't include the
-    // the extra data/ also means doesn't include the model object.
-    return newSpool.toJSON();
+        // toJSON() just returns the dataValues, and doesn't include the
+        // the extra data/ also means doesn't include the model object.
+        return newSpool.toJSON();
+    } catch (e) {
+        console.log(e);
+    }
+
 
 }
 

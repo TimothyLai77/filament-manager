@@ -2,8 +2,8 @@ import * as util from "../modules/spoolLogic.js";
 Object.assign(global, util);
 
 const runTests = async () => {
-    //await spoolCreationTest();
-    await getAllSpools();
+    await spoolCreationTest();
+    //await getAllSpools();
     //await getLimitedSpools(2);
 }
 
@@ -16,11 +16,19 @@ const getLimitedSpools = async (limit) => {
 }
 
 const spoolCreationTest = async () => {
-    try {
-        const s1 = await createSpool('spool', 'creality', 'pla', 'black', 'matte', 1000.00, 22.12);
-        const s2 = await createSpool('spool2', 'esun', 'asa', 'white', null, 1000.00, 25.34);
-        const s3 = await createSpool('spool3', 'bambu', 'petg', 'purple', 'normal', 1000.00, 25.34);
 
+    const sData = {
+        name: "spool name",
+        brand: "bambu",
+        material: "pla",
+        colour: "black",
+        finish: "matte",
+        initialWeight: 1000.00,
+        cost: 22.35,
+    };
+
+    try {
+        const s1 = await createSpool(sData);
         const s1p = await getSpoolById(s1.id);
         console.log(s1p.name == s1.name);
     } catch {
