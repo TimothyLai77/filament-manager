@@ -42,7 +42,7 @@ Spool.init(
             type: DataTypes.FLOAT,
             allowNull: false
         },
-        datePurchased: {
+        dateAdded: {
             // no clue why need to call Sequelize first but ok?
             type: Sequelize.DataTypes.DATEONLY
         }
