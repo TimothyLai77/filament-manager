@@ -47,7 +47,7 @@ const getSpools = async (limit = null) => {
  * @param {string} material 
  * @param {string} colour 
  * @param {string} finish (use finish=null for nothing)
- * @param {float} weight 
+ * @param {float} initialWeight 
  * @param {float} cost 
  * @returns newly created spool
  */
@@ -57,7 +57,7 @@ const createSpool = async (
     material,
     colour,
     finish,
-    weight,
+    initialWeight,
     cost,
 ) => {
     const newSpool = await Spool.create({
@@ -67,7 +67,7 @@ const createSpool = async (
         material: material,
         colour: colour,
         finish: finish,
-        weight: weight,
+        initialWeight: initialWeight,
         filamentUsed: 0.0,
         filamentLeft: weight,
         cost: cost,
@@ -112,8 +112,40 @@ const decreaseFilament = async (id, amount) => {
     }
 }
 
-const editSpool = async () => {
+const editSpool = async (
+    name,
+    brand,
+    material,
+    colour,
+    finish,
+    initialWeight,
+    cost,
+    filamentUsed,
+    filamentLeft,
+) => {
+    try {
+        const spool = await Spool.findByPk(id);
+        if (!spool) throw new SpoolNotFoundError;
 
+        /**
+         * todo: there should probably be some constraints as part of the table or some logic checking here
+         * todo_continued: like if you were to edit filamentUsed such that filamentUsed > initialWeight
+         * todo_continued: and like similar restraints.
+         */
+        if (!spool) throw new SpoolNotFoundError;
+        if (name) { spool.name = name };
+        if (brand) { spool.brand = brand };
+        if (material) { spool.material = material };
+        if (colour) { spool.colour = colour };
+        if (finish) { spool.finish = finish };
+        if (initialWeight) { spool.initialWeight = weight };
+        if (cost) { spool.cost = cost };
+        if (filamentUsed) { spool.filamentUsed = filamentUsed };
+        if (filamentLeft) { spool.filamentLeft = filamentLeft };
+        return spool.toJSON();
+    } catch (e) {
+        return e;
+    }
 }
 
 

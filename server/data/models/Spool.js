@@ -29,7 +29,7 @@ Spool.init(
             type: DataTypes.STRING,
             allowNull: true
         },
-        weight: {
+        initialWeight: {
             type: DataTypes.FLOAT,
             allowNull: false,
         },
