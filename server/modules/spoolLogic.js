@@ -23,17 +23,20 @@ const getSpoolById = async (id) => {
  * @returns array of spools
  */
 const getSpools = async (limit = null) => {
-    var spools;
-    if (limit) {
-        // return the first limit spools
-        spools = await Spool.findAll({ limit: limit })
-    } else {
-        // return all spools
-        spools = await Spool.findAll();
+    try {
+        var spools;
+        if (limit) {
+            // return the first limit spools
+            spools = await Spool.findAll({ limit: limit })
+        } else {
+            // return all spools
+            spools = await Spool.findAll();
+        }
+        const formattedSpools = spools.map((spool) => spool.toJSON());
+        return formattedSpools;
+    } catch (e) {
+        return e;
     }
-    const formattedSpools = spools.map((spool) => spool.toJSON());
-    return formattedSpools;
-
 }
 
 const createSpool = async (
@@ -66,7 +69,7 @@ const createSpool = async (
 
 }
 
-const deleteSpool = async () => {
+const deleteSpool = async (id) => {
 
 }
 
