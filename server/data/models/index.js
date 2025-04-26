@@ -22,7 +22,7 @@ const connectAndAssociate = async () => {
     Spool.hasMany(Job, { foreignKey: 'id' });
     // maybe this association should be belongstoMany for multi material/colour prints
     // but honestly I would rather just make another entry in the relavent spool
-    Job.belongsTo(Spool, { foreignKey: 'id' });
+    Job.belongsTo(Spool, { foreignKey: 'spoolId' });
 
     // one inventory -> many spool
     // a spool -> one inventory
