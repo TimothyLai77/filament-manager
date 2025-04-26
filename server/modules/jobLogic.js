@@ -1,9 +1,9 @@
 import { Sequelize } from "sequelize";
 import uniqid from 'uniqid';
-import { Job } from "../data/models/Job";
-import { Spool } from "../data/models/Spool";
-import { JobNotFoundError, SpoolNotFoundError } from "../errors/errors";
-import { decreaseFilament, incrementJobCount } from "./spoolLogic";
+import { Job } from "../data/models/Job.js";
+import { Spool } from "../data/models/Spool.js";
+import { JobNotFoundError, SpoolNotFoundError } from "../errors/errors.js";
+import { decreaseFilament, incrementJobCount } from "./spoolLogic.js";
 
 
 /**
@@ -28,7 +28,7 @@ const createJob = async (spoolId, dataObj) => {
             id: uniqid('job-'),
             name: dataObj.name,
             filamentAmountUsed: dataObj.filamentAmountUsed,
-            cost: cost,
+            cost: cost.toFixed(2),
             date: new Date(),
             spoolId: spoolId
         })
