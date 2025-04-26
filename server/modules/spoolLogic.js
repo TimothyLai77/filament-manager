@@ -95,7 +95,8 @@ const decreaseFilament = async (id, amount) => {
     try {
         const spool = await Spool.findByPk(id);
         if (!spool) throw new SpoolNotFoundError;
-        if (spool.filamentLeft - amount < 0.0) throw new NotEnoughFilamentError;
+        //todo: i'm gonna comment this out for now, idk if I should actually check for enough filament?
+        //if (spool.filamentLeft - amount < 0.0) throw new NotEnoughFilamentError;
         console.log(`Decreasing ${id}'s filament by ${amount}`)
         spool.filamentLeft = spool.filamentLeft - amount;
         spool.filamentUsed = spool.filamentUsed + amount;
@@ -104,6 +105,18 @@ const decreaseFilament = async (id, amount) => {
     } catch (e) {
         return e;
     }
+
+
+
+}
+
+const incrementJobCount = async (id) => {
+    const spool = await Spool.findByPk(id);
+    if (!spool) throw new SpoolNotFoundError;
+
+    spool.numberOfJobs = spool.numberOfJobs + 1;
+    await spool.save();
+    return spool;
 }
 
 const markSpoolAsEmpty = async (id) => {
@@ -118,8 +131,6 @@ const markSpoolAsEmpty = async (id) => {
         throw e;
     }
 }
-
-
 /**
  * edit spool by id
  * @param {string} id
@@ -156,4 +167,4 @@ const editSpool = async (id, newDataObj) => {
 }
 
 
-export { createSpool, getSpoolById, getSpools, deleteSpool, decreaseFilament, editSpool };
+export { createSpool, getSpoolById, getSpools, deleteSpool, decreaseFilament, editSpool, incrementJobCount };

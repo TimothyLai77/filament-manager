@@ -13,7 +13,11 @@ Job.init(
             type: DataTypes.STRING,
             allowNull: false
         },
-        filamentUsed: {
+        spoolId: {
+            type: DataTypes.STRING,
+            allowNull: false
+        },
+        filamentAmountUsed: {
             type: DataTypes.FLOAT,
             allowNull: false,
         },

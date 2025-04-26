@@ -53,6 +53,10 @@ Spool.init(
         isEmpty: {
             type: Sequelize.DataTypes.BOOLEAN,
             defaultValue: false
+        },
+        numberOfJobs: {
+            type: Sequelize.DataTypes.INTEGER,
+            defaultValue: 0
         }
     },
     {
