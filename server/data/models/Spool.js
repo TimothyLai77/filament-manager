@@ -25,7 +25,11 @@ Spool.init(
             type: DataTypes.STRING,
             allowNull: false
         },
-        weight: {
+        finish: {
+            type: DataTypes.STRING,
+            allowNull: true
+        },
+        initialWeight: {
             type: DataTypes.FLOAT,
             allowNull: false,
         },
@@ -42,14 +46,22 @@ Spool.init(
             type: DataTypes.FLOAT,
             allowNull: false
         },
-        datePurchased: {
+        dateAdded: {
             // no clue why need to call Sequelize first but ok?
             type: Sequelize.DataTypes.DATEONLY
+        },
+        isEmpty: {
+            type: Sequelize.DataTypes.BOOLEAN,
+            defaultValue: false
+        },
+        numberOfJobs: {
+            type: Sequelize.DataTypes.INTEGER,
+            defaultValue: 0
         }
     },
     {
         sequelize: database,
-        modelName: 'Spool'
+        modelName: 'spool'
     }
 );
 
