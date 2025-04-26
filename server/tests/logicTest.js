@@ -1,11 +1,30 @@
 import { createSpool, getSpoolById, decreaseFilament, getSpools } from '../modules/spoolLogic.js'
-import { createJob } from '../modules/jobLogic.js'
+import { createJob, getJobs, getJobsBySpool } from '../modules/jobLogic.js'
 const runTests = async () => {
     const spoolId = await spoolCreationTest();
     //await getAllSpools();
     //await getLimitedSpools(2);
 
-    const job1 = await createJobsTest(spoolId);
+    await createJobsTest(spoolId);
+    await getJobsTest(spoolId);
+
+
+}
+
+
+const getJobsTest = async (spoolId) => {
+    console.log(`Getting ALL JOBS:`)
+    const allJobs = await getJobs();
+
+    for (let i = 0; i < allJobs.length; i++) {
+        console.log(allJobs[i].name);
+    }
+
+    console.log(`============= getting jobs by spool =======`);
+    const jobs2 = await getJobsBySpool(spoolId);
+    for (let i = 0; i < jobs2.length; i++) {
+        console.log(`${spoolId} --> ${jobs2[i].name}`);
+    }
 
 }
 
@@ -13,9 +32,20 @@ const createJobsTest = async (spoolId) => {
     const j1 = {
         name: 'job',
         filamentAmountUsed: 10.35,
+    };
+    let jobArr = []
+    for (let i = 0; i < 10; i++) {
+        jobArr.push({
+            name: `'job-${i}`,
+            filamentAmountUsed: Math.random() * 100
+        })
     }
 
-    await createJob(spoolId, j1);
+    for await (const job of jobArr) {
+        await createJob(spoolId, job);
+    }
+
+
 }
 
 
