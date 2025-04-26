@@ -95,9 +95,11 @@ const decreaseFilament = async (id, amount) => {
     try {
         const spool = await Spool.findByPk(id);
         if (!spool) throw new SpoolNotFoundError;
-
         if (spool.filamentLeft - amount < 0.0) throw new NotEnoughFilamentError;
+        console.log(`Decreasing ${id}'s filament by ${amount}`)
         spool.filamentLeft = spool.filamentLeft - amount;
+        spool.filamentUsed = spool.filamentUsed + amount;
+        await spool.save();
         return spool.toJSON();
     } catch (e) {
         return e;
@@ -131,6 +133,7 @@ const editSpool = async (id, newDataObj) => {
         if (newDataObj.cost) { spool.cost = newDataObj.cost };
         if (newDataObj.filamentUsed) { spool.filamentUsed = newDataObj.filamentUsed };
         if (newDataObj.filamentLeft) { spool.filamentLeft = newDataObj.filamentLeft };
+        await spool.save();
         return spool.toJSON();
     } catch (e) {
         return e;
