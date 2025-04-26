@@ -1,3 +1,4 @@
 class NotEnoughFilamentError extends Error { };
 class SpoolNotFoundError extends Error { };
-export { NotEnoughFilamentError, SpoolNotFoundError };
+class JobNotFoundError extends Error { };
+export { NotEnoughFilamentError, SpoolNotFoundError, JobNotFoundError };
