@@ -2,8 +2,8 @@ import { Sequelize } from "sequelize";
 import uniqid from 'uniqid';
 import { Job } from "../data/models/Job";
 import { Spool } from "../data/models/Spool";
-import { SpoolNotFoundError } from "../errors/errors";
-import { decreaseFilament } from "./spoolLogic";
+import { JobNotFoundError, SpoolNotFoundError } from "../errors/errors";
+import { decreaseFilament, incrementJobCount } from "./spoolLogic";
 
 
 /**
@@ -15,15 +15,15 @@ import { decreaseFilament } from "./spoolLogic";
 const createJob = async (spoolId, dataObj) => {
     try {
         // get spool, throw err if does not exist
-        const spool = Spool.findByPk(spoolId);
+        const spool = await Spool.findByPk(spoolId);
         if (!spool) throw new SpoolNotFoundError;
 
         // calculate total cost for print
         const costPerGram = spool.cost / spool.initialWeight;
         const cost = dataObj.filamentAmountUsed * costPerGram;
 
-        decreaseFilament(spoolId, dataObj.filamentAmountUsed);
-
+        await decreaseFilament(spoolId, dataObj.filamentAmountUsed);
+        await incrementJobCount(spoolId);
         const newJob = await Job.create({
             id: uniqid('job-'),
             name: dataObj.name,
@@ -40,11 +40,18 @@ const createJob = async (spoolId, dataObj) => {
 }
 
 const deleteJob = async (id) => {
-
+    try {
+        const job = await Job.findByPk(id);
+        if (!job) throw new JobNotFoundError;
+        await job.destroy();
+        return true;
+    } catch (e) {
+        throw e;
+    }
 }
-
+//todo: another day lol
 const editJob = async (id, newData) => {
 
 }
 
-export { createJob }
+export { createJob, deleteJob }
