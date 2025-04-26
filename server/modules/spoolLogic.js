@@ -105,6 +105,21 @@ const decreaseFilament = async (id, amount) => {
         return e;
     }
 }
+
+const markSpoolAsEmpty = async (id) => {
+    try {
+        const spool = await Spool.findByPk(id);
+        if (!spool) throw new SpoolNotFoundError;
+
+        spool.isEmpty = true;
+        await spool.save();
+        return spool.toJSON();
+    } catch (e) {
+        throw e;
+    }
+}
+
+
 /**
  * edit spool by id
  * @param {string} id

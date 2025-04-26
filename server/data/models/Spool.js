@@ -49,6 +49,10 @@ Spool.init(
         dateAdded: {
             // no clue why need to call Sequelize first but ok?
             type: Sequelize.DataTypes.DATEONLY
+        },
+        isEmpty: {
+            type: Sequelize.DataTypes.BOOLEAN,
+            defaultValue: false
         }
     },
     {
