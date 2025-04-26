@@ -1,5 +1,6 @@
 # other
 .env
+.vscode/
 # MacOS
 .DS_Store
 # Logs
