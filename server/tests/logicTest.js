@@ -1,21 +1,28 @@
-import * as util from "../modules/spoolLogic.js";
-Object.assign(global, util);
-
+import { createSpool, getSpoolById, decreaseFilament, getSpools } from '../modules/spoolLogic.js'
+import { createJob } from '../modules/jobLogic.js'
 const runTests = async () => {
-    const id = await spoolCreationTest();
+    const spoolId = await spoolCreationTest();
     //await getAllSpools();
     //await getLimitedSpools(2);
-    await editSpoolFilament(id, 46.423);
-    await editSpoolFilament(id, 100);
-    await editSpoolFilament(id, 35.46);
 
+    const job1 = await createJobsTest(spoolId);
 
 }
 
+const createJobsTest = async (spoolId) => {
+    const j1 = {
+        name: 'job',
+        filamentAmountUsed: 10.35,
+    }
+
+    await createJob(spoolId, j1);
+}
+
+
 const editSpoolFilament = async (id, amount) => {
     //console.log(await util.getSpoolById(id));
-    const before = await util.getSpoolById(id);
-    const after = await util.decreaseFilament(id, amount);
+    const before = await getSpoolById(id);
+    const after = await decreaseFilament(id, amount);
 
     console.log(`filament decrement test: ${before.filamentLeft - amount == after.filamentLeft}`);
     console.log(await util.getSpoolById(id))
