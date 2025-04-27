@@ -9,20 +9,17 @@ const { startSequelize } = require("./data/models/index");
 const { initDb, checkDbExists } = require('./modules/database');
 const { runTests } = require('./tests/logicTest')
 const env = process.env;
-const PORT = 8080;
+const PORT = env.APP_PORT;
 
 
 
 async function prepareApp() {
-    // const app = express();
-    // app.set("trust proxy", 1);
-    // app.use(express.json());
-    // app.use(cors());
-    // app.use(expressSessionConfig);
+    const app = express();
+    app.set("trust proxy", 1);
+    app.use(express.json());
+    app.use(cors());
 
-    // app.use("/", express.static(CLIENT_FRONTEND_PATH));
-    //app.use("/");
-
+    // ================== SEQUELIZE and DB ==================
     // check if the database exists if not setup
     if (!(await checkDbExists())) {
         console.log('db and user do not exist: ')
@@ -33,10 +30,15 @@ async function prepareApp() {
 
     // Connect to postgres with sequelize for app functionality
     await startSequelize();
-    await runTests();
+    //await runTests();
     // app.listen(PORT, () => {
     //     console.log("express started");
     // })
+
+    // ================== EXPRESS ==================
+    // app.use("/", express.static(CLIENT_FRONTEND_PATH));
+    app.use("/"); //todo : replace with above when frontend exists
+
 }
 
 prepareApp();
