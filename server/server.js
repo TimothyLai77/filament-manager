@@ -8,6 +8,7 @@ const session = require('express-session');
 const { startSequelize } = require("./data/models/index");
 const { initDb, checkDbExists } = require('./modules/database');
 const { runTests } = require('./tests/logicTest')
+const spool_routes = require('./routes/spools.js')
 const env = process.env;
 const PORT = env.APP_PORT;
 
@@ -31,14 +32,15 @@ async function prepareApp() {
     // Connect to postgres with sequelize for app functionality
     await startSequelize();
     //await runTests();
-    // app.listen(PORT, () => {
-    //     console.log("express started");
-    // })
+
 
     // ================== EXPRESS ==================
+    app.listen(PORT, () => {
+        console.log(`express started on port: ${PORT}`);
+    })
     // app.use("/", express.static(CLIENT_FRONTEND_PATH));
-    app.use("/"); //todo : replace with above when frontend exists
-
+    //app.use("/"); //todo : replace with above when frontend exists
+    app.use('/api/', spool_routes)
 }
 
 prepareApp();
