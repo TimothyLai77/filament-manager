@@ -1,4 +1,4 @@
-import { Table, Card,Stack } from "@chakra-ui/react"
+import { Table, Card,Stack, Button } from "@chakra-ui/react"
 
 const SpoolList = () => {
 
@@ -12,7 +12,7 @@ const items = [
 
   return (
     <div>
-        <Card.Root>
+        <Card.Root margin={5}>
             <Card.Header>
                 <Card.Title>Filament List</Card.Title>
             </Card.Header>
@@ -30,6 +30,16 @@ const items = [
           <Table.Row key={item.id}>
             <Table.Cell>{item.name}</Table.Cell>
             <Table.Cell>{item.category}</Table.Cell>
+            <Table.Cell>
+                <Button>
+                    press me
+                </Button>
+            </Table.Cell>
+                <Table.Cell>
+                <Button>
+                    press me 2
+                </Button>
+            </Table.Cell>
             <Table.Cell textAlign="end">{item.price}</Table.Cell>
           </Table.Row>
         ))}
