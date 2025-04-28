@@ -8,7 +8,7 @@ const session = require('express-session');
 const { startSequelize } = require("./data/models/index");
 const { initDb, checkDbExists } = require('./modules/database');
 const { runTests } = require('./tests/logicTest')
-const spool_routes = require('./controller/spoolController.js')
+const spool_routes = require('./routes/spools.js')
 const env = process.env;
 const PORT = env.APP_PORT;
 
