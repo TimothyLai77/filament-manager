@@ -1,5 +1,5 @@
 import { loadableSpoolArrayAtom } from "../atoms.js"
-import {  Table, Card, Button, HStack } from "@chakra-ui/react"
+import {  Text, Flex, Table, Card, Button, HStack, Center, Separator } from "@chakra-ui/react"
 import { MdModeEdit,MdLibraryAdd, MdInfoOutline} from "react-icons/md";
 import { useAtom } from 'jotai'
 
@@ -14,8 +14,20 @@ const SpoolList = () => {
     <>
   <Card.Root margin={5}>
     <Card.Body>
-      <Card.Title>Current Filament</Card.Title>
-      <Table.ScrollArea borderWidth="0px">
+      <Card.Title >
+       <Flex justify="space-between" align="center">
+        <Text  fontWeight="bold">Current filament</Text>
+  
+        <HStack justifyContent="right"> 
+          <Button size="xs">
+            Add Filament
+          </Button>
+        </HStack>
+       </Flex>
+        <Separator size="lg"/>
+      </Card.Title>
+     
+      <Table.ScrollArea margin={5} borderWidth="0px">
       <Table.Root interactive>
         <Table.Header>
           <Table.Row>
