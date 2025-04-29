@@ -2,9 +2,10 @@ import { loadableSpoolArrayAtom } from "../atoms.js"
 import {  Text, Flex, Table, Card, Button, HStack, Center, Separator } from "@chakra-ui/react"
 import { MdModeEdit,MdLibraryAdd, MdInfoOutline} from "react-icons/md";
 import { useAtom } from 'jotai'
-
+import { useNavigate } from 'react-router-dom'
 
 const SpoolList = () => {
+  const navigate = useNavigate();
   const [spools] = useAtom(loadableSpoolArrayAtom)
   if (spools.state === 'hasError') return <h1>Something really broke...</h1>
   if (spools.state === 'loading') return <h1>loading</h1>
@@ -19,7 +20,7 @@ const SpoolList = () => {
         <Text  fontWeight="bold">Current filament</Text>
   
         <HStack justifyContent="right"> 
-          <Button size="xs">
+          <Button size="xs" onClick={() => {navigate("/create-spool")}}>
             Add Filament
           </Button>
         </HStack>
