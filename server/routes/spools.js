@@ -9,6 +9,7 @@ const {
 
 router.get('/spools', async (req, res) => {
     try {
+        console.log("GET /spools")
         const spools = await getSpools();
         res.send(spools), 200;
     } catch (e) {
