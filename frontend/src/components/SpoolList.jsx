@@ -1,6 +1,6 @@
 import { loadableSpoolArrayAtom } from "../atoms.js"
-import { Table, Card,Text, Button, HStack } from "@chakra-ui/react"
-import { MdModeEdit,MdLibraryAdd } from "react-icons/md";
+import {  Table, Card, Button, HStack } from "@chakra-ui/react"
+import { MdModeEdit,MdLibraryAdd, MdInfoOutline} from "react-icons/md";
 import { useAtom } from 'jotai'
 
 
@@ -11,6 +11,7 @@ const SpoolList = () => {
   const spoolList = spools.data;
 
   return(
+    <>
   <Card.Root margin={5}>
     <Card.Body>
       <Card.Title>Current Filament</Card.Title>
@@ -24,7 +25,7 @@ const SpoolList = () => {
               <Table.ColumnHeader>Colour</Table.ColumnHeader>
               <Table.ColumnHeader>Finish</Table.ColumnHeader>
               <Table.ColumnHeader>Amount Left (g)</Table.ColumnHeader>
-              <Table.ColumnHeader align="end">Actions</Table.ColumnHeader> 
+              <Table.ColumnHeader textAlign="end">Actions</Table.ColumnHeader> 
           </Table.Row>
         </Table.Header>
 
@@ -38,7 +39,11 @@ const SpoolList = () => {
               <Table.Cell>{spool.finish}</Table.Cell>
               <Table.Cell>{spool.filamentLeft.toFixed(2)}</Table.Cell>
               <Table.Cell align="end">
-                <HStack>
+                <HStack justifyContent="right">
+                  <Button size="xs">
+                    <MdInfoOutline />
+                    Details
+                  </Button>
                   <Button size="xs">
                     <MdModeEdit/>
                     Edit
@@ -47,6 +52,7 @@ const SpoolList = () => {
                     <MdLibraryAdd />
                     Create Job 
                   </Button>
+
                 </HStack>          
               </Table.Cell>
             </Table.Row>
@@ -56,6 +62,7 @@ const SpoolList = () => {
       </Table.ScrollArea>
     </Card.Body>
   </Card.Root>
+ </>
   )
 }
 
