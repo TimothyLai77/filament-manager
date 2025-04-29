@@ -1,14 +1,15 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-//import './App.css'
-import SpoolList from './components/SpoolList'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import SpoolPage from './pages/SpoolPage';
+import CreateSpoolPage from './pages/CreateSpoolPage' 
 function App() {
 
   return (
-    <>
-      <SpoolList />
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path='/' element={<SpoolPage />} />
+        <Route path='/create-spool' element={<CreateSpoolPage/>}/ >
+      </Routes>
+    </BrowserRouter>
   )
 }
 
