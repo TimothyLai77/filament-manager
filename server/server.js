@@ -31,7 +31,7 @@ async function prepareApp() {
 
     // Connect to postgres with sequelize for app functionality
     await startSequelize();
-    //await runTests();
+    await runTests();
 
 
     // ================== EXPRESS ==================
