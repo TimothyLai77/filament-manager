@@ -6,7 +6,9 @@ import SpoolList from './components/SpoolList'
 function App() {
 
   return (
-    <SpoolList />
+    <>
+      <SpoolList />
+    </>
   )
 }
 
