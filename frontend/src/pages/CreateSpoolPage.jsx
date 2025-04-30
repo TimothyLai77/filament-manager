@@ -1,6 +1,6 @@
 import {NumberInput, Button, Input, Stack, Card, Text, Field, Fieldset} from '@chakra-ui/react'
 import { asyncNewSpoolAtom } from '../atoms.js'
-import { useAtom, atom  } from 'jotai'
+import { useAtom, atom } from 'jotai'
 import { useState } from 'react'
 
 
@@ -19,13 +19,14 @@ const CreateSpoolPage = () => {
         if(payload.name === '') return false;
         if(payload.brand === '') return false;
         if(payload.material === '') return false;
-        if(payload.initialWeight <= 0) return false;
-        if(payload.cost <= 0) return false;
+        if(payload.initialWeight <= 0 || isNaN(payload.initialWeight)) return false;
+        if(payload.cost <= 0|| isNaN(payload.cost)) return false;
         return true;
     }
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
         const payload = {
             name: name,
             brand : brand,
@@ -36,6 +37,7 @@ const CreateSpoolPage = () => {
             cost: parseFloat(cost)
         }
         if(checkPayload(payload)){
+            console.log(payload)
             setData(payload)
         }else{
             console.log('form error')
