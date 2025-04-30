@@ -1,11 +1,16 @@
 import {NumberInput, Button, Input, Stack, Card, Text, Field} from '@chakra-ui/react'
+import { newSpoolSendAtom, newSpoolAtom } from '../atoms.js'
+import { useAtom } from 'jotai'
 const CreateSpoolPage = () => {
-    
 
-
+    const [,setData] = useAtom(newSpoolSendAtom);
+    const [getNewSpool] = useAtom(newSpoolAtom);
+    const onClick = () => {
+        setData({"placeholder": "placeholder"});
+       
+    }
 
     const generateFields = () => {
-
         const fields = [
             {"fieldText":"Name","type": String, "placeholder": "Prusament Matte Black"},
             {"fieldText":"Brand","type": String, "placeholder": "Prusament"},
@@ -45,7 +50,7 @@ const CreateSpoolPage = () => {
                 <Stack margin={5}>
                     {generateFields()}
             
-                    <Button marginTop={5}>Submit</Button>
+                    <Button marginTop={5} onClick={onClick}>Submit</Button>
                 </Stack>
             </Card.Body>
         </Card.Root>
