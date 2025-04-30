@@ -18,6 +18,12 @@ router.get('/spools', async (req, res) => {
     }
 
 })
+//todo: for testing only remove later
+router.post('/void', async (req, res) => {
+    console.log(`POST: /VOID: =========`)
+    console.log(req.body);
+    res.json(req.body), 200
+})
 
 
 router.get('/spools/:id', async (req, res) => {
