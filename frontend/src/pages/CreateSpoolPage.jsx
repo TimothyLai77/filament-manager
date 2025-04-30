@@ -1,41 +1,101 @@
-import {NumberInput, Button, Input, Stack, Card, Text, Field} from '@chakra-ui/react'
+import {NumberInput, Button, Input, Stack, Card, Text, Field, Fieldset} from '@chakra-ui/react'
 import { asyncNewSpoolAtom } from '../atoms.js'
-import { useAtom } from 'jotai'
+import { useAtom, atom  } from 'jotai'
+import { useState } from 'react'
+
+
 const CreateSpoolPage = () => {
+    const [name, setName] = useState('');
+    const [brand, setBrand] = useState('');
+    const [material, setMaterial] = useState('');
+    const [colour, setColour] = useState('');
+    const [finish, setFinish] = useState('');
+    const [initialWeight, setInitialWeight] = useState(1000);
+    const [cost, setCost] = useState(0);
+
     const [response, setData] = useAtom(asyncNewSpoolAtom);
-    const onClick = () => {
-        setData({"test": "testing"});
-        console.log(response);
+
+    const checkPayload = (payload) => {
+        if(payload.name === '') return false;
+        if(payload.brand === '') return false;
+        if(payload.material === '') return false;
+        if(payload.initialWeight <= 0) return false;
+        if(payload.cost <= 0) return false;
+        return true;
     }
 
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const payload = {
+            name: name,
+            brand : brand,
+            material: material,
+            colour: colour, 
+            finish: finish ? finish : null,
+            initialWeight: parseFloat(initialWeight),
+            cost: parseFloat(cost)
+        }
+        if(checkPayload(payload)){
+            setData(payload)
+        }else{
+            console.log('form error')
+        }
+    }
+    
+
+    //todo: clean this up so its dynamically generated
     const generateFields = () => {
-        const fields = [
-            {"fieldText":"Name","type": String, "placeholder": "Prusament Matte Black"},
-            {"fieldText":"Brand","type": String, "placeholder": "Prusament"},
-            {"fieldText":"Material","type": String, "placeholder": "PLA",}, 
-            {"fieldText":"Colour","type" : String, "placeholder": "black"},
-            {"fieldText":"Finish (Optional)","type": String, "placeholder": "matte"},
-            {"fieldText":"Initial Weight (g)","type": Number, "defaultValue": 1000},
-            {"fieldText":"Cost ($)","type": Number}
-        ];
+        return (
+            <Fieldset.Root>
+                <Field.Root>
+                    <Field.Label>Name</Field.Label>
+                    <Input
+                        onChange={(e) => setName(e.target.value)}
+                        value={name}
+                    />
 
-     
+                    <Field.Label>Brand</Field.Label>
+                    <Input
+                         onChange={(e) => setBrand(e.target.value)}
+                        value={brand}
+                    />
 
-        return(     
-            fields.map((field, index) => (
-                <Field.Root key={index}>
-                    <Field.Label >{field.fieldText}</Field.Label>
-                    {field.type === String ? 
-                    <Input placeholder={field.placeholder}></Input> : 
-                    <NumberInput.Root minWidth="100%">
-                        <NumberInput.Input defaultValue={field.defaultValue}/>
-                    </NumberInput.Root>
-                }
+                    <Field.Label>Material</Field.Label>
+                    <Input
+                        onChange={(e) => setMaterial(e.target.value)}
+                        value={material}
+                    />
+       
+                    <Field.Label>Colour</Field.Label>
+                    <Input
+                        onChange={(e) => setColour(e.target.value)}
+                        value={colour}
+                    />
+
+                    <Field.Label>Finish (optional)</Field.Label>
+                    <Input
+                        onChange={(e) => setFinish(e.target.value)}
+                        value={finish}
+                    />
+
+                  <Field.Label>Initial Weight (g)</Field.Label>
+                    <Input
+                        onChange={(e) => setInitialWeight(e.target.value)}
+                        value={initialWeight}
+                    />
+
+                   <Field.Label>Cost ($)</Field.Label>
+                    <Input
+                        onChange={(e) => setCost(e.target.value)}
+                        value={cost}
+                    />
                 </Field.Root>
-            )) 
-        )
+                <Button marginTop={5} type="submit" onClick={handleSubmit}>Submit</Button>
+            </Fieldset.Root>
+        );
     }
-
+        
+    
 
 
   return (
@@ -47,8 +107,6 @@ const CreateSpoolPage = () => {
                 </Card.Title>
                 <Stack margin={5}>
                     {generateFields()}
-            
-                    <Button marginTop={5} onClick={onClick}>Submit</Button>
                 </Stack>
             </Card.Body>
         </Card.Root>
