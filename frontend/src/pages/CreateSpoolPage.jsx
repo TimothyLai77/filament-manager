@@ -1,13 +1,11 @@
 import {NumberInput, Button, Input, Stack, Card, Text, Field} from '@chakra-ui/react'
-import { newSpoolSendAtom, newSpoolAtom } from '../atoms.js'
+import { asyncNewSpoolAtom } from '../atoms.js'
 import { useAtom } from 'jotai'
 const CreateSpoolPage = () => {
-
-    const [,setData] = useAtom(newSpoolSendAtom);
-    const [getNewSpool] = useAtom(newSpoolAtom);
+    const [response, setData] = useAtom(asyncNewSpoolAtom);
     const onClick = () => {
-        setData({"placeholder": "placeholder"});
-       
+        setData({"test": "testing"});
+        console.log(response);
     }
 
     const generateFields = () => {

@@ -7,17 +7,19 @@ const asyncSpoolArrayAtom = atom(async () => {
     return response.json();
 });
 
-export const newSpoolAtom = atom(null)
-
-export const newSpoolSendAtom = atom(null,
+export const asyncNewSpoolAtom = atom(
+    null,
     async (get, set, payload) => {
         const response = await fetch('/api/void', {
             method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
             body: JSON.stringify(payload)
         });
         const data = await response.json();
         console.log(data);
-        set(newSpoolAtom, data);
+        set(asyncNewSpoolAtom, data);
     }
 )
 
