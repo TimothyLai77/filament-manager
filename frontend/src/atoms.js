@@ -9,7 +9,7 @@ const asyncSpoolArrayAtom = atom(async () => {
 
 // not really sure how this works? but looks like the tutorials use
 // base atoms to store stuff, and we have the async atoms that can modify it?
-const newSpoolBaseAtom = atom(null)
+export const newSpoolBaseAtom = atom(null)
 export const asyncNewSpoolAtom = atom(
     (get) => get(newSpoolBaseAtom),
     async (get, set, payload) => {

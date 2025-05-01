@@ -1,10 +1,11 @@
 import {NumberInput, Button, Input, Stack, Card, Text, Field, Fieldset} from '@chakra-ui/react'
-import { asyncNewSpoolAtom } from '../atoms.js'
+import { asyncNewSpoolAtom,newSpoolBaseAtom } from '../atoms.js'
 import { useAtom, atom } from 'jotai'
 import { useState } from 'react'
 
 
 const CreateSpoolPage = () => {
+
     const [name, setName] = useState('');
     const [brand, setBrand] = useState('');
     const [material, setMaterial] = useState('');
@@ -14,6 +15,8 @@ const CreateSpoolPage = () => {
     const [cost, setCost] = useState(0);
 
     const [response, setData] = useAtom(asyncNewSpoolAtom);
+    // todo: hmmm i don't think this is the proper way... 
+    const [newSpool] = useAtom(newSpoolBaseAtom);
 
     const checkPayload = (payload) => {
         if(payload.name === '') return false;
@@ -111,6 +114,12 @@ const CreateSpoolPage = () => {
                 <Stack margin={5}>
                     {generateFields()}
                 </Stack>
+            </Card.Body>
+        </Card.Root>
+
+        <Card.Root margin={5}>
+            <Card.Body>
+                <h1>{newSpool ? newSpool.name : ''}</h1>
             </Card.Body>
         </Card.Root>
     </>
