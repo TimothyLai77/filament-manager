@@ -29,7 +29,7 @@ const CreateSpoolPage = () => {
             if(newSpool instanceof Error){
                 toaster.create({
                     title: "Error",
-                    description: "something went wrong",
+                    description: `something went wrong: ` + newSpool.message,
                     type: "error"
                 })
             }else{
