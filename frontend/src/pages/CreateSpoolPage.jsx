@@ -20,21 +20,27 @@ const CreateSpoolPage = () => {
 
 
     useEffect(() => {
-        console.log(newSpool)
+        //console.log(newSpool)
         if(newSpool == null) return;
-        if(newSpool instanceof Error){
-            toaster.create({
-                title: "Error",
-                description: "something went wrong",
-                type: "error"
-            })
-        }else{
-            toaster.create({
-                title: "Success",
-                description : "New spool added to database.",
-                type: "success"
-            });
-        }
+
+        // this is kinda ????? but I get a flush sync warning without the timer
+        // just defers the rendering to the next cycle apparnetly?
+        setTimeout(() => {
+            if(newSpool instanceof Error){
+                toaster.create({
+                    title: "Error",
+                    description: "something went wrong",
+                    type: "error"
+                })
+            }else{
+                toaster.create({
+                    title: "Success",
+                    description : "New spool added to database.",
+                    type: "success"
+                });
+            }
+        }, 0);
+ 
 
     }, [newSpool])
 
