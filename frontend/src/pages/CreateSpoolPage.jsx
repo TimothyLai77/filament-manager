@@ -1,8 +1,8 @@
 import {NumberInput, Button, Input, Stack, Card, Text, Field, Fieldset} from '@chakra-ui/react'
 import { asyncNewSpoolAtom,newSpoolBaseAtom } from '../atoms.js'
 import { useAtom, atom } from 'jotai'
-import { useState } from 'react'
-
+import { useEffect, useState } from 'react'
+import { Toaster, toaster } from "../components/ui/toaster";
 
 const CreateSpoolPage = () => {
 
@@ -14,9 +14,29 @@ const CreateSpoolPage = () => {
     const [initialWeight, setInitialWeight] = useState(1000);
     const [cost, setCost] = useState(0);
 
-    const [response, setData] = useAtom(asyncNewSpoolAtom);
+    const [, setData] = useAtom(asyncNewSpoolAtom);
     // todo: hmmm i don't think this is the proper way... 
     const [newSpool] = useAtom(newSpoolBaseAtom);
+
+
+    useEffect(() => {
+        console.log(newSpool)
+        if(newSpool == null) return;
+        if(newSpool instanceof Error){
+            toaster.create({
+                title: "Error",
+                description: "something went wrong",
+                type: "error"
+            })
+        }else{
+            toaster.create({
+                title: "Success",
+                description : "New spool added to database.",
+                type: "success"
+            });
+        }
+
+    }, [newSpool])
 
     const checkPayload = (payload) => {
         if(payload.name === '') return false;
@@ -29,7 +49,6 @@ const CreateSpoolPage = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
         const payload = {
             name: name,
             brand : brand,
@@ -42,11 +61,17 @@ const CreateSpoolPage = () => {
         if(checkPayload(payload)){
             //console.log(payload)
             setData(payload)
-            console.log(response)
         }else{
             console.log('form error')
+             toaster.create({
+                title: "Form Error",
+                description: "double check fields",
+                type: "error"
+            })
         }
     }
+
+
     
 
     //todo: clean this up so its dynamically generated
@@ -116,12 +141,7 @@ const CreateSpoolPage = () => {
                 </Stack>
             </Card.Body>
         </Card.Root>
-
-        <Card.Root margin={5}>
-            <Card.Body>
-                <h1>{newSpool ? newSpool.name : ''}</h1>
-            </Card.Body>
-        </Card.Root>
+        <Toaster />
     </>
   )
 }
