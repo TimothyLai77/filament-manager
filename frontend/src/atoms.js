@@ -7,4 +7,28 @@ const asyncSpoolArrayAtom = atom(async () => {
     return response.json();
 });
 
+// not really sure how this works? but looks like the tutorials use
+// base atoms to store stuff, and we have the async atoms that can modify it?
+export const newSpoolBaseAtom = atom(null)
+export const asyncNewSpoolAtom = atom(
+    (get) => get(newSpoolBaseAtom),
+    async (get, set, payload) => {
+        try {
+            const response = await fetch('/api/spools/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
+            const data = await response.json();
+            //console.log(data);
+            set(newSpoolBaseAtom, data);
+        } catch (e) {
+            set(newSpoolBaseAtom, e);
+        }
+
+    }
+)
+
 export const loadableSpoolArrayAtom = loadable(asyncSpoolArrayAtom);
