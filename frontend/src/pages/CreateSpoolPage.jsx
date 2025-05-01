@@ -37,8 +37,9 @@ const CreateSpoolPage = () => {
             cost: parseFloat(cost)
         }
         if(checkPayload(payload)){
-            console.log(payload)
+            //console.log(payload)
             setData(payload)
+            console.log(response)
         }else{
             console.log('form error')
         }
