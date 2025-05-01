@@ -18,12 +18,18 @@ router.get('/spools', async (req, res) => {
     }
 
 })
-//todo: for testing only remove later
-router.post('/void', async (req, res) => {
-    console.log(`POST: /VOID: =========`)
-    console.log(req.body);
-    res.json(req.body), 200
+
+router.post('/spools/create', async (req, res) => {
+    try {
+        console.log("POST: /spools/create")
+        payload = req.body;
+        const newSpool = await createSpool(payload);
+        res.send(newSpool), 200
+    } catch (e) {
+        res.send(e), 500
+    }
 })
+
 
 
 router.get('/spools/:id', async (req, res) => {

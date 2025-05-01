@@ -10,7 +10,7 @@ const asyncSpoolArrayAtom = atom(async () => {
 export const asyncNewSpoolAtom = atom(
     null,
     async (get, set, payload) => {
-        const response = await fetch('/api/void', {
+        const response = await fetch('/api/spools/create', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -22,16 +22,5 @@ export const asyncNewSpoolAtom = atom(
         set(asyncNewSpoolAtom, data);
     }
 )
-
-// export const asyncNewSpoolAtom = atom(null, async (get, set) => {
-//     const data = get(newSpoolAtom);
-//     console.log(data);
-//     const response = await fetch('/api/void', {
-//         method: 'POST',
-//         body: JSON.stringify({ "test": "a" })
-//     });
-//     set(response);
-//     //console.log(response);
-// })
 
 export const loadableSpoolArrayAtom = loadable(asyncSpoolArrayAtom);
