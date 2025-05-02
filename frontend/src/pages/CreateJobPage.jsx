@@ -9,7 +9,11 @@ const JobCreationForm = () => {
     return(
         <>
             <HomeButton />
-            <SpoolDetailCard />
+            <Stack margin={5}>
+                <SpoolDetailCard />
+            </Stack>
+
+
         </>
     )
 }
