@@ -72,6 +72,10 @@ const SpoolDetailCard = () => {
                         <Text as="span" textStyle="lg" fontWeight="bold">Colour: </Text>
                         <Text textStyle="lg" as="span">{spoolData.colour}</Text>
                     </Box>      
+                    <Box>
+                        <Text as="span" textStyle="lg" fontWeight="bold">Finish: </Text>
+                        <Text textStyle="lg" as="span">{spoolData.finish ? spoolData.finish : 'None'}</Text>
+                    </Box>     
 
                     <Box>
                         <Text as="span" textStyle="lg" fontWeight="bold">Date Added: </Text>
