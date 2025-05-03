@@ -73,7 +73,7 @@ const createJob = async (spoolId, dataObj) => {
 
         return newJob.toJSON();
     } catch (e) {
-        console.log(e)
+        //console.log(`CAUGHT: ${e}`)
         throw e;
     }
 }
