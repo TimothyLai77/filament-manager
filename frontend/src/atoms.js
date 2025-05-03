@@ -1,6 +1,5 @@
 import { atom } from 'jotai'
 import { loadable } from 'jotai/utils'
-
 // todo: im pretty sure this is 'wrong'
 const asyncSpoolArrayAtom = atom(async () => {
     const response = await fetch('/api/spools');
@@ -47,6 +46,8 @@ const asyncSelectedSpoolDetailsAtom = atom(async (get) => {
     }
 
 })
+
+// ATOMS related to creating print jobs
 export const newJobBaseAtom = atom(null);
 export const asyncNewJobAtom = atom(
     get => get(newJobBaseAtom),
@@ -59,11 +60,19 @@ export const asyncNewJobAtom = atom(
                 },
                 body: JSON.stringify(payload)
             });
+            if (!response.ok) {
+                //console.log('bad status')
+                if (response.status == 501) {
+                    set(newJobBaseAtom, new Error('not enough filament'));
+                } else {
+                    set(newJobBaseAtom, new Error('server error'));
+                }
+            }
             const data = await response.json();
-            //console.log(data);
             set(newJobBaseAtom, data);
         } catch (e) {
-            set(newJobBaseAtom, e);
+            throw e;
+            //set(newJobBaseAtom, e);
         }
     }
 )

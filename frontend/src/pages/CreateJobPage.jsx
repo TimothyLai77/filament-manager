@@ -5,12 +5,14 @@ import { useEffect, useState } from 'react'
 import { Toaster, toaster } from "../components/ui/toaster";
 import HomeButton from '..//components/HomeButton.jsx';
 import SpoolDetailCard from '../components/SpoolDetailCard.jsx'
-const JobCreationForm = () => {
+import JobCreationForm from '../components/JobCreationForm.jsx';
+const CreateJobPage = () => {
     return(
         <>
             <HomeButton />
             <Stack margin={5}>
                 <SpoolDetailCard />
+                <JobCreationForm />
             </Stack>
 
 
@@ -18,4 +20,4 @@ const JobCreationForm = () => {
     )
 }
 
-export default JobCreationForm;
+export default CreateJobPage;

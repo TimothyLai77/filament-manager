@@ -3,51 +3,54 @@ import { asyncNewSpoolAtom,newSpoolBaseAtom } from '../atoms.js'
 import { useAtom, atom } from 'jotai'
 import { useEffect, useState } from 'react'
 import { Toaster, toaster } from "../components/ui/toaster";
-import { newJobBaseAtom, asyncNewJobAtom } from '../atoms.js';
+import { newJobBaseAtom, asyncNewJobAtom, loadableSelectedSpoolDetailsAtom } from '../atoms.js';
 const JobCreationForm = () => {
 
     const [name, setName] = useState('');
-    //const [spoolId] = useAtom() //todo: make atom for this
+    const [spoolDetails] = useAtom(loadableSelectedSpoolDetailsAtom) 
     const [filamentAmount, setFilamentAmount] = useState('');
-    const [cost, setCost] = useAtom() // make atom for this
+    const [cost, setCost] = useState(0);
 
 
     const [, setData] = useAtom(asyncNewJobAtom);
     // todo: hmmm i don't think this is the proper way... 
-    const [newSpool] = useAtom(newSpoolBaseAtom);
+    const [newJob] = useAtom(newJobBaseAtom);
 
-
+    const updateCostOnFilamentChange = (e) => {
+        setFilamentAmount(e.target.value);
+    }
     useEffect(() => {
         //console.log(newSpool)
-        if(newSpool == null) return;
+        if(newJob == null) return;
 
         // this is kinda ????? but I get a flush sync warning without the timer
         // just defers the rendering to the next cycle apparnetly?
         setTimeout(() => {
-            if(newSpool instanceof Error){
+            if(newJob instanceof Error){
                 toaster.create({
                     title: "Error",
-                    description: `something went wrong: ` + newSpool.message,
+                    description: `something went wrong: ` + newJob.message,
                     type: "error"
                 })
             }else{
                 toaster.create({
                     title: "Success",
-                    description : "New spool added to database.",
+                    description : "New job added to database.",
                     type: "success"
                 });
             }
         }, 0);
  
 
-    }, [newSpool])
+    }, [newJob])
 
     const checkPayload = (payload) => {
-        if(payload.name === '') return false;
-        if(payload.brand === '') return false;
-        if(payload.material === '') return false;
-        if(payload.initialWeight <= 0 || isNaN(payload.initialWeight)) return false;
-        if(payload.cost <= 0|| isNaN(payload.cost)) return false;
+        // idk there's probably a better way but my brain isn't working
+        const spoolRegex = new RegExp("^(spool-).+$");
+        if(!spoolRegex.test(payload.spoolId)) return false;
+        if(payload.name === '' || payload.name === null) return false;
+        if(payload.filamentAmountUsed <= 0 || isNaN(payload.filamentAmountUsed)) return false;
+        if(isNaN(payload.cost)) return false;
         return true;
     }
 
@@ -55,13 +58,11 @@ const JobCreationForm = () => {
         e.preventDefault();
         const payload = {
             name: name,
-            brand : brand,
-            material: material,
-            colour: colour, 
-            finish: finish ? finish : null,
-            initialWeight: parseFloat(initialWeight),
+            spoolId: spoolDetails.data.id,
+            filamentAmountUsed: parseFloat(filamentAmount), 
             cost: parseFloat(cost)
         }
+        console.log(payload);
         if(checkPayload(payload)){
             //console.log(payload)
             setData(payload)
@@ -83,43 +84,19 @@ const JobCreationForm = () => {
         return (
             <Fieldset.Root>
                 <Field.Root>
-                    <Field.Label>Name</Field.Label>
+                    <Field.Label>Job Name</Field.Label>
                     <Input
                         onChange={(e) => setName(e.target.value)}
                         value={name}
                     />
 
-                    <Field.Label>Brand</Field.Label>
+                    <Field.Label>Filament Amount</Field.Label>
                     <Input
-                         onChange={(e) => setBrand(e.target.value)}
-                        value={brand}
+                         onChange={updateCostOnFilamentChange}
+                        value={filamentAmount}
                     />
 
-                    <Field.Label>Material</Field.Label>
-                    <Input
-                        onChange={(e) => setMaterial(e.target.value)}
-                        value={material}
-                    />
-       
-                    <Field.Label>Colour</Field.Label>
-                    <Input
-                        onChange={(e) => setColour(e.target.value)}
-                        value={colour}
-                    />
-
-                    <Field.Label>Finish (optional)</Field.Label>
-                    <Input
-                        onChange={(e) => setFinish(e.target.value)}
-                        value={finish}
-                    />
-
-                  <Field.Label>Initial Weight (g)</Field.Label>
-                    <Input
-                        onChange={(e) => setInitialWeight(e.target.value)}
-                        value={initialWeight}
-                    />
-
-                   <Field.Label>Cost ($)</Field.Label>
+                    <Field.Label>{`Cost (override if needed)`}</Field.Label>
                     <Input
                         onChange={(e) => setCost(e.target.value)}
                         value={cost}
@@ -135,7 +112,7 @@ const JobCreationForm = () => {
 
   return (
     <>
-        <Card.Root margin={5}>
+        <Card.Root>
             <Card.Body>
                 <Card.Title>
                     <Text fontWeight="bold">Create New Job</Text>
