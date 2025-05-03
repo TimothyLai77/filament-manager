@@ -9,7 +9,8 @@ function App() {
       <Routes>
         <Route path='/' element={<SpoolPage />} />
         <Route path='/create-spool' element={<CreateSpoolPage/>}/ >
-        <Route path='/create-job' element={<CreateJobPage />} />
+        {/* <Route path='/create-job' element={<CreateJobPage />} /> */}
+        <Route path='/:spoolId/create-job' element={<CreateJobPage />}/>
       </Routes>
     </BrowserRouter>
   )

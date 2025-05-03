@@ -13,6 +13,7 @@ const SpoolList = () => {
   if (spools.state === 'loading') return <h1>loading</h1>
   const spoolList = spools.data;
 
+
   return(
     <>
   <Card.Root margin={5}>
@@ -65,8 +66,8 @@ const SpoolList = () => {
                   </Button>
                   <Button size="xs"
                     onClick={() => {
-                      setSelectedSpool(spool.id);
-                      navigate("create-job");
+                      //setSelectedSpool(spool.id);
+                      navigate(`/${spool.id}/create-job`);
                     }}
                   >
                     <MdLibraryAdd />
