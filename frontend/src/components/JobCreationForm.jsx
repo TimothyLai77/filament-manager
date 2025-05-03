@@ -4,6 +4,7 @@ import { useAtom, atom } from 'jotai'
 import { useEffect, useState } from 'react'
 import { Toaster, toaster } from "../components/ui/toaster";
 import { newJobBaseAtom, asyncNewJobAtom, loadableSelectedSpoolDetailsAtom } from '../atoms.js';
+import SpoolDetailCard from './SpoolDetailCard.jsx';
 const JobCreationForm = () => {
 
     const [name, setName] = useState('');
@@ -15,10 +16,16 @@ const JobCreationForm = () => {
     const [, setData] = useAtom(asyncNewJobAtom);
     // todo: hmmm i don't think this is the proper way... 
     const [newJob] = useAtom(newJobBaseAtom);
+    
+    let costPerGram = 0;
+    if(spoolDetails.state === 'hasData') costPerGram = spoolDetails.data.cost / spoolDetails.data.initialWeight;
+    
 
-    const updateCostOnFilamentChange = (e) => {
-        setFilamentAmount(e.target.value);
-    }
+    useEffect(() => {
+        setCost(costPerGram*filamentAmount);
+    },[filamentAmount])
+
+    
     useEffect(() => {
         //console.log(newSpool)
         if(newJob == null) return;
@@ -92,7 +99,7 @@ const JobCreationForm = () => {
 
                     <Field.Label>Filament Amount</Field.Label>
                     <Input
-                         onChange={updateCostOnFilamentChange}
+                         onChange={(e) => setFilamentAmount(e.target.value)}
                         value={filamentAmount}
                     />
 
