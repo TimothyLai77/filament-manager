@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const { createJob, getJobs } = require('../modules/jobLogic.js');
+const { NotEnoughFilamentError } = require('../errors/errors.js');
 
 
 /**
@@ -21,7 +22,14 @@ router.post('/create', async (req, res) => {
         console.log('created job', newJob);
         res.send(newJob), 200
     } catch (e) {
-        res.send(e), 500
+        if (e instanceof NotEnoughFilamentError) {
+            res.status(501);
+            res.send('not enough filament');
+        } else {
+            res.status(500);
+            res.send('server error');
+        }
+
     }
 
 });
@@ -33,7 +41,8 @@ router.get('/', async (req, res) => {
         const data = await getJobs();
         res.send(data), 200
     } catch (e) {
-        res.send(e), 500
+        res.status(500)
+        res.send(e)
     }
 
 })
