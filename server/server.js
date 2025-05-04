@@ -9,6 +9,7 @@ const { startSequelize } = require("./data/models/index");
 const { initDb, checkDbExists } = require('./modules/database');
 const { runTests } = require('./tests/logicTest')
 const spool_routes = require('./routes/spools.js')
+const job_routes = require('./routes/jobs.js')
 const env = process.env;
 const PORT = env.APP_PORT;
 
@@ -41,6 +42,7 @@ async function prepareApp() {
     // app.use("/", express.static(CLIENT_FRONTEND_PATH));
     //app.use("/"); //todo : replace with above when frontend exists
     app.use('/api/', spool_routes)
+    app.use('/api/jobs/', job_routes);
 }
 
 prepareApp();

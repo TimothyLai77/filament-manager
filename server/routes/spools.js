@@ -26,7 +26,8 @@ router.post('/spools/create', async (req, res) => {
         const newSpool = await createSpool(payload);
         res.send(newSpool), 200
     } catch (e) {
-        res.send(e), 500
+        res.status(500)
+        res.send('something went wrong')
     }
 })
 
@@ -34,6 +35,7 @@ router.post('/spools/create', async (req, res) => {
 
 router.get('/spools/:id', async (req, res) => {
     try {
+        console.log("GET /spools/:id")
         const id = req.params.id;
         const spool = await getSpoolById(id);
         res.send(spool), 200

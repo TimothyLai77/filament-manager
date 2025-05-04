@@ -96,14 +96,14 @@ const decreaseFilament = async (id, amount) => {
         const spool = await Spool.findByPk(id);
         if (!spool) throw new SpoolNotFoundError;
         //todo: i'm gonna comment this out for now, idk if I should actually check for enough filament?
-        //if (spool.filamentLeft - amount < 0.0) throw new NotEnoughFilamentError;
+        if (spool.filamentLeft - amount < 0.0) throw new NotEnoughFilamentError;
         console.log(`Decreasing ${id}'s filament by ${amount}`)
         spool.filamentLeft = spool.filamentLeft - amount;
         spool.filamentUsed = spool.filamentUsed + amount;
         await spool.save();
         return spool.toJSON();
     } catch (e) {
-        return e;
+        throw e;
     }
 
 

@@ -1,6 +1,6 @@
 import { atom } from 'jotai'
 import { loadable } from 'jotai/utils'
-
+// todo: im pretty sure this is 'wrong'
 const asyncSpoolArrayAtom = atom(async () => {
     const response = await fetch('/api/spools');
 
@@ -31,4 +31,52 @@ export const asyncNewSpoolAtom = atom(
     }
 )
 
+// atoms for selecting which spool to edit/create jobs/view details for
+export const selectedSpoolAtom = atom('');
+const asyncSelectedSpoolDetailsAtom = atom(async (get) => {
+    try {
+        const response = await fetch(`/api/spools/${get(selectedSpoolAtom)}`, {
+            method: 'GET',
+        });
+        const data = await response.json();
+        //set(asyncSelectedSpoolDetailsAtom, data);
+        return data;
+    } catch (e) {
+        return 'error';
+    }
+
+})
+
+// ATOMS related to creating print jobs
+export const newJobBaseAtom = atom(null);
+export const asyncNewJobAtom = atom(
+    get => get(newJobBaseAtom),
+    async (get, set, payload) => {
+        try {
+            const response = await fetch('/api/jobs/create', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
+            if (!response.ok) {
+                //console.log('bad status')
+                if (response.status == 501) {
+                    set(newJobBaseAtom, new Error('not enough filament'));
+                } else {
+                    set(newJobBaseAtom, new Error('server error'));
+                }
+            }
+            const data = await response.json();
+            set(newJobBaseAtom, data);
+        } catch (e) {
+            throw e;
+            //set(newJobBaseAtom, e);
+        }
+    }
+)
+
+
 export const loadableSpoolArrayAtom = loadable(asyncSpoolArrayAtom);
+export const loadableSelectedSpoolDetailsAtom = loadable(asyncSelectedSpoolDetailsAtom);
