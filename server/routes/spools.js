@@ -32,7 +32,7 @@ router.post('/spools/create', async (req, res) => {
 })
 
 
-
+//todo: uh i don't actually know why i wrote this?
 router.get('/history/:id', async (req, res) => {
     try {
         console.log("GET /jobs/history/:id")

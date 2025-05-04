@@ -50,14 +50,15 @@ router.get('/', async (req, res) => {
 /**
  * Returns a list of jobs that the spool has done.
  */
-router.get('/:spoolId', async (req, res) => {
+router.get('/history/:spoolId', async (req, res) => {
     try {
         console.log('GET /API/jobs/:spoolId');
-        const spoolId = req.params.id;
+        const spoolId = req.params.spoolId;
         const data = await getJobsBySpool(spoolId);
         res.status(200).send(data);
     } catch (e) {
-        throw e;
+        res.status(500);
+        res.send(e)
     }
 })
 
