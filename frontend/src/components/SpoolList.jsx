@@ -56,7 +56,12 @@ const SpoolList = () => {
               <Table.Cell>{spool.filamentLeft.toFixed(2)}</Table.Cell>
               <Table.Cell align="end">
                 <HStack justifyContent="right">
-                  <Button size="xs">
+                  <Button
+                    size="xs"
+                      onClick={() => {
+                      navigate(`/job-history/${spool.id}`);
+                    }}
+                  >
                     <MdInfoOutline />
                     Details
                   </Button>

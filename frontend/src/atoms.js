@@ -75,8 +75,23 @@ export const asyncNewJobAtom = atom(
             //set(newJobBaseAtom, e);
         }
     }
-)
 
+)
+// atoms related to getting a list of jobs
+const jobArrayAtom = atom([]);
+const asyncJobArrayAtom = atom(
+    get => get(jobArrayAtom),
+    async (get, set) => {
+        try {
+            const response = await fetch(`/api/jobs/history/${get(selectedSpoolAtom)}`);
+            const data = await response.json;
+            set(jobArrayAtom, data);
+        } catch (e) {
+            throw e;
+        }
+    }
+)
 
 export const loadableSpoolArrayAtom = loadable(asyncSpoolArrayAtom);
 export const loadableSelectedSpoolDetailsAtom = loadable(asyncSelectedSpoolDetailsAtom);
+export const loadableJobArrayAtom = loadable(asyncJobArrayAtom);
