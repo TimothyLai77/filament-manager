@@ -59,7 +59,7 @@ const SpoolList = () => {
                   <Button
                     size="xs"
                       onClick={() => {
-                      navigate(`/job-history/${spool.id}`);
+                      navigate(`/details/${spool.id}`);
                     }}
                   >
                     <MdInfoOutline />
@@ -72,7 +72,7 @@ const SpoolList = () => {
                   <Button size="xs"
                     onClick={() => {
                       //setSelectedSpool(spool.id);
-                      navigate(`/${spool.id}/create-job`);
+                      navigate(`/create-job/${spool.id}`);
                     }}
                   >
                     <MdLibraryAdd />
