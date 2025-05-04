@@ -10,8 +10,6 @@ function App() {
       <Routes>
         <Route path='/' element={<SpoolPage />} />
         <Route path='/create-spool' element={<CreateSpoolPage/>}/ >
-        {/* <Route path='/create-job' element={<CreateJobPage />} /> */}
-        {/* //todo: uh flip this around so it's create-job/:spoolId... */}
         <Route path='/create-job/:spoolId' element={<CreateJobPage />}/>
         <Route path='/details/:spoolId' element={<JobHistoryPage />}/>
       </Routes>
