@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const { createJob, getJobs } = require('../modules/jobLogic.js');
+const { createJob, getJobs, getJobsBySpool } = require('../modules/jobLogic.js');
 const { NotEnoughFilamentError } = require('../errors/errors.js');
 
 
@@ -45,6 +45,20 @@ router.get('/', async (req, res) => {
         res.send(e)
     }
 
+})
+
+/**
+ * Returns a list of jobs that the spool has done.
+ */
+router.get('/:spoolId', async (req, res) => {
+    try {
+        console.log('GET /API/jobs/:spoolId');
+        const spoolId = req.params.id;
+        const data = await getJobsBySpool(spoolId);
+        res.status(200).send(data);
+    } catch (e) {
+        throw e;
+    }
 })
 
 module.exports = router;
