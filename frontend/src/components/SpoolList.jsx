@@ -56,7 +56,12 @@ const SpoolList = () => {
               <Table.Cell>{spool.filamentLeft.toFixed(2)}</Table.Cell>
               <Table.Cell align="end">
                 <HStack justifyContent="right">
-                  <Button size="xs">
+                  <Button
+                    size="xs"
+                      onClick={() => {
+                      navigate(`/details/${spool.id}`);
+                    }}
+                  >
                     <MdInfoOutline />
                     Details
                   </Button>
@@ -67,7 +72,7 @@ const SpoolList = () => {
                   <Button size="xs"
                     onClick={() => {
                       //setSelectedSpool(spool.id);
-                      navigate(`/${spool.id}/create-job`);
+                      navigate(`/create-job/${spool.id}`);
                     }}
                   >
                     <MdLibraryAdd />

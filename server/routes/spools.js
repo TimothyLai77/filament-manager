@@ -32,7 +32,6 @@ router.post('/spools/create', async (req, res) => {
 })
 
 
-
 router.get('/spools/:id', async (req, res) => {
     try {
         console.log("GET /spools/:id")
