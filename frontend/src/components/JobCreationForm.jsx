@@ -3,12 +3,12 @@ import { asyncNewSpoolAtom,newSpoolBaseAtom } from '../atoms.js'
 import { useAtom, atom } from 'jotai'
 import { useEffect, useState } from 'react'
 import { Toaster, toaster } from "../components/ui/toaster";
-import { newJobBaseAtom, asyncNewJobAtom, loadableSelectedSpoolDetailsAtom } from '../atoms.js';
+import { finalSelectedSpoolAtom ,newJobBaseAtom, asyncNewJobAtom, loadableSelectedSpoolDetailsAtom } from '../atoms.js';
 import SpoolDetailCard from './SpoolDetailCard.jsx';
 const JobCreationForm = () => {
 
     const [name, setName] = useState('');
-    const [spoolDetails] = useAtom(loadableSelectedSpoolDetailsAtom) 
+    const [spoolDetails,refreshSpool] = useAtom(finalSelectedSpoolAtom) 
     const [filamentAmount, setFilamentAmount] = useState('');
     const [cost, setCost] = useState(0);
 
@@ -45,6 +45,7 @@ const JobCreationForm = () => {
                     description : "New job added to database.",
                     type: "success"
                 });
+                refreshSpool()
             }
         }, 0);
  
@@ -71,8 +72,7 @@ const JobCreationForm = () => {
         }
         console.log(payload);
         if(checkPayload(payload)){
-            //console.log(payload)
-            setData(payload)
+            setData(payload);
         }else{
             console.log('form error')
              toaster.create({

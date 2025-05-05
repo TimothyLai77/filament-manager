@@ -1,5 +1,5 @@
 import { atom } from 'jotai'
-import { loadable } from 'jotai/utils'
+import { atomWithRefresh, loadable } from 'jotai/utils'
 // todo: im pretty sure this is 'wrong'
 const asyncSpoolArrayAtom = atom(async () => {
     const response = await fetch('/api/spools');
@@ -33,7 +33,7 @@ export const asyncNewSpoolAtom = atom(
 
 // atoms for selecting which spool to edit/create jobs/view details for
 export const selectedSpoolAtom = atom('');
-const asyncSelectedSpoolDetailsAtom = atom(async (get) => {
+const asyncSelectedSpoolDetailsAtom = atomWithRefresh(async (get) => {
     try {
         const response = await fetch(`/api/spools/${get(selectedSpoolAtom)}`, {
             method: 'GET',
@@ -46,10 +46,21 @@ const asyncSelectedSpoolDetailsAtom = atom(async (get) => {
     }
 
 })
+// https://github.com/pmndrs/jotai/discussions/2251#discussioncomment-9235793
+// and also https://github.com/pmndrs/jotai/discussions/2251#discussioncomment-10163733
+// seems to be a workaround for not being able to have refreshable loadable atoms
+// loadable atoms can't have a write function which is what the refresh call is
+export const finalSelectedSpoolAtom = atom(
+    (get) => get(loadableSelectedSpoolDetailsAtom),
+    (get, set) => set(asyncSelectedSpoolDetailsAtom)
+);
+
+
+
 
 // ATOMS related to creating print jobs
 export const newJobBaseAtom = atom(null);
-export const asyncNewJobAtom = atom(
+export const asyncNewJobAtom = atomWithRefresh(
     get => get(newJobBaseAtom),
     async (get, set, payload) => {
         try {
@@ -75,8 +86,8 @@ export const asyncNewJobAtom = atom(
             //set(newJobBaseAtom, e);
         }
     }
-
 )
+
 //atoms related to getting a list of jobs
 //const jobArrayAtom = atom([]);
 //  const response = await fetch(`/api/jobs/history/${get(selectedSpoolAtom)}`);
