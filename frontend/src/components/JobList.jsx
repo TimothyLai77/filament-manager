@@ -1,4 +1,4 @@
-import { Card, Text } from "@chakra-ui/react";
+import { Tag,Box,Card, FormatNumber, Text } from "@chakra-ui/react";
 import { useAtom } from "jotai";
 import { loadableJobArrayAtom } from "../atoms";
 const JobList = () => {
@@ -7,19 +7,46 @@ const JobList = () => {
     if(getJobs.state === 'hasError') return <h1>error loading history</h1>
     if(getJobs.state === 'loading') return <h1>loading</h1>
     const jobsArray = getJobs.data;
-
+    console.log(jobsArray)
+    
     return (
-        jobsArray.map((job) => {
+        jobsArray.toReversed().map((job, index) => {
             return(
             <Card.Root key={job.id}>
-                <Card.Title>
-                    {job.name}
-                </Card.Title>
+                <Card.Body>
+                    <Card.Title textStyle="2xl">
+                        #{jobsArray.length-index}: {job.name}
+                    </Card.Title>
+                    
+                    <Box>
+                        <Text as="span" textStyle="lg" fontWeight="bold">Date: </Text>
+                        <Text textStyle="lg" as="span">
+                           {job.date}
+                        </Text>
+                    </Box>
 
-                <Text>id: {job.id}</Text>
-                <Text>amount: {job.filamentAmountUsed}</Text>
-                <Text>cost: {job.cost}</Text>
-                <Text>date: {job.date}</Text>
+                    <Box>
+                        <Text as="span" textStyle="lg" fontWeight="bold">Cost: </Text>
+                        <Text textStyle="lg" as="span">
+                            <FormatNumber style="currency" currency="USD" value={job.cost}/>
+                        </Text>
+                    </Box>
+
+
+                    <Box>
+                        <Text as="span" textStyle="lg" fontWeight="bold">Filament Used: </Text>
+                        <Text textStyle="lg" as="span">
+                            <FormatNumber style="unit" unit="gram" value={job.filamentAmountUsed}/>
+                        </Text>
+                    </Box>
+
+                    <Box>
+                        <Tag.Root>
+                            <Tag.Label>{job.id}</Tag.Label>
+                        </Tag.Root>
+                    </Box>
+                </Card.Body>
+ 
         
 
             </Card.Root>

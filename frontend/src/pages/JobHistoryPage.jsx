@@ -1,4 +1,5 @@
 import JobList from "../components/JobList";
+import { Stack } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
 import { useAtom } from "jotai";
 import { selectedSpoolAtom } from "../atoms";
@@ -16,8 +17,11 @@ const JobHistoryPage = () => {
     return(
         <>
             <HomeButton />
-            <SpoolDetailCard />
-            <JobList /> 
+            <Stack margin={5}>
+                <SpoolDetailCard />
+                <JobList /> 
+            </Stack>
+
         </>
     );
 }
