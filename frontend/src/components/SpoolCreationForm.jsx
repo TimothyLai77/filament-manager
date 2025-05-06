@@ -1,8 +1,9 @@
 import { Button, Input, Stack, Card, Text, Field, Fieldset} from '@chakra-ui/react'
-import { asyncNewSpoolAtom,newSpoolBaseAtom } from '../atoms.js'
+import { asyncNewSpoolAtom,newSpoolBaseAtom, finalSpoolArrayAtom } from '../atoms.js'
 import { useAtom, atom } from 'jotai'
 import { useEffect, useState } from 'react'
 import { Toaster, toaster } from "../components/ui/toaster";
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const SpoolCreationForm = () => {
 
@@ -13,11 +14,12 @@ const SpoolCreationForm = () => {
     const [finish, setFinish] = useState('');
     const [initialWeight, setInitialWeight] = useState(1000);
     const [cost, setCost] = useState(0);
+    const [spoolArray, refreshSpoolArray] = useAtom(finalSpoolArrayAtom)
 
     const [, setData] = useAtom(asyncNewSpoolAtom);
     // todo: hmmm i don't think this is the proper way... 
-    const [newSpool] = useAtom(newSpoolBaseAtom);
-
+    const [newSpool,setNewSpool] = useAtom(newSpoolBaseAtom);
+    const navigate = useNavigate();
 
     useEffect(() => {
         //console.log(newSpool)
@@ -33,11 +35,16 @@ const SpoolCreationForm = () => {
                     type: "error"
                 })
             }else{
+                // clear the state so when navigating back to spool creation page it won't show
+                // a toast
+                setNewSpool(null);
                 toaster.create({
                     title: "Success",
                     description : "New spool added to database.",
                     type: "success"
                 });
+                clearInputs();
+                refreshSpoolArray();
             }
         }, 0);
  
@@ -78,7 +85,15 @@ const SpoolCreationForm = () => {
     }
 
 
-    
+    const clearInputs = () => {
+        setName('');
+        setBrand('');
+        setMaterial('');
+        setColour('');
+        setFinish('');
+        setInitialWeight(1000);
+        setCost(0);
+    }
 
     //todo: clean this up so its dynamically generated
     const generateFields = () => {
