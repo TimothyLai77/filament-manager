@@ -1,11 +1,19 @@
-import { atom } from 'jotai'
+import { atom, useAtom } from 'jotai'
 import { atomWithRefresh, loadable } from 'jotai/utils'
-// todo: im pretty sure this is 'wrong'
-const asyncSpoolArrayAtom = atom(async () => {
-    const response = await fetch('/api/spools');
 
-    return response.json();
-});
+// atoms related to getting the main list of spools
+const asyncSpoolArrayAtom = atomWithRefresh(
+    async () => {
+        const response = await fetch('/api/spools');
+        const data = await response.json();
+        return data;
+    }
+);
+export const finalSpoolArrayAtom = atom(
+    (get) => get(loadableSpoolArrayAtom),
+    (get, set) => set(asyncSpoolArrayAtom)
+)
+
 
 // not really sure how this works? but looks like the tutorials use
 // base atoms to store stuff, and we have the async atoms that can modify it?
