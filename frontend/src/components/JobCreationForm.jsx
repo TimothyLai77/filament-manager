@@ -46,6 +46,7 @@ const JobCreationForm = () => {
                     type: "success"
                 });
                 refreshSpool()
+                clearInputs()
             }
         }, 0);
  
@@ -61,7 +62,11 @@ const JobCreationForm = () => {
         if(isNaN(payload.cost)) return false;
         return true;
     }
-
+    const clearInputs = () => {
+        setName('')
+        setFilamentAmount('')
+        setCost(0);
+    }
     const handleSubmit = (e) => {
         e.preventDefault();
         const payload = {
