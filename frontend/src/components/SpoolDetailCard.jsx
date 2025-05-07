@@ -1,8 +1,9 @@
-import { selectedSpoolAtom, loadableSelectedSpoolDetailsAtom } from '../atoms.js';
+import { selectedSpoolAtom, loadableSelectedSpoolDetailsAtom,showEditButtonAtom } from '../atoms.js';
 import { useAtom } from 'jotai';
-import { Text, Box, Card, Progress, Stat,FormatNumber, HStack, Stack } from '@chakra-ui/react';
+import { Button,Text, Box, Card, Progress, Stat,FormatNumber, HStack, Stack } from '@chakra-ui/react';
 
 const SpoolDetailCard = () => {
+    const [showEditButton] = useAtom(showEditButtonAtom)
     const [selectedSpool] = useAtom(selectedSpoolAtom);
     const [spool] = useAtom(loadableSelectedSpoolDetailsAtom);
     const spoolText = () => {
@@ -20,6 +21,20 @@ const SpoolDetailCard = () => {
         //console.log(spoolData)
         const percentLeft = spoolData.filamentLeft/spoolData.initialWeight*100
         const costPerGram = spoolData.cost / spoolData.initialWeight
+  
+        const editButton = () => {
+            if(showEditButton){
+                console.log('pls show')
+                return(
+                    <Box>
+                        <Button>Edit Spool</Button>
+                    </Box>
+                )
+            }else{
+                console.log('brain no work')
+            }
+        }
+
         return (
             <>
                 <Card.Title textStyle="3xl">
@@ -80,8 +95,10 @@ const SpoolDetailCard = () => {
                     <Box>
                         <Text as="span" textStyle="lg" fontWeight="bold">Date Added: </Text>
                         <Text textStyle="lg" as="span">{spoolData.dateAdded}</Text>
-                    </Box>         
+                    </Box>        
+                    
                 </Stack>
+               {editButton()} 
        
             </>
         )

@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import { Toaster, toaster } from "../components/ui/toaster";
 import { finalSelectedSpoolAtom ,newJobBaseAtom, asyncNewJobAtom, loadableSelectedSpoolDetailsAtom } from '../atoms.js';
 import SpoolDetailCard from './SpoolDetailCard.jsx';
-const JobCreationForm = () => {
+const JobCreationForm = ({showEditButton}) => {
 
     const [name, setName] = useState('');
     const [spoolDetails,refreshSpool] = useAtom(finalSelectedSpoolAtom) 
