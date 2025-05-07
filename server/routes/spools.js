@@ -1,11 +1,27 @@
 const express = require('express');
 const router = express.Router();
+const { SpoolNotFoundError } = require('../errors/errors.js');
 
 const {
     createSpool,
     getSpools,
     getSpoolById,
-} = require('../modules/spoolLogic.js')
+    editSpool,
+} = require('../modules/spoolLogic.js');
+
+
+router.put('/spools/edit/:spoolId', async (req, res) => {
+    try {
+        console.log('PUT: /spools/edit/:spoolId');
+        const spoolId = req.params.spoolId;
+
+        const editedSpool = await editSpool(spoolId, req.body);
+        res.status(200).send(editedSpool);
+    } catch (e) {
+        res.status(500).send(e)
+    }
+})
+
 
 router.get('/spools', async (req, res) => {
     try {
