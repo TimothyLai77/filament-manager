@@ -1,7 +1,7 @@
 import {Input,Fieldset,Field,Box,CloseButton, Dialog, Portal,Button} from '@chakra-ui/react'
 import { MdModeEdit } from "react-icons/md";
 import { useAtom } from 'jotai';
-import { editSpoolPayloadAtom,loadableSelectedSpoolDetailsAtom} from '../atoms'
+import { asyncPutSpoolEditAtom,loadableSelectedSpoolDetailsAtom} from '../atoms'
 import { useState } from 'react';
 const EditSpoolDialog = () => {
     const [spool] = useAtom(loadableSelectedSpoolDetailsAtom);
@@ -27,7 +27,7 @@ const EditSpoolDialog = () => {
     const [cost, setCost] = useState(spoolData.cost);
     const [filamentUsed, setFilamentUsed] = useState(spoolData.filamentUsed)
     
-    const [,setPayload] = useAtom(editSpoolPayloadAtom);
+    const [,setPayload] = useAtom(asyncPutSpoolEditAtom);
 
     // pain
     const verifyPayload = (payload) => {
@@ -38,24 +38,29 @@ const EditSpoolDialog = () => {
         // allow finish to be empty string
         // shouldn't allow new initial weight be less than what is left
         if(payload.cost <= 0 || isNaN(payload.cost)) return false;
+        if(isNaN(payload.initialWeight)) return false;
+        if(isNaN(payload.filamentUsed)) return false;
         if(initialWeight < filamentUsed) return false;
         if(filamentUsed > initialWeight) return false; // im having a brain fart this is redundant??
         return true;
     }
 
     const handleSave = () => {
+        console.log(spoolData)
         const payload = {
+            id: spoolData.id,
             name: name,
             brand: brand,
             material: material,
             colour: colour,
             finish: finish,
-            initialWeight: initialWeight,
+            initialWeight: parseFloat(initialWeight),
             cost: parseFloat(cost),
-            filamentUsed: filamentUsed
+            filamentUsed: parseFloat(filamentUsed)
         }
         if(verifyPayload(payload)){
             console.log('valid payload')
+            setPayload(payload)
         }else{
             console.log('invalid payload', payload)
         }
