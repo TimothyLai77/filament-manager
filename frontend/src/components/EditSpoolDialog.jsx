@@ -1,7 +1,8 @@
-import {Box,CloseButton, Dialog, Portal,Button} from '@chakra-ui/react'
+import {Input,Fieldset,Field,Box,CloseButton, Dialog, Portal,Button} from '@chakra-ui/react'
 import { MdModeEdit } from "react-icons/md";
 import { useAtom } from 'jotai';
 import { loadableSelectedSpoolDetailsAtom} from '../atoms'
+import SpoolEditForm from './SpoolEditForm';
 
 const EditSpoolDialog = () => {
     const [spool] = useAtom(loadableSelectedSpoolDetailsAtom);
@@ -16,11 +17,6 @@ const EditSpoolDialog = () => {
         )
     }
     const spoolData = spool.data
-    //console.log(spoolData)
-    const percentLeft = spoolData.filamentLeft/spoolData.initialWeight*100
-    const costPerGram = spoolData.cost / spoolData.initialWeight
-
-
 
 
     return(
@@ -38,10 +34,7 @@ const EditSpoolDialog = () => {
                 <Dialog.Title>Edit Spool: {`${spoolData.name}`}</Dialog.Title>
                 </Dialog.Header>
                 <Dialog.Body>
-                <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-                    eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                </p>
+                    <SpoolEditForm spoolData={spoolData}/>
                 </Dialog.Body>
                 <Dialog.Footer>
                 <Dialog.ActionTrigger asChild>
