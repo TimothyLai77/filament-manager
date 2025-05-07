@@ -157,7 +157,8 @@ const editSpool = async (id, newDataObj) => {
         if (newDataObj.initialWeight) { spool.initialWeight = newDataObj.initialWeight };
         if (newDataObj.cost) { spool.cost = newDataObj.cost };
         if (newDataObj.filamentUsed) { spool.filamentUsed = newDataObj.filamentUsed };
-        if (newDataObj.filamentLeft) { spool.filamentLeft = newDataObj.filamentLeft };
+        //console.log(`${newDataObj.initialWeight} - ${newDataObj.filamentUsed} = ${newDataObj.initialWeight - newDataObj.filamentUsed}`)
+        spool.filamentLeft = newDataObj.initialWeight - newDataObj.filamentUsed;
         await spool.save();
         return spool.toJSON();
     } catch (e) {
