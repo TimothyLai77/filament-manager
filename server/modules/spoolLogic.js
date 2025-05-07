@@ -149,16 +149,16 @@ const editSpool = async (id, newDataObj) => {
          * 
          * todo: i also just don't like this in general...
          */
-        if (!newDataObj.spool) throw new SpoolNotFoundError;
         if (newDataObj.name) { spool.name = newDataObj.name };
         if (newDataObj.brand) { spool.brand = newDataObj.brand };
         if (newDataObj.material) { spool.material = newDataObj.material };
         if (newDataObj.colour) { spool.colour = newDataObj.colour };
         if (newDataObj.finish) { spool.finish = newDataObj.finish };
-        if (newDataObj.initialWeight) { spool.initialWeight = newDataObj.weight };
+        if (newDataObj.initialWeight) { spool.initialWeight = newDataObj.initialWeight };
         if (newDataObj.cost) { spool.cost = newDataObj.cost };
         if (newDataObj.filamentUsed) { spool.filamentUsed = newDataObj.filamentUsed };
-        if (newDataObj.filamentLeft) { spool.filamentLeft = newDataObj.filamentLeft };
+        //console.log(`${newDataObj.initialWeight} - ${newDataObj.filamentUsed} = ${newDataObj.initialWeight - newDataObj.filamentUsed}`)
+        spool.filamentLeft = newDataObj.initialWeight - newDataObj.filamentUsed;
         await spool.save();
         return spool.toJSON();
     } catch (e) {

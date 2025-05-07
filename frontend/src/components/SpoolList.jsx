@@ -3,13 +3,11 @@ import {  Text, Flex, Table, Card, Button, HStack, Center, Separator } from "@ch
 import { MdModeEdit,MdLibraryAdd, MdInfoOutline} from "react-icons/md";
 import { useAtom } from 'jotai'
 import { useNavigate } from 'react-router-dom'
-import { selectedSpoolAtom } from "../atoms.js";
-import { useEffect } from "react";
+
 
 const SpoolList = () => {
   const navigate = useNavigate();
-  const [spools,refreshSpoolArray] = useAtom(finalSpoolArrayAtom)
-  const [,setSelectedSpool] = useAtom(selectedSpoolAtom);
+  const [spools] = useAtom(finalSpoolArrayAtom)
   if (spools.state === 'hasError') return <h1>Something really broke...</h1>
   if (spools.state === 'loading') return <h1>loading</h1>
   const spoolList = spools.data;
@@ -67,14 +65,12 @@ const SpoolList = () => {
                     <MdInfoOutline />
                     Details
                   </Button>
-                  <Button size="xs">
-                    <MdModeEdit/>
-                    Edit
-                  </Button>
+
                   <Button size="xs"
                     onClick={() => {
                       //setSelectedSpool(spool.id);
                       navigate(`/create-job/${spool.id}`);
+                      
                     }}
                   >
                     <MdLibraryAdd />

@@ -1,10 +1,16 @@
-import { selectedSpoolAtom, loadableSelectedSpoolDetailsAtom } from '../atoms.js';
+import { selectedSpoolAtom, loadableSelectedSpoolDetailsAtom,showEditButtonAtom, finalSelectedSpoolAtom } from '../atoms.js';
 import { useAtom } from 'jotai';
+import { useEffect, useState } from 'react';
 import { Text, Box, Card, Progress, Stat,FormatNumber, HStack, Stack } from '@chakra-ui/react';
-
+import EditSpoolDialog from './EditSpoolDialog.jsx';
 const SpoolDetailCard = () => {
+    const [showEditButton] = useAtom(showEditButtonAtom)
     const [selectedSpool] = useAtom(selectedSpoolAtom);
-    const [spool] = useAtom(loadableSelectedSpoolDetailsAtom);
+    //const [spool] = useAtom(loadableSelectedSpoolDetailsAtom);
+    const [spool] = useAtom(finalSelectedSpoolAtom);
+    
+    
+    
     const spoolText = () => {
         if(spool.state === 'loading'){
             return (
@@ -18,8 +24,12 @@ const SpoolDetailCard = () => {
         }
         const spoolData = spool.data
         //console.log(spoolData)
-        const percentLeft = spoolData.filamentLeft/spoolData.initialWeight*100
-        const costPerGram = spoolData.cost / spoolData.initialWeight
+        
+        let percentLeft = spoolData.filamentLeft/spoolData.initialWeight*100
+        let costPerGram = spoolData.cost / spoolData.initialWeight
+    
+   
+
         return (
             <>
                 <Card.Title textStyle="3xl">
@@ -80,8 +90,11 @@ const SpoolDetailCard = () => {
                     <Box>
                         <Text as="span" textStyle="lg" fontWeight="bold">Date Added: </Text>
                         <Text textStyle="lg" as="span">{spoolData.dateAdded}</Text>
-                    </Box>         
+                       
+                    </Box>        
+                    {showEditButton ? <EditSpoolDialog /> : <></>}
                 </Stack>
+              
        
             </>
         )

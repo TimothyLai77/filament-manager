@@ -68,6 +68,8 @@ export const finalSelectedSpoolAtom = atom(
 
 // ATOMS related to creating print jobs
 export const newJobBaseAtom = atom(null);
+
+// todo: i have no idea why this is atomWithRefresh? did i do this on purpose???
 export const asyncNewJobAtom = atomWithRefresh(
     get => get(newJobBaseAtom),
     async (get, set, payload) => {
@@ -106,6 +108,29 @@ const asyncJobArrayAtom = atom(async (get) => {
     return await response.json();
 }
 
+)
+//ATOMS for editing spools
+// atom for whether or not to show the edit button on the spool detail card
+// i have no idea if this should actually be an atom or not...
+export const showEditButtonAtom = atom(false);
+export const asyncPutSpoolEditAtom = atom(
+    null,
+    async (get, set, payload) => {
+        try {
+            const response = await fetch(`/api/spools/edit/${payload.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
+            const data = await response.json();
+            set(finalSelectedSpoolAtom); // refresh the spool
+            return data;
+        } catch (e) {
+            return e
+        }
+    }
 )
 
 
