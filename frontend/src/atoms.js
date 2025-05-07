@@ -125,6 +125,7 @@ export const asyncPutSpoolEditAtom = atom(
                 body: JSON.stringify(payload)
             });
             const data = await response.json();
+            set(finalSelectedSpoolAtom); // refresh the spool
             return data;
         } catch (e) {
             return e
