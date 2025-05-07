@@ -1,11 +1,14 @@
 import { selectedSpoolAtom, loadableSelectedSpoolDetailsAtom,showEditButtonAtom } from '../atoms.js';
 import { useAtom } from 'jotai';
-import { Button,Text, Box, Card, Progress, Stat,FormatNumber, HStack, Stack } from '@chakra-ui/react';
-import { MdModeEdit } from "react-icons/md";
+import { Text, Box, Card, Progress, Stat,FormatNumber, HStack, Stack } from '@chakra-ui/react';
+import EditSpoolDialog from './EditSpoolDialog.jsx';
 const SpoolDetailCard = () => {
     const [showEditButton] = useAtom(showEditButtonAtom)
     const [selectedSpool] = useAtom(selectedSpoolAtom);
     const [spool] = useAtom(loadableSelectedSpoolDetailsAtom);
+    
+    
+    
     const spoolText = () => {
         if(spool.state === 'loading'){
             return (
@@ -21,17 +24,10 @@ const SpoolDetailCard = () => {
         //console.log(spoolData)
         const percentLeft = spoolData.filamentLeft/spoolData.initialWeight*100
         const costPerGram = spoolData.cost / spoolData.initialWeight
-  
-        const editButton = () => {
-            if(showEditButton){
-                return(
-                    <Box display="flex" justifyContent="flex-end">
-                        <Button><MdModeEdit/>Edit Spool</Button>
-                    </Box>
-                )   
-            }else{
-            }
-        }
+    
+    
+
+
 
         return (
             <>
@@ -95,7 +91,7 @@ const SpoolDetailCard = () => {
                         <Text textStyle="lg" as="span">{spoolData.dateAdded}</Text>
                        
                     </Box>        
-                     {editButton()} 
+                    < EditSpoolDialog / >
                 </Stack>
               
        
