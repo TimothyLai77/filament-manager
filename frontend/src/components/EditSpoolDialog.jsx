@@ -120,7 +120,7 @@ const EditSpoolDialog = () => {
     }
 
     return(
-        <Dialog.Root size="xl">
+        <Dialog.Root size="xl" initialFocusEl="null">
         <Dialog.Trigger asChild>
                 <Box display="flex" justifyContent="flex-end">
                     <Button><MdModeEdit/>Edit Spool</Button>
