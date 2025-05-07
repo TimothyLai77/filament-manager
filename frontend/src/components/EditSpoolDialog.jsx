@@ -38,10 +38,12 @@ const EditSpoolDialog = () => {
         // allow finish to be empty string
         // shouldn't allow new initial weight be less than what is left
         if(payload.cost <= 0 || isNaN(payload.cost)) return false;
+
+        console.log(initialWeight < filamentUsed)
+
         if(isNaN(payload.initialWeight)) return false;
         if(isNaN(payload.filamentUsed)) return false;
-        if(initialWeight < filamentUsed) return false;
-        if(filamentUsed > initialWeight) return false; // im having a brain fart this is redundant??
+        if(payload.initialWeight < payload.filamentUsed) return false;
         return true;
     }
 
@@ -59,10 +61,10 @@ const EditSpoolDialog = () => {
             filamentUsed: parseFloat(filamentUsed)
         }
         if(verifyPayload(payload)){
-            console.log('valid payload')
+            //console.log('valid payload')
             setPayload(payload)
         }else{
-            console.log('invalid payload', payload)
+            console.log('invalid payload', payload);
         }
     }
 
