@@ -7,7 +7,28 @@ import {
     Text
  } from "@chakra-ui/react";
 import { MdCheck } from "react-icons/md"
+import { useAtom } from "jotai";
+import { markSpoolAsFinishedAtom, finalSelectedSpoolAtom ,selectedSpoolAtom} from "../atoms";
+import { useEffect,useState } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
+
 const MarkSpoolAsFinishedButton = () => {
+    const navigate = useNavigate()
+    const [spool] = useAtom(finalSelectedSpoolAtom);
+    const [,markSpool] = useAtom(markSpoolAsFinishedAtom);
+    const [,setSelectedSpool] = useAtom(selectedSpoolAtom)
+    const handleConfirm = async () => {
+
+        if((await markSpool(spool.data.id)).isEmpty){
+            // setSelectedSpool('') // set selected spool to none.
+            navigate('/') // go back
+        }else{
+            console.log('pain')
+        }
+        
+    }
+
+
     return(
         <Dialog.Root>
             <Dialog.Trigger asChild>
@@ -32,7 +53,7 @@ const MarkSpoolAsFinishedButton = () => {
                 <Dialog.ActionTrigger asChild>
                     <Button variant="outline">Cancel</Button>
                 </Dialog.ActionTrigger>
-                <Button>Mark spool as Finished</Button>
+                <Button onClick={handleConfirm}>Mark spool as Finished</Button>
                 </Dialog.Footer>
                 <Dialog.CloseTrigger asChild>
                 <CloseButton size="sm" />
