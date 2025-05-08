@@ -167,4 +167,4 @@ const editSpool = async (id, newDataObj) => {
 }
 
 
-export { createSpool, getSpoolById, getSpools, deleteSpool, decreaseFilament, editSpool, incrementJobCount };
+export { markSpoolAsEmpty, createSpool, getSpoolById, getSpools, deleteSpool, decreaseFilament, editSpool, incrementJobCount };
