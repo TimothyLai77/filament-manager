@@ -1,10 +1,11 @@
-import { selectedSpoolAtom, loadableSelectedSpoolDetailsAtom,showEditButtonAtom, finalSelectedSpoolAtom } from '../atoms.js';
+import { selectedSpoolAtom,showSpoolManagementButtonsAtom, finalSelectedSpoolAtom } from '../atoms.js';
 import { useAtom } from 'jotai';
 import { useEffect, useState } from 'react';
 import { Text, Box, Card, Progress, Stat,FormatNumber, HStack, Stack } from '@chakra-ui/react';
 import EditSpoolDialog from './EditSpoolDialog.jsx';
+import MarkSpoolAsFinishedButton from './MarkSpoolAsFinishedButton.jsx';
 const SpoolDetailCard = () => {
-    const [showEditButton] = useAtom(showEditButtonAtom)
+    const [showEditButton] = useAtom(showSpoolManagementButtonsAtom)
     const [selectedSpool] = useAtom(selectedSpoolAtom);
     //const [spool] = useAtom(loadableSelectedSpoolDetailsAtom);
     const [spool] = useAtom(finalSelectedSpoolAtom);
@@ -32,10 +33,12 @@ const SpoolDetailCard = () => {
 
         return (
             <>
-                <Card.Title textStyle="3xl">
-                    {`Selected Spool: ${spoolData.name}`}
+                <Card.Title as="span" textStyle="3xl">
+                    { spoolData.isEmpty ? <Text textStyle="4xl" color='red' >Status: Spool Finished</Text> : <></>}
+                    {`Selected Spool: ${spoolData.name}`} 
                 </Card.Title>
 
+                
                     <Stat.Root w={{ base: "100%", sm: "100%", md: "auto", lg: "50%" }} marginTop={3}>
                     <Stat.Label textStyle="md">Filament Left / Total</Stat.Label>
                     <Stat.ValueText textStyle="lg">
@@ -91,8 +94,12 @@ const SpoolDetailCard = () => {
                         <Text as="span" textStyle="lg" fontWeight="bold">Date Added: </Text>
                         <Text textStyle="lg" as="span">{spoolData.dateAdded}</Text>
                        
-                    </Box>        
-                    {showEditButton ? <EditSpoolDialog /> : <></>}
+                    </Box>   
+                    <Box display="flex" justifyContent="flex-end" gap="5">
+                        {showEditButton && !spoolData.isEmpty ? <EditSpoolDialog /> : <></>}
+                        {showEditButton && !spoolData.isEmpty ? <MarkSpoolAsFinishedButton /> : <></>}
+                    </Box>     
+
                 </Stack>
               
        

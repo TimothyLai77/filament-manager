@@ -7,8 +7,20 @@ const {
     getSpools,
     getSpoolById,
     editSpool,
+    markSpoolAsEmpty
 } = require('../modules/spoolLogic.js');
 
+router.put('/spools/mark-finished/:spoolId', async (req, res) => {
+    try {
+        console.log(`PUT: /spools/mark-finished/${req.params.spoolId}`);
+        const spoolId = req.params.spoolId;
+        // function returns Spool with the isFinished set to True
+        const returnedSpool = await markSpoolAsEmpty(spoolId);
+        res.status(200).send(returnedSpool);
+    } catch (e) {
+        res.status(500).send(e)
+    }
+})
 
 router.put('/spools/edit/:spoolId', async (req, res) => {
     try {
