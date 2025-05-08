@@ -33,10 +33,12 @@ const SpoolDetailCard = () => {
 
         return (
             <>
-                <Card.Title textStyle="3xl">
-                    {`Selected Spool: ${spoolData.name}`}
+                <Card.Title as="span" textStyle="3xl">
+                    { spoolData.isEmpty ? <Text textStyle="4xl" color='red' >Status: Spool Finished</Text> : <></>}
+                    {`Selected Spool: ${spoolData.name}`} 
                 </Card.Title>
 
+                
                     <Stat.Root w={{ base: "100%", sm: "100%", md: "auto", lg: "50%" }} marginTop={3}>
                     <Stat.Label textStyle="md">Filament Left / Total</Stat.Label>
                     <Stat.ValueText textStyle="lg">
@@ -94,8 +96,8 @@ const SpoolDetailCard = () => {
                        
                     </Box>   
                     <Box display="flex" justifyContent="flex-end" gap="5">
-                        {showEditButton ? <EditSpoolDialog /> : <></>}
-                        {showEditButton ? <MarkSpoolAsFinishedButton /> : <></>}
+                        {showEditButton && !spoolData.isEmpty ? <EditSpoolDialog /> : <></>}
+                        {showEditButton && !spoolData.isEmpty ? <MarkSpoolAsFinishedButton /> : <></>}
                     </Box>     
 
                 </Stack>
