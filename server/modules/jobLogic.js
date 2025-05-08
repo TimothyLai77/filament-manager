@@ -50,9 +50,15 @@ const createJob = async (spoolId, dataObj) => {
         const spool = await Spool.findByPk(spoolId);
         if (!spool) throw new SpoolNotFoundError;
 
-        // calculate total cost for print
-        const costPerGram = spool.cost / spool.initialWeight;
-        const cost = dataObj.filamentAmountUsed * costPerGram;
+        // calculate total cost for print if no information was passed
+        let cost = NaN;
+        if (dataObj.cost == null) {
+            const costPerGram = spool.cost / spool.initialWeight;
+            cost = dataObj.filamentAmountUsed * costPerGram;
+        } else {
+            cost = dataObj.cost;
+        }
+
 
         await decreaseFilament(spoolId, dataObj.filamentAmountUsed);
         await incrementJobCount(spoolId);
@@ -60,13 +66,14 @@ const createJob = async (spoolId, dataObj) => {
             id: uniqid('job-'),
             name: dataObj.name,
             filamentAmountUsed: dataObj.filamentAmountUsed,
-            cost: cost.toFixed(2),
+            cost: cost.toFixed(),
             date: new Date(),
             spoolId: spoolId
         })
 
         return newJob.toJSON();
     } catch (e) {
+        //console.log(`CAUGHT: ${e}`)
         throw e;
     }
 }
