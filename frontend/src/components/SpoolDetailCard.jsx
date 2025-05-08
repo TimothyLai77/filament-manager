@@ -1,10 +1,11 @@
-import { selectedSpoolAtom, loadableSelectedSpoolDetailsAtom,showEditButtonAtom, finalSelectedSpoolAtom } from '../atoms.js';
+import { selectedSpoolAtom,showSpoolManagementButtonsAtom, finalSelectedSpoolAtom } from '../atoms.js';
 import { useAtom } from 'jotai';
 import { useEffect, useState } from 'react';
 import { Text, Box, Card, Progress, Stat,FormatNumber, HStack, Stack } from '@chakra-ui/react';
 import EditSpoolDialog from './EditSpoolDialog.jsx';
+//import MarkSpoolAsFinishedButton from './MarkSpoolAsFinishedButton.jsx';
 const SpoolDetailCard = () => {
-    const [showEditButton] = useAtom(showEditButtonAtom)
+    const [showEditButton] = useAtom(showSpoolManagementButtonsAtom)
     const [selectedSpool] = useAtom(selectedSpoolAtom);
     //const [spool] = useAtom(loadableSelectedSpoolDetailsAtom);
     const [spool] = useAtom(finalSelectedSpoolAtom);

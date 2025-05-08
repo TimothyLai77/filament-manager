@@ -112,7 +112,7 @@ const asyncJobArrayAtom = atom(async (get) => {
 //ATOMS for editing spools
 // atom for whether or not to show the edit button on the spool detail card
 // i have no idea if this should actually be an atom or not...
-export const showEditButtonAtom = atom(false);
+export const showSpoolManagementButtonsAtom = atom(false);
 export const asyncPutSpoolEditAtom = atom(
     null,
     async (get, set, payload) => {
