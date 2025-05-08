@@ -10,7 +10,7 @@ const {
     markSpoolAsEmpty
 } = require('../modules/spoolLogic.js');
 
-router.put('spools/mark-finished/:spoolId', async (req, res) => {
+router.put('/spools/mark-finished/:spoolId', async (req, res) => {
     try {
         console.log(`PUT: /spools/mark-finished/${req.params.spoolId}`);
         const spoolId = req.params.spoolId;
