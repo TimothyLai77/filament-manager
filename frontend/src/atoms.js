@@ -32,6 +32,7 @@ export const asyncNewSpoolAtom = atom(
             const data = await response.json();
             //console.log(data);
             set(newSpoolBaseAtom, data);
+            return;
         } catch (e) {
             set(newSpoolBaseAtom, e);
         }
@@ -85,12 +86,15 @@ export const asyncNewJobAtom = atomWithRefresh(
                 //console.log('bad status')
                 if (response.status == 501) {
                     set(newJobBaseAtom, new Error('not enough filament'));
+
                 } else {
                     set(newJobBaseAtom, new Error('server error'));
                 }
             }
             const data = await response.json();
             set(newJobBaseAtom, data);
+            set(finalSpoolArrayAtom) // refresh spool list
+            return;
         } catch (e) {
             throw e;
             //set(newJobBaseAtom, e);
@@ -142,6 +146,7 @@ export const markSpoolAsFinishedAtom = atom(
                 method: 'PUT'
             });
             const data = await response.json();
+            set(finalSelectedSpoolAtom) // refresh in case user goes back and checks
             return data;
         } catch (e) {
             return e
