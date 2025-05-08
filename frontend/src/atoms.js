@@ -4,7 +4,7 @@ import { atomWithRefresh, loadable } from 'jotai/utils'
 // atoms related to getting the main list of spools
 const asyncSpoolArrayAtom = atomWithRefresh(
     async () => {
-        const response = await fetch('/api/spools');
+        const response = await fetch('/api/active-spools');
         const data = await response.json();
         return data;
     }
@@ -126,6 +126,7 @@ export const asyncPutSpoolEditAtom = atom(
             });
             const data = await response.json();
             set(finalSelectedSpoolAtom); // refresh the spool
+            set(finalSpoolArrayAtom)
             return data;
         } catch (e) {
             return e
@@ -142,6 +143,8 @@ export const markSpoolAsFinishedAtom = atom(
                 method: 'PUT'
             });
             const data = await response.json();
+            set(finalSelectedSpoolAtom) // refresh in case user goes back and checks
+            set(finalSpoolArrayAtom) // refresh main list
             return data;
         } catch (e) {
             return e

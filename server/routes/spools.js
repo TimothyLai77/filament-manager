@@ -7,7 +7,8 @@ const {
     getSpools,
     getSpoolById,
     editSpool,
-    markSpoolAsEmpty
+    markSpoolAsEmpty,
+    getActiveSpools
 } = require('../modules/spoolLogic.js');
 
 router.put('/spools/mark-finished/:spoolId', async (req, res) => {
@@ -32,6 +33,18 @@ router.put('/spools/edit/:spoolId', async (req, res) => {
     } catch (e) {
         res.status(500).send(e)
     }
+})
+
+router.get('/active-spools', async (req, res) => {
+    try {
+        console.log("GET /active-spools")
+        const spools = await getActiveSpools();
+        res.send(spools), 200;
+    } catch (e) {
+        console.log(e)
+        res.status(500).send('Something went wrong.');
+    }
+
 })
 
 
