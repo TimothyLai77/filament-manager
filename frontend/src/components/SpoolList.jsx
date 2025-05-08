@@ -18,18 +18,6 @@ const SpoolList = () => {
     <>
   <Card.Root margin={5}>
     <Card.Body>
-      <Card.Title >
-       <Flex justify="space-between" align="center">
-        <Text  fontWeight="bold">Current filament</Text>
-  
-        <HStack justifyContent="right"> 
-          <Button size="xs" onClick={() => {navigate("/create-spool")}}>
-            Add Filament
-          </Button>
-        </HStack>
-       </Flex>
-        <Separator size="lg"/>
-      </Card.Title>
      
       <Table.ScrollArea margin={5} borderWidth="0px">
       <Table.Root interactive>
