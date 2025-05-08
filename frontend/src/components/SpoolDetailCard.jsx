@@ -3,7 +3,7 @@ import { useAtom } from 'jotai';
 import { useEffect, useState } from 'react';
 import { Text, Box, Card, Progress, Stat,FormatNumber, HStack, Stack } from '@chakra-ui/react';
 import EditSpoolDialog from './EditSpoolDialog.jsx';
-//import MarkSpoolAsFinishedButton from './MarkSpoolAsFinishedButton.jsx';
+import MarkSpoolAsFinishedButton from './MarkSpoolAsFinishedButton.jsx';
 const SpoolDetailCard = () => {
     const [showEditButton] = useAtom(showSpoolManagementButtonsAtom)
     const [selectedSpool] = useAtom(selectedSpoolAtom);
@@ -92,8 +92,12 @@ const SpoolDetailCard = () => {
                         <Text as="span" textStyle="lg" fontWeight="bold">Date Added: </Text>
                         <Text textStyle="lg" as="span">{spoolData.dateAdded}</Text>
                        
-                    </Box>        
-                    {showEditButton ? <EditSpoolDialog /> : <></>}
+                    </Box>   
+                    <Box display="flex" justifyContent="flex-end" gap="5">
+                        {showEditButton ? <EditSpoolDialog /> : <></>}
+                        {showEditButton ? <MarkSpoolAsFinishedButton /> : <></>}
+                    </Box>     
+
                 </Stack>
               
        
