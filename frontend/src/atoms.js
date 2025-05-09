@@ -171,6 +171,7 @@ export const markSpoolAsFinishedAtom = atom(
             const data = await response.json();
             set(finalSelectedSpoolAtom) // refresh in case user goes back and checks
             set(finalSpoolArrayAtom) // refresh main list
+            set(finalFinishedSpoolArrayAtom)
             return data;
         } catch (e) {
             return e
