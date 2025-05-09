@@ -66,7 +66,7 @@ const getActiveSpools = async (limit) => {
     }
 }
 
-const getFinishedSpools = async () => {
+const getFinishedSpools = async (limit) => {
     try {
         var spools;
         if (limit) {

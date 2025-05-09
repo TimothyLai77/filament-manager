@@ -1,6 +1,9 @@
 import { atom, useAtom } from 'jotai'
 import { atomWithRefresh, loadable } from 'jotai/utils'
 
+
+export const spoolTabSelectorAtom = atom();
+
 // atoms related to getting the main list of spools
 const asyncSpoolArrayAtom = atomWithRefresh(
     async () => {
