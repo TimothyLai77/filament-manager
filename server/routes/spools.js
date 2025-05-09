@@ -48,7 +48,7 @@ router.get('/active-spools', async (req, res) => {
 
 })
 
-router.get('/finihsed-spools', async (req, res) => {
+router.get('/finished-spools', async (req, res) => {
     try {
         console.log("GET /finished-spools")
         const spools = await getFinishedSpools();

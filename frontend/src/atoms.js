@@ -14,6 +14,20 @@ export const finalSpoolArrayAtom = atom(
     (get, set) => set(asyncSpoolArrayAtom)
 )
 
+// atoms related to getting the main list of spools
+const asyncFinishedSpoolArrayAtom = atomWithRefresh(
+    async () => {
+        const response = await fetch('/api/finished-spools');
+        const data = await response.json();
+        return data;
+    }
+);
+export const finalFinishedSpoolArrayAtom = atom(
+    (get) => get(loadableFinishedSpoolArrayAtom),
+    (get, set) => set(asyncFinishedSpoolArrayAtom)
+)
+
+
 
 // not really sure how this works? but looks like the tutorials use
 // base atoms to store stuff, and we have the async atoms that can modify it?
@@ -157,5 +171,6 @@ export const markSpoolAsFinishedAtom = atom(
 )
 
 export const loadableSpoolArrayAtom = loadable(asyncSpoolArrayAtom);
+export const loadableFinishedSpoolArrayAtom = loadable(asyncFinishedSpoolArrayAtom)
 export const loadableSelectedSpoolDetailsAtom = loadable(asyncSelectedSpoolDetailsAtom);
 export const loadableJobArrayAtom = loadable(asyncJobArrayAtom);
