@@ -15,15 +15,14 @@ const env = process.env;
  */
 const createClient = () => {
     const { Client } = pg
+    // this is expecitng a clean slate of postgres 
     const client = new Client({
-
-        // NOTE: at least my Macbook, the default database is 'postgres'
-        // and default login is just nothing... like literally `psql -d 'postgres'`
-        //user: env.DATABASE_USER,
-        // password: env.DATABASE_PASSWORD,
-        host: 'localhost',
+        host: env.DATABASE_SERVER,
+        user: env.DATABASE_USER,
+        database: env.DATABASE_NAME,
         port: env.DATABASE_PORT,
-        database: env.DATABASE_NAME.toLowerCase()
+        password: env.DATABASE_PASSWORD
+        //database: env.DATABASE_NAME.toLowerCase()
     });
     return client;
 }
@@ -96,6 +95,7 @@ const checkDbExists = async () => {
 const initDb = async () => {
     // this is kinda jank, but on first time init, need to use the default postgres db,
     //
+    console.log('initializing database')
     const { Client } = pg
     const client = new Client({
 
