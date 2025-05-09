@@ -12,10 +12,11 @@ const spool_routes = require('./routes/spools.js')
 const job_routes = require('./routes/jobs.js')
 const env = process.env;
 const PORT = env.APP_PORT;
-
+const CLIENT_FRONTEND_PATH = path.join(__dirname, "../", "frontend", "dist");
 
 
 async function prepareApp() {
+    console.log(`CLIENT_FRONTEND_PATH: ${CLIENT_FRONTEND_PATH}`);
     const app = express();
     app.set("trust proxy", 1);
     app.use(express.json());
@@ -32,15 +33,14 @@ async function prepareApp() {
 
     // Connect to postgres with sequelize for app functionality
     await startSequelize();
-    await runTests();
-
+    //await runTests();
 
     // ================== EXPRESS ==================
     app.listen(PORT, () => {
         console.log(`express started on port: ${PORT}`);
     })
-    // app.use("/", express.static(CLIENT_FRONTEND_PATH));
-    //app.use("/"); //todo : replace with above when frontend exists
+    app.use('/', express.static(CLIENT_FRONTEND_PATH));
+
     app.use('/api/', spool_routes)
     app.use('/api/jobs/', job_routes);
 }
