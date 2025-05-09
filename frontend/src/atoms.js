@@ -111,6 +111,7 @@ export const asyncNewJobAtom = atomWithRefresh(
             const data = await response.json();
             set(newJobBaseAtom, data);
             set(finalSpoolArrayAtom) // refresh spool list
+            set(finalJobArrayAtom)
             return;
         } catch (e) {
             throw e;
@@ -122,14 +123,18 @@ export const asyncNewJobAtom = atomWithRefresh(
 //atoms related to getting a list of jobs
 //const jobArrayAtom = atom([]);
 //  const response = await fetch(`/api/jobs/history/${get(selectedSpoolAtom)}`);
-const asyncJobArrayAtom = atom(async (get) => {
+const asyncJobArrayAtom = atomWithRefresh(async (get) => {
     const requestedId = get(selectedSpoolAtom);
     if (!requestedId) return null;
     const response = await fetch(`/api/jobs/history/${get(selectedSpoolAtom)}`);
     return await response.json();
-}
+})
 
-)
+export const finalJobArrayAtom = atom(
+    (get) => get(loadableJobArrayAtom),
+    (get, set) => set(asyncJobArrayAtom)
+);
+
 //ATOMS for editing spools
 // atom for whether or not to show the edit button on the spool detail card
 // i have no idea if this should actually be an atom or not...
