@@ -47,7 +47,7 @@ const getActiveSpools = async (limit) => {
             // return the first limit spools
             spools = await Spool.findAll({
                 where: {
-                    isEmpty: true
+                    isEmpty: false
                 },
                 limit: limit
             })
@@ -55,7 +55,7 @@ const getActiveSpools = async (limit) => {
             // return all spools
             spools = await Spool.findAll({
                 where: {
-                    isEmpty: true
+                    isEmpty: false
                 },
             });
         }
@@ -73,7 +73,7 @@ const getFinishedSpools = async () => {
             // return the first limit spools
             spools = await Spool.findAll({
                 where: {
-                    isEmpty: false
+                    isEmpty: true
                 },
                 limit: limit
             })
@@ -81,7 +81,7 @@ const getFinishedSpools = async () => {
             // return all spools
             spools = await Spool.findAll({
                 where: {
-                    isEmpty: false
+                    isEmpty: true
                 },
             });
         }
