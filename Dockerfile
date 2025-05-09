@@ -13,5 +13,7 @@ RUN npm run build
 # ========= BACKEND STUFF =========
 WORKDIR /filament-manager/server
 
+RUN npm install
+
 #start the app
 CMD ["node", "server.js"]
