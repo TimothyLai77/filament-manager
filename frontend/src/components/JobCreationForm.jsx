@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import { Toaster, toaster } from "../components/ui/toaster";
 import { finalSelectedSpoolAtom ,newJobBaseAtom, asyncNewJobAtom, loadableSelectedSpoolDetailsAtom } from '../atoms.js';
 import SpoolDetailCard from './SpoolDetailCard.jsx';
-const JobCreationForm = ({showEditButton}) => {
+const JobCreationForm = () => {
 
     const [name, setName] = useState('');
     const [spoolDetails,refreshSpool] = useAtom(finalSelectedSpoolAtom) 
@@ -18,7 +18,11 @@ const JobCreationForm = ({showEditButton}) => {
     const [newJob] = useAtom(newJobBaseAtom);
     
     let costPerGram = 0;
-    if(spoolDetails.state === 'hasData') costPerGram = spoolDetails.data.cost / spoolDetails.data.initialWeight;
+    let allowJobCreation = false;
+    if(spoolDetails.state === 'hasData'){
+        costPerGram = spoolDetails.data.cost / spoolDetails.data.initialWeight;
+        if(!spoolDetails.data.isEmpty) allowJobCreation = true;
+    }
     
 
     useEffect(() => {
@@ -120,23 +124,25 @@ const JobCreationForm = ({showEditButton}) => {
     }
         
     
+    if(allowJobCreation){
+        return (
+        <>
+                <Card.Root>
+                    <Card.Body>
+                        <Card.Title>
+                            <Text fontWeight="bold">Create New Job</Text>
+                        </Card.Title>
+                        <Stack margin={5}>
+                            {generateFields()}
+                        </Stack>
+                    </Card.Body>
+                </Card.Root>
+                <Toaster />
+            </>
+        )
+    }
 
 
-  return (
-    <>
-        <Card.Root>
-            <Card.Body>
-                <Card.Title>
-                    <Text fontWeight="bold">Create New Job</Text>
-                </Card.Title>
-                <Stack margin={5}>
-                    {generateFields()}
-                </Stack>
-            </Card.Body>
-        </Card.Root>
-        <Toaster />
-    </>
-  )
 }
 
 export default JobCreationForm;

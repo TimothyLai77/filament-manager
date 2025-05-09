@@ -40,6 +40,58 @@ const getSpools = async (limit = null) => {
 }
 
 
+const getActiveSpools = async (limit) => {
+    try {
+        var spools;
+        if (limit) {
+            // return the first limit spools
+            spools = await Spool.findAll({
+                where: {
+                    isEmpty: false
+                },
+                limit: limit
+            })
+        } else {
+            // return all spools
+            spools = await Spool.findAll({
+                where: {
+                    isEmpty: false
+                },
+            });
+        }
+        const formattedSpools = spools.map((spool) => spool.toJSON());
+        return formattedSpools;
+    } catch (e) {
+        return e;
+    }
+}
+
+const getFinishedSpools = async (limit) => {
+    try {
+        var spools;
+        if (limit) {
+            // return the first limit spools
+            spools = await Spool.findAll({
+                where: {
+                    isEmpty: true
+                },
+                limit: limit
+            })
+        } else {
+            // return all spools
+            spools = await Spool.findAll({
+                where: {
+                    isEmpty: true
+                },
+            });
+        }
+        const formattedSpools = spools.map((spool) => spool.toJSON());
+        return formattedSpools;
+    } catch (e) {
+        return e;
+    }
+}
+
 /**
  * create new spool
    @param {object} newSpoolDataObj
@@ -167,4 +219,4 @@ const editSpool = async (id, newDataObj) => {
 }
 
 
-export { createSpool, getSpoolById, getSpools, deleteSpool, decreaseFilament, editSpool, incrementJobCount };
+export { getFinishedSpools, getActiveSpools, markSpoolAsEmpty, createSpool, getSpoolById, getSpools, deleteSpool, decreaseFilament, editSpool, incrementJobCount };

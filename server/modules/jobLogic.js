@@ -66,7 +66,7 @@ const createJob = async (spoolId, dataObj) => {
             id: uniqid('job-'),
             name: dataObj.name,
             filamentAmountUsed: dataObj.filamentAmountUsed,
-            cost: cost.toFixed(),
+            cost: cost.toFixed(4),
             date: new Date(),
             spoolId: spoolId
         })

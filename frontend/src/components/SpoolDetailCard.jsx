@@ -1,10 +1,11 @@
-import { selectedSpoolAtom, loadableSelectedSpoolDetailsAtom,showEditButtonAtom, finalSelectedSpoolAtom } from '../atoms.js';
+import { selectedSpoolAtom,showSpoolManagementButtonsAtom, finalSelectedSpoolAtom } from '../atoms.js';
 import { useAtom } from 'jotai';
 import { useEffect, useState } from 'react';
-import { Text, Box, Card, Progress, Stat,FormatNumber, HStack, Stack } from '@chakra-ui/react';
+import { Tag,Text, Box, Card, Progress, Stat,FormatNumber, HStack, Stack } from '@chakra-ui/react';
 import EditSpoolDialog from './EditSpoolDialog.jsx';
+import MarkSpoolAsFinishedButton from './MarkSpoolAsFinishedButton.jsx';
 const SpoolDetailCard = () => {
-    const [showEditButton] = useAtom(showEditButtonAtom)
+    const [showEditButton] = useAtom(showSpoolManagementButtonsAtom)
     const [selectedSpool] = useAtom(selectedSpoolAtom);
     //const [spool] = useAtom(loadableSelectedSpoolDetailsAtom);
     const [spool] = useAtom(finalSelectedSpoolAtom);
@@ -32,10 +33,16 @@ const SpoolDetailCard = () => {
 
         return (
             <>
-                <Card.Title textStyle="3xl">
-                    {`Selected Spool: ${spoolData.name}`}
+                <Card.Title as="span" textStyle="3xl">
+                    { spoolData.isEmpty ? <Text textStyle="4xl" color='red' >Status: Spool Finished</Text> : <></>}
+                    {`Selected Spool: ${spoolData.name}`} 
                 </Card.Title>
-
+                    <Box>
+                        <Tag.Root>
+                            <Tag.Label>{spoolData.id}</Tag.Label>
+                        </Tag.Root>
+                    </Box>
+                
                     <Stat.Root w={{ base: "100%", sm: "100%", md: "auto", lg: "50%" }} marginTop={3}>
                     <Stat.Label textStyle="md">Filament Left / Total</Stat.Label>
                     <Stat.ValueText textStyle="lg">
@@ -58,16 +65,27 @@ const SpoolDetailCard = () => {
                         </Progress.Root>
                     </Stat.Root>
 
-       
-                    <Stat.Root maxWidth="25%" marginTop={3}>
-                    <Stat.Label textStyle="md">{`Cost ($) / g`}</Stat.Label>
-                    <Stat.ValueText textStyle="lg">
-                        <Box marginRight={1}>
-                            <FormatNumber value={costPerGram} style="currency" currency="USD" />
-                        </Box>
-                    </Stat.ValueText>
-         
-                    </Stat.Root>
+                    <Box  marginTop={3}>
+                        <Stat.Root>
+                        <Stat.Label textStyle="md">{`Spool Cost`}</Stat.Label>
+                        <Stat.ValueText textStyle="lg">
+                            <Box marginRight={1}>
+                                <FormatNumber value={spoolData.cost} style="currency" currency="USD" />
+                            </Box>
+                        </Stat.ValueText>
+                        </Stat.Root>
+
+                            
+                        <Stat.Root marginTop={2}>
+                        <Stat.Label textStyle="md">{`Cost ($) / g`}</Stat.Label>
+                        <Stat.ValueText textStyle="lg">
+                            <Box marginRight={1}>
+                                <FormatNumber value={costPerGram} style="currency" currency="USD" />
+                            </Box>
+                        </Stat.ValueText>
+                        </Stat.Root>
+                    </Box>
+ 
               
 
 
@@ -91,8 +109,12 @@ const SpoolDetailCard = () => {
                         <Text as="span" textStyle="lg" fontWeight="bold">Date Added: </Text>
                         <Text textStyle="lg" as="span">{spoolData.dateAdded}</Text>
                        
-                    </Box>        
-                    {showEditButton ? <EditSpoolDialog /> : <></>}
+                    </Box>   
+                    <Box display="flex" justifyContent="flex-end" gap="5">
+                        {showEditButton && !spoolData.isEmpty ? <EditSpoolDialog /> : <></>}
+                        {showEditButton && !spoolData.isEmpty ? <MarkSpoolAsFinishedButton /> : <></>}
+                    </Box>     
+
                 </Stack>
               
        

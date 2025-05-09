@@ -7,8 +7,22 @@ const {
     getSpools,
     getSpoolById,
     editSpool,
+    markSpoolAsEmpty,
+    getActiveSpools,
+    getFinishedSpools
 } = require('../modules/spoolLogic.js');
 
+router.put('/spools/mark-finished/:spoolId', async (req, res) => {
+    try {
+        console.log(`PUT: /spools/mark-finished/${req.params.spoolId}`);
+        const spoolId = req.params.spoolId;
+        // function returns Spool with the isFinished set to True
+        const returnedSpool = await markSpoolAsEmpty(spoolId);
+        res.status(200).send(returnedSpool);
+    } catch (e) {
+        res.status(500).send(e)
+    }
+})
 
 router.put('/spools/edit/:spoolId', async (req, res) => {
     try {
@@ -22,6 +36,29 @@ router.put('/spools/edit/:spoolId', async (req, res) => {
     }
 })
 
+router.get('/active-spools', async (req, res) => {
+    try {
+        console.log("GET /active-spools")
+        const spools = await getActiveSpools();
+        res.send(spools), 200;
+    } catch (e) {
+        console.log(e)
+        res.status(500).send('Something went wrong.');
+    }
+
+})
+
+router.get('/finished-spools', async (req, res) => {
+    try {
+        console.log("GET /finished-spools")
+        const spools = await getFinishedSpools();
+        res.send(spools), 200;
+    } catch (e) {
+        console.log(e)
+        res.status(500).send('Something went wrong.');
+    }
+
+})
 
 router.get('/spools', async (req, res) => {
     try {
