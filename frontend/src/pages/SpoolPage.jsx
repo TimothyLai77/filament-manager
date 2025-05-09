@@ -1,7 +1,7 @@
 import SpoolList from '../components/SpoolList'
 import { Tabs,Box,Card ,Flex,HStack,Button,Separator,Text} from '@chakra-ui/react';
 import { Navigate, useNavigate } from 'react-router-dom';
-const ActiveSpoolPage = () => {
+const SpoolPage = () => {
 
   const titleCard = (isActiveFilament) => {
     const navigate = useNavigate();
@@ -77,4 +77,4 @@ const ActiveSpoolPage = () => {
   )
 }
 
-export default ActiveSpoolPage;
+export default SpoolPage;
