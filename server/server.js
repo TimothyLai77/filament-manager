@@ -36,13 +36,22 @@ async function prepareApp() {
     //await runTests();
 
     // ================== EXPRESS ==================
-    app.listen(PORT, () => {
-        console.log(`express started on port: ${PORT}`);
-    })
-    app.use('/', express.static(CLIENT_FRONTEND_PATH));
+
 
     app.use('/api/', spool_routes)
     app.use('/api/jobs/', job_routes);
+    app.use(express.static(CLIENT_FRONTEND_PATH));
+
+    // express 5? updated some internal packages and it breaks using the '*' as a path
+    // have to use this regex instead?
+    // https://github.com/expressjs/express/issues/5936#issuecomment-2340677058
+    app.get(/(.*)/, (req, res) => {
+        res.sendFile(path.join(CLIENT_FRONTEND_PATH, 'index.html'));
+    });
+
+    app.listen(PORT, () => {
+        console.log(`express started on port: ${PORT}`);
+    })
 }
 
 prepareApp();
