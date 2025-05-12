@@ -1,5 +1,5 @@
 import { spoolTabSelectorAtom, finalSpoolArrayAtom, finalFinishedSpoolArrayAtom } from "../atoms.js"
-import { Box, Flex, Table, Card, Button, HStack, Center, Separator } from "@chakra-ui/react"
+import { Box, Flex, Table, Card, Button, HStack, ProgressCircle, Separator } from "@chakra-ui/react"
 import { MdModeEdit, MdLibraryAdd, MdInfoOutline } from "react-icons/md";
 import { useAtom, atom } from 'jotai'
 import { useNavigate } from 'react-router-dom'
@@ -24,11 +24,11 @@ const SpoolList = () => {
     const spoolList = spools.data;
 
 
+    console.log(spoolList)
 
     return (
         <>
-            {/* <Card.Root margin={5}>
-                <Card.Body> */}
+
             <Box margin={5} borderWidth="1px">
                 <Table.ScrollArea margin={5} borderWidth="0px">
                     <Table.Root interactive>
@@ -40,6 +40,7 @@ const SpoolList = () => {
                                 <Table.ColumnHeader>Colour</Table.ColumnHeader>
                                 <Table.ColumnHeader>Finish</Table.ColumnHeader>
                                 <Table.ColumnHeader>Amount Left (g)</Table.ColumnHeader>
+
                                 <Table.ColumnHeader textAlign="end">Actions</Table.ColumnHeader>
                             </Table.Row>
                         </Table.Header>
@@ -52,7 +53,23 @@ const SpoolList = () => {
                                     <Table.Cell>{spool.material}</Table.Cell>
                                     <Table.Cell>{spool.colour}</Table.Cell>
                                     <Table.Cell>{spool.finish}</Table.Cell>
-                                    <Table.Cell>{spool.filamentLeft.toFixed(2)}</Table.Cell>
+                                    <Table.Cell>
+                                        <HStack gap={5}>
+
+                                            <ProgressCircle.Root value={
+                                                spool.filamentLeft / spool.initialWeight * 100
+                                            } size='xs'>
+                                                <ProgressCircle.Circle>
+                                                    <ProgressCircle.Track />
+                                                    <ProgressCircle.Range />
+                                                </ProgressCircle.Circle>
+                                            </ProgressCircle.Root>
+                                            {spool.filamentLeft.toFixed(2)}
+                                        </HStack>
+
+
+                                    </Table.Cell>
+
                                     <Table.Cell align="end">
                                         <HStack justifyContent="right">
                                             <Button
