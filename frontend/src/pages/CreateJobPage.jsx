@@ -2,7 +2,7 @@ import { Box, Stack } from '@chakra-ui/react'
 import { useAtom } from 'jotai';
 import { useParams } from 'react-router-dom';
 import { selectedSpoolAtom, showSpoolManagementButtonsAtom } from '../atoms.js'
-import HomeButton from '..//components/HomeButton.jsx';
+import TopNavBar from '../components/TopNavBar.jsx';
 import SpoolDetailCard from '../components/SpoolDetailCard.jsx'
 import JobCreationForm from '../components/JobCreationForm.jsx';
 import { useEffect } from 'react';
@@ -17,7 +17,7 @@ const CreateJobPage = () => {
 
     return (
         <>
-            <HomeButton />
+            <TopNavBar />
             <Stack
                 direction={{ base: 'column', lg: 'row' }} // column on mobile, row on md+
                 spacing={4}

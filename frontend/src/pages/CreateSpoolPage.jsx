@@ -1,12 +1,12 @@
-import {NumberInput, Button, Input, Stack, Card, Text, Field, Fieldset} from '@chakra-ui/react'
+import { NumberInput, Button, Input, Stack, Card, Text, Field, Fieldset } from '@chakra-ui/react'
 import SpoolCreationForm from '../components/SpoolCreationForm';
-import HomeButton from '../components/HomeButton.jsx';
+import TopNavBar from '../components/TopNavBar';
 const CreateSpoolPage = () => {
 
   return (
     <>
-        <HomeButton />
-        <SpoolCreationForm />
+      <TopNavBar />
+      <SpoolCreationForm />
     </>
   )
 }

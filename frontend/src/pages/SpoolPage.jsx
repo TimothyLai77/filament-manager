@@ -4,6 +4,7 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import { useAtom } from 'jotai';
 import { spoolTabSelectorAtom } from '../atoms';
 import { useEffect } from 'react';
+import TopNavBar from '../components/TopNavBar';
 const SpoolPage = () => {
   const [, setTab] = useAtom(spoolTabSelectorAtom);
 
@@ -47,6 +48,7 @@ const SpoolPage = () => {
 
   return (
     <>
+      <TopNavBar />
       <Box margin={5}>
         <Tabs.RootProvider value={tabs} lazyMount fitted variant="enclosed">
           <Flex justify="center" width="100%">
