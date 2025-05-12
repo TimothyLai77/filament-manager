@@ -1,14 +1,14 @@
-import { Button, Input, Stack, Card, Text, Field, Fieldset} from '@chakra-ui/react'
-import { asyncNewSpoolAtom,newSpoolBaseAtom } from '../atoms.js'
+import { Button, Input, Stack, Card, Text, Field, Fieldset } from '@chakra-ui/react'
+import { asyncNewSpoolAtom, newSpoolBaseAtom } from '../atoms.js'
 import { useAtom, atom } from 'jotai'
 import { useEffect, useState } from 'react'
 import { Toaster, toaster } from "../components/ui/toaster";
-import { finalSelectedSpoolAtom ,newJobBaseAtom, asyncNewJobAtom, loadableSelectedSpoolDetailsAtom } from '../atoms.js';
+import { finalSelectedSpoolAtom, newJobBaseAtom, asyncNewJobAtom, loadableSelectedSpoolDetailsAtom } from '../atoms.js';
 import SpoolDetailCard from './SpoolDetailCard.jsx';
 const JobCreationForm = () => {
 
     const [name, setName] = useState('');
-    const [spoolDetails,refreshSpool] = useAtom(finalSelectedSpoolAtom) 
+    const [spoolDetails, refreshSpool] = useAtom(finalSelectedSpoolAtom)
     const [filamentAmount, setFilamentAmount] = useState('');
     const [cost, setCost] = useState(0);
 
@@ -16,54 +16,54 @@ const JobCreationForm = () => {
     const [, setData] = useAtom(asyncNewJobAtom);
     // todo: hmmm i don't think this is the proper way... 
     const [newJob] = useAtom(newJobBaseAtom);
-    
+
     let costPerGram = 0;
     let allowJobCreation = false;
-    if(spoolDetails.state === 'hasData'){
+    if (spoolDetails.state === 'hasData') {
         costPerGram = spoolDetails.data.cost / spoolDetails.data.initialWeight;
-        if(!spoolDetails.data.isEmpty) allowJobCreation = true;
+        if (!spoolDetails.data.isEmpty) allowJobCreation = true;
     }
-    
+
 
     useEffect(() => {
-        setCost(costPerGram*filamentAmount);
-    },[filamentAmount])
+        setCost(costPerGram * filamentAmount);
+    }, [filamentAmount])
 
-    
+
     useEffect(() => {
         //console.log(newSpool)
-        if(newJob == null) return;
+        if (newJob == null) return;
 
         // this is kinda ????? but I get a flush sync warning without the timer
         // just defers the rendering to the next cycle apparnetly?
         setTimeout(() => {
-            if(newJob instanceof Error){
+            if (newJob instanceof Error) {
                 toaster.create({
                     title: "Error",
                     description: `something went wrong: ` + newJob.message,
                     type: "error"
                 })
-            }else{
+            } else {
                 toaster.create({
                     title: "Success",
-                    description : "New job added to database.",
+                    description: "New job added to database.",
                     type: "success"
                 });
                 refreshSpool()
                 clearInputs()
             }
         }, 0);
- 
+
 
     }, [newJob])
 
     const checkPayload = (payload) => {
         // idk there's probably a better way but my brain isn't working
         const spoolRegex = new RegExp("^(spool-).+$");
-        if(!spoolRegex.test(payload.spoolId)) return false;
-        if(payload.name === '' || payload.name === null) return false;
-        if(payload.filamentAmountUsed <= 0 || isNaN(payload.filamentAmountUsed)) return false;
-        if(isNaN(payload.cost)) return false;
+        if (!spoolRegex.test(payload.spoolId)) return false;
+        if (payload.name === '' || payload.name === null) return false;
+        if (payload.filamentAmountUsed <= 0 || isNaN(payload.filamentAmountUsed)) return false;
+        if (isNaN(payload.cost)) return false;
         return true;
     }
     const clearInputs = () => {
@@ -76,15 +76,15 @@ const JobCreationForm = () => {
         const payload = {
             name: name,
             spoolId: spoolDetails.data.id,
-            filamentAmountUsed: parseFloat(filamentAmount), 
+            filamentAmountUsed: parseFloat(filamentAmount),
             cost: parseFloat(cost)
         }
         console.log(payload);
-        if(checkPayload(payload)){
+        if (checkPayload(payload)) {
             setData(payload);
-        }else{
+        } else {
             console.log('form error')
-             toaster.create({
+            toaster.create({
                 title: "Form Error",
                 description: "double check fields",
                 type: "error"
@@ -93,7 +93,7 @@ const JobCreationForm = () => {
     }
 
 
-    
+
 
     //todo: clean this up so its dynamically generated
     const generateFields = () => {
@@ -108,7 +108,7 @@ const JobCreationForm = () => {
 
                     <Field.Label>Filament Amount</Field.Label>
                     <Input
-                         onChange={(e) => setFilamentAmount(e.target.value)}
+                        onChange={(e) => setFilamentAmount(e.target.value)}
                         value={filamentAmount}
                     />
 
@@ -122,12 +122,12 @@ const JobCreationForm = () => {
             </Fieldset.Root>
         );
     }
-        
-    
-    if(allowJobCreation){
+
+
+    if (allowJobCreation) {
         return (
-        <>
-                <Card.Root>
+            <>
+                <Card.Root minH="100%">
                     <Card.Body>
                         <Card.Title>
                             <Text fontWeight="bold">Create New Job</Text>
