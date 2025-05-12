@@ -23,7 +23,8 @@ const SpoolList = () => {
     if (spools.state === 'loading') return <h1>loading</h1>
     const spoolList = spools.data;
 
-
+    console.log(spoolList)
+    spoolList.sort((s1, s2) => Date.parse(s2.createdAt) - Date.parse(s1.createdAt))
     console.log(spoolList)
 
     return (
