@@ -19,7 +19,7 @@ const CreateJobPage = () => {
         <>
             <HomeButton />
             <Stack
-                direction={{ base: 'column', md: 'row' }} // column on mobile, row on md+
+                direction={{ base: 'column', lg: 'row' }} // column on mobile, row on md+
                 spacing={4}
                 margin={5}
                 gap={5}
