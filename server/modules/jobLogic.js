@@ -93,17 +93,22 @@ const deleteJob = async (id) => {
 //todo: another day lol
 const editJob = async (jobId, newData) => {
     try {
-        const jobToEdit = await findByPk(jobId);
+        const jobToEdit = await Job.findByPk(jobId);
         if (!jobToEdit) throw new JobNotFoundError;
 
         // apply changes to the spool's filament amount first:
-        const filamentDelta = jobToEdit.filamentAmountUsed - newData.filamentAmountUsed;
+        let filamentDelta = 0;
+        if (newData.filamentAmountUsed == 0) {
+            filamentDelta = jobToEdit.filamentAmountUsed;
+        } else {
+            filamentDelta = jobToEdit.filamentAmountUsed - newData.filamentAmountUsed;
+        }
         await changeFilamentAmount(jobToEdit.spoolId, filamentDelta)
 
         // make changes to the job
-        if (newData.name) { jobToEdit.name = newData.name };
-        if (newData.filamentAmountUsed) { jobToEdit.filamentAmountUsed = newData.filamentAmountUsed };
-        if (newData.cost) { jobToEdit.cost = newData.cost };
+        jobToEdit.name = newData.name;
+        jobToEdit.filamentAmountUsed = newData.filamentAmountUsed;
+        jobToEdit.cost = newData.cost
         await jobToEdit.save();
         return jobToEdit.toJSON();
     } catch (e) {

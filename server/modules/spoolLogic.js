@@ -159,7 +159,7 @@ const changeFilamentAmount = async (id, delta) => {
 
         // apply the change
         spool.filamentLeft = spool.filamentLeft + delta;
-        spool.filamentLeft = spool.filamentUsed + delta;
+        spool.filamentUsed = spool.filamentUsed - delta;
         await spool.save();
         return spool.toJSON();
     } catch (e) {
