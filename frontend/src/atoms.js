@@ -184,7 +184,7 @@ export const asyncEditJobAtom = atom(
     null,
     async (get, set, payload) => {
         try {
-            const response = await fetch(`/api/spools/edit/${payload.id}`, {
+            const response = await fetch(`/api/jobs/edit/${payload.jobId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
