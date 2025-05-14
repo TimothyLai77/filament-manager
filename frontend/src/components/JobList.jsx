@@ -48,7 +48,7 @@ const JobList = () => {
                         </Box>
 
                         <Box display="flex" justifyContent="flex-end">
-                            <EditJobDialog />
+                            <EditJobDialog job={job} />
                         </Box>
                     </Card.Body>
 

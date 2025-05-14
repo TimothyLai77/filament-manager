@@ -1,24 +1,15 @@
 import { Input, Fieldset, Field, Box, CloseButton, Dialog, Portal, Button } from '@chakra-ui/react'
 import { MdModeEdit } from "react-icons/md";
 import { useAtom } from 'jotai';
-import { asyncPutSpoolEditAtom, loadableSelectedSpoolDetailsAtom } from '../atoms'
+import { asyncEditJobAtom, loadableSelectedSpoolDetailsAtom } from '../atoms'
 import { useState } from 'react';
-const EditJobDialog = () => {
-    const [spool] = useAtom(loadableSelectedSpoolDetailsAtom);
-    if (spool.state === 'loading') {
-        return (
-            <h1>Loading...</h1>
-        );
-    }
-    if (spool.state === 'hasError') {
-        return (
-            <h1>Error</h1>
-        )
-    }
-    const spoolData = spool.data
-    const [name, setName] = useState();
-    const [filamentUsed, setFilamentUsed] = useState();
-    const [cost, setCost] = useState();
+const EditJobDialog = ({ job }) => {
+    const [, setPayload] = useAtom(asyncEditJobAtom);
+
+
+    const [name, setName] = useState(job.name);
+    const [filamentUsed, setFilamentUsed] = useState(job.filamentAmountUsed);
+    const [cost, setCost] = useState(job.cost);
 
 
     // pain
@@ -77,7 +68,7 @@ const EditJobDialog = () => {
                 <Dialog.Positioner>
                     <Dialog.Content>
                         <Dialog.Header>
-                            <Dialog.Title>Edit Job: {`${spoolData.name}`}</Dialog.Title>
+                            <Dialog.Title>Edit Job: {`${job.name}`}</Dialog.Title>
                         </Dialog.Header>
                         <Dialog.Body>
                             {form()}

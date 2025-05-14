@@ -179,6 +179,29 @@ export const markSpoolAsFinishedAtom = atom(
     }
 )
 
+
+export const asyncEditJobAtom = atom(
+    null,
+    async (get, set, payload) => {
+        try {
+            const response = await fetch(`/api/spools/edit/${payload.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
+            const data = await response.json();
+            set(finalSelectedSpoolAtom) // refresh the selected spool
+            set(finalJobArrayAtom) // refresh the job array
+            return data;
+        } catch (e) {
+            return e
+        }
+    }
+)
+
+
 export const loadableSpoolArrayAtom = loadable(asyncSpoolArrayAtom);
 export const loadableFinishedSpoolArrayAtom = loadable(asyncFinishedSpoolArrayAtom)
 export const loadableSelectedSpoolDetailsAtom = loadable(asyncSelectedSpoolDetailsAtom);
