@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const { createJob, getJobs, getJobsBySpool } = require('../modules/jobLogic.js');
+const { createJob, getJobs, getJobsBySpool, editJob } = require('../modules/jobLogic.js');
 const { NotEnoughFilamentError } = require('../errors/errors.js');
 
 
@@ -33,6 +33,19 @@ router.post('/create', async (req, res) => {
     }
 
 });
+
+router.put('/edit/:jobId', async (req, res) => {
+    try {
+        console.log('PUT /API/jobs/edit/:jobId');
+        const jobId = req.params.jobId;
+        const payload = req.body;
+        const editedJob = await editJob(jobId, payload);
+        res.status(200).send(editedJob);
+    } catch (e) {
+        res.status(500);
+        res.send(e)
+    }
+})
 
 
 router.get('/', async (req, res) => {

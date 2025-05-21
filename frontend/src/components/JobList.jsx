@@ -1,6 +1,7 @@
-import { Tag, Box, Card, FormatNumber, Text } from "@chakra-ui/react";
+import { Tag, Box, Card, FormatNumber, Text, Button } from "@chakra-ui/react";
 import { useAtom } from "jotai";
 import { finalJobArrayAtom } from "../atoms";
+import EditJobDialog from "./EditJobDialog";
 const JobList = () => {
     const [getJobs] = useAtom(finalJobArrayAtom)
 
@@ -44,6 +45,10 @@ const JobList = () => {
                             <Tag.Root>
                                 <Tag.Label>{job.id}</Tag.Label>
                             </Tag.Root>
+                        </Box>
+
+                        <Box display="flex" justifyContent="flex-end">
+                            <EditJobDialog job={job} />
                         </Box>
                     </Card.Body>
 

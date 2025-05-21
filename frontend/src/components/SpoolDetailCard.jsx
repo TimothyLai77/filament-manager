@@ -2,7 +2,7 @@ import { selectedSpoolAtom, showSpoolManagementButtonsAtom, finalSelectedSpoolAt
 import { useAtom } from 'jotai';
 import { useEffect, useState } from 'react';
 import { MdLibraryAdd } from 'react-icons/md';
-import { Button, Tag, Text, Box, Card, Progress, Stat, FormatNumber, HStack, Stack } from '@chakra-ui/react';
+import { Flex, Button, Tag, Text, Box, Card, Progress, Stat, FormatNumber, HStack, Stack } from '@chakra-ui/react';
 import EditSpoolDialog from './EditSpoolDialog.jsx';
 import MarkSpoolAsFinishedButton from './MarkSpoolAsFinishedButton.jsx';
 import { useNavigate } from 'react-router-dom';
@@ -34,7 +34,9 @@ const SpoolDetailCard = () => {
         const displayButtons = () => {
             if (showEditButton && !spoolData.isEmpty) {
                 return (
-                    <Box display="flex" justifyContent="flex-end" gap="5">
+                    <Flex wrap="wrap" display="flex" justifyContent="flex-end" gap="5">
+
+
                         <EditSpoolDialog />
 
                         <Button
@@ -48,7 +50,7 @@ const SpoolDetailCard = () => {
                             Create Job
                         </Button>
                         <MarkSpoolAsFinishedButton />
-                    </Box>
+                    </Flex>
 
                 )
 

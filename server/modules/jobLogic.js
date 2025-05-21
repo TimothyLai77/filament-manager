@@ -3,7 +3,7 @@ import uniqid from 'uniqid';
 import { Job } from "../data/models/Job.js";
 import { Spool } from "../data/models/Spool.js";
 import { JobNotFoundError, SpoolNotFoundError } from "../errors/errors.js";
-import { decreaseFilament, incrementJobCount } from "./spoolLogic.js";
+import { changeFilamentAmount, decreaseFilament, incrementJobCount } from "./spoolLogic.js";
 
 
 /**
@@ -91,8 +91,33 @@ const deleteJob = async (id) => {
     }
 }
 //todo: another day lol
-const editJob = async (id, newData) => {
+const editJob = async (jobId, newData) => {
+    try {
+        const jobToEdit = await Job.findByPk(jobId);
+        if (!jobToEdit) throw new JobNotFoundError;
+
+        // apply changes to the spool's filament amount first:
+        let filamentDelta = 0;
+        if (newData.filamentAmountUsed == 0) {
+            filamentDelta = jobToEdit.filamentAmountUsed;
+        } else {
+            filamentDelta = jobToEdit.filamentAmountUsed - newData.filamentAmountUsed;
+        }
+        await changeFilamentAmount(jobToEdit.spoolId, filamentDelta)
+
+        // make changes to the job
+        jobToEdit.name = newData.name;
+        jobToEdit.filamentAmountUsed = newData.filamentAmountUsed;
+        jobToEdit.cost = newData.cost
+        await jobToEdit.save();
+        return jobToEdit.toJSON();
+    } catch (e) {
+        throw e;
+    }
+
+
+
 
 }
 
-export { createJob, deleteJob, getJobsBySpool, getJobs }
+export { editJob, createJob, deleteJob, getJobsBySpool, getJobs }

@@ -1,7 +1,7 @@
 import { Sequelize, col } from "sequelize";
 import uniqid from 'uniqid';
 import { Spool } from '../data/models/Spool.js'
-import { NotEnoughFilamentError, SpoolNotFoundError } from '../errors/errors.js'
+import { NotEnoughFilamentError, SpoolNotFoundError, TooMuchFilamentError } from '../errors/errors.js'
 /**
  * Get's spool when given an id. 
  * @param {string} id 
@@ -143,6 +143,36 @@ const deleteSpool = async (id) => {
     }
 }
 
+/**
+ * applies a +/- delta to the filament amount/filament left
+ * @param {string} id 
+ * @param {float} delta 
+ */
+const changeFilamentAmount = async (id, delta) => {
+    try {
+        const spool = await Spool.findByPk(id);
+        if (!spool) throw new SpoolNotFoundError;
+
+        // check if amount after applying delta is within bounds 
+        if (spool.filamentLeft + delta < 0.0) throw new NotEnoughFilamentError;
+        if (spool.filamentLeft + delta > spool.initialWeight) throw new TooMuchFilamentError;
+
+        // apply the change
+        spool.filamentLeft = spool.filamentLeft + delta;
+        spool.filamentUsed = spool.filamentUsed - delta;
+        await spool.save();
+        return spool.toJSON();
+    } catch (e) {
+        throw e;
+    }
+}
+
+/**
+ * Strictly decreases the filament, should probably use changeFilament function instead
+ * @param {String} id 
+ * @param {float} amount 
+ * @returns 
+ */
 const decreaseFilament = async (id, amount) => {
     try {
         const spool = await Spool.findByPk(id);
@@ -219,4 +249,4 @@ const editSpool = async (id, newDataObj) => {
 }
 
 
-export { getFinishedSpools, getActiveSpools, markSpoolAsEmpty, createSpool, getSpoolById, getSpools, deleteSpool, decreaseFilament, editSpool, incrementJobCount };
+export { changeFilamentAmount, getFinishedSpools, getActiveSpools, markSpoolAsEmpty, createSpool, getSpoolById, getSpools, deleteSpool, decreaseFilament, editSpool, incrementJobCount };
