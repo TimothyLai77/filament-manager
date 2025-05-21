@@ -1,5 +1,5 @@
-import { Button, Input, Stack, Card, Text, Field, Fieldset} from '@chakra-ui/react'
-import { asyncNewSpoolAtom,newSpoolBaseAtom, finalSpoolArrayAtom } from '../atoms.js'
+import { Button, Input, Stack, Card, Text, Field, Fieldset } from '@chakra-ui/react'
+import { asyncNewSpoolAtom, newSpoolBaseAtom, finalSpoolArrayAtom } from '@/atoms/atoms.js'
 import { useAtom, atom } from 'jotai'
 import { useEffect, useState } from 'react'
 import { Toaster, toaster } from "../components/ui/toaster";
@@ -18,45 +18,45 @@ const SpoolCreationForm = () => {
 
     const [, setData] = useAtom(asyncNewSpoolAtom);
     // todo: hmmm i don't think this is the proper way... 
-    const [newSpool,setNewSpool] = useAtom(newSpoolBaseAtom);
+    const [newSpool, setNewSpool] = useAtom(newSpoolBaseAtom);
     const navigate = useNavigate();
 
     useEffect(() => {
         //console.log(newSpool)
-        if(newSpool == null) return;
+        if (newSpool == null) return;
 
         // this is kinda ????? but I get a flush sync warning without the timer
         // just defers the rendering to the next cycle apparnetly?
         setTimeout(() => {
-            if(newSpool instanceof Error){
+            if (newSpool instanceof Error) {
                 toaster.create({
                     title: "Error",
                     description: `something went wrong: ` + newSpool.message,
                     type: "error"
                 })
-            }else{
+            } else {
                 // clear the state so when navigating back to spool creation page it won't show
                 // a toast
                 setNewSpool(null);
                 toaster.create({
                     title: "Success",
-                    description : "New spool added to database.",
+                    description: "New spool added to database.",
                     type: "success"
                 });
                 clearInputs();
                 refreshSpoolArray();
             }
         }, 0);
- 
+
 
     }, [newSpool])
 
     const checkPayload = (payload) => {
-        if(payload.name === '') return false;
-        if(payload.brand === '') return false;
-        if(payload.material === '') return false;
-        if(payload.initialWeight <= 0 || isNaN(payload.initialWeight)) return false;
-        if(payload.cost <= 0|| isNaN(payload.cost)) return false;
+        if (payload.name === '') return false;
+        if (payload.brand === '') return false;
+        if (payload.material === '') return false;
+        if (payload.initialWeight <= 0 || isNaN(payload.initialWeight)) return false;
+        if (payload.cost <= 0 || isNaN(payload.cost)) return false;
         return true;
     }
 
@@ -64,19 +64,19 @@ const SpoolCreationForm = () => {
         e.preventDefault();
         const payload = {
             name: name,
-            brand : brand,
+            brand: brand,
             material: material,
-            colour: colour, 
+            colour: colour,
             finish: finish ? finish : null,
             initialWeight: parseFloat(initialWeight),
             cost: parseFloat(cost)
         }
-        if(checkPayload(payload)){
+        if (checkPayload(payload)) {
             //console.log(payload)
             setData(payload)
-        }else{
+        } else {
             console.log('form error')
-             toaster.create({
+            toaster.create({
                 title: "Form Error",
                 description: "double check fields",
                 type: "error"
@@ -108,7 +108,7 @@ const SpoolCreationForm = () => {
 
                     <Field.Label>Brand</Field.Label>
                     <Input
-                         onChange={(e) => setBrand(e.target.value)}
+                        onChange={(e) => setBrand(e.target.value)}
                         value={brand}
                     />
 
@@ -117,7 +117,7 @@ const SpoolCreationForm = () => {
                         onChange={(e) => setMaterial(e.target.value)}
                         value={material}
                     />
-       
+
                     <Field.Label>Colour</Field.Label>
                     <Input
                         onChange={(e) => setColour(e.target.value)}
@@ -130,13 +130,13 @@ const SpoolCreationForm = () => {
                         value={finish}
                     />
 
-                  <Field.Label>Initial Weight (g)</Field.Label>
+                    <Field.Label>Initial Weight (g)</Field.Label>
                     <Input
                         onChange={(e) => setInitialWeight(e.target.value)}
                         value={initialWeight}
                     />
 
-                   <Field.Label>Cost ($)</Field.Label>
+                    <Field.Label>Cost ($)</Field.Label>
                     <Input
                         onChange={(e) => setCost(e.target.value)}
                         value={cost}
@@ -146,25 +146,25 @@ const SpoolCreationForm = () => {
             </Fieldset.Root>
         );
     }
-        
-    
 
 
-  return (
-    <>
-        <Card.Root margin={5}>
-            <Card.Body>
-                <Card.Title>
-                    <Text fontWeight="bold">Add New Filament</Text>
-                </Card.Title>
-                <Stack margin={5}>
-                    {generateFields()}
-                </Stack>
-            </Card.Body>
-        </Card.Root>
-        <Toaster />
-    </>
-  )
+
+
+    return (
+        <>
+            <Card.Root margin={5}>
+                <Card.Body>
+                    <Card.Title>
+                        <Text fontWeight="bold">Add New Filament</Text>
+                    </Card.Title>
+                    <Stack margin={5}>
+                        {generateFields()}
+                    </Stack>
+                </Card.Body>
+            </Card.Root>
+            <Toaster />
+        </>
+    )
 }
 
 export default SpoolCreationForm;

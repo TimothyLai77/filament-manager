@@ -1,6 +1,6 @@
 import { Tag, Box, Card, FormatNumber, Text, Button } from "@chakra-ui/react";
 import { useAtom } from "jotai";
-import { finalJobArrayAtom } from "../atoms";
+import { finalJobArrayAtom } from "@/atoms/atoms";
 import EditJobDialog from "./EditJobDialog";
 const JobList = () => {
     const [getJobs] = useAtom(finalJobArrayAtom)

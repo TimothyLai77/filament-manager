@@ -2,7 +2,7 @@ import JobList from "../components/JobList";
 import { Stack } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
 import { useAtom } from "jotai";
-import { selectedSpoolAtom, showSpoolManagementButtonsAtom } from "../atoms";
+import { selectedSpoolAtom, showSpoolManagementButtonsAtom } from "@/atoms/atoms";
 import { useEffect } from "react";
 import SpoolDetailCard from "../components/SpoolDetailCard";
 import TopNavBar from "../components/TopNavBar";

@@ -1,4 +1,4 @@
-import { spoolTabSelectorAtom, finalSpoolArrayAtom, finalFinishedSpoolArrayAtom } from "../atoms.js"
+import { spoolTabSelectorAtom, finalSpoolArrayAtom, finalFinishedSpoolArrayAtom } from "@/atoms/atoms.js"
 import { Box, Flex, Table, Card, Button, HStack, ProgressCircle, Separator } from "@chakra-ui/react"
 import { MdModeEdit, MdLibraryAdd, MdInfoOutline } from "react-icons/md";
 import { useAtom, atom } from 'jotai'

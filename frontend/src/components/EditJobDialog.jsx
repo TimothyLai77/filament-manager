@@ -1,7 +1,7 @@
 import { Tag, Text, Input, Fieldset, Field, Box, CloseButton, Dialog, Portal, Button } from '@chakra-ui/react'
 import { MdModeEdit } from "react-icons/md";
 import { useAtom } from 'jotai';
-import { asyncEditJobAtom, finalSelectedSpoolAtom, loadableSelectedSpoolDetailsAtom } from '../atoms'
+import { asyncEditJobAtom, finalSelectedSpoolAtom, loadableSelectedSpoolDetailsAtom } from '@/atoms/atoms'
 import { useEffect, useState } from 'react';
 const EditJobDialog = ({ job }) => {
     const [, setPayload] = useAtom(asyncEditJobAtom);
