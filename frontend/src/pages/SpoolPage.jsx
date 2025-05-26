@@ -2,7 +2,7 @@ import SpoolList from '../components/SpoolList'
 import { Tabs, Box, Card, Flex, HStack, Button, Separator, Text, useTabs } from '@chakra-ui/react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useAtom } from 'jotai';
-import { spoolTabSelectorAtom } from '../atoms';
+import { spoolTabSelectorAtom } from '@/atoms/atoms';
 import { useEffect } from 'react';
 import TopNavBar from '../components/TopNavBar';
 const SpoolPage = () => {

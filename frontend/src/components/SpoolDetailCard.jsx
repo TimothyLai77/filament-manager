@@ -1,4 +1,4 @@
-import { selectedSpoolAtom, showSpoolManagementButtonsAtom, finalSelectedSpoolAtom } from '../atoms.js';
+import { selectedSpoolAtom, showSpoolManagementButtonsAtom, finalSelectedSpoolAtom } from '@/atoms/atoms.js';
 import { useAtom } from 'jotai';
 import { useEffect, useState } from 'react';
 import { MdLibraryAdd } from 'react-icons/md';

@@ -1,7 +1,7 @@
 import { Box, Stack } from '@chakra-ui/react'
 import { useAtom } from 'jotai';
 import { useParams } from 'react-router-dom';
-import { selectedSpoolAtom, showSpoolManagementButtonsAtom } from '../atoms.js'
+import { selectedSpoolAtom, showSpoolManagementButtonsAtom } from '@/atoms/atoms.js'
 import TopNavBar from '../components/TopNavBar.jsx';
 import SpoolDetailCard from '../components/SpoolDetailCard.jsx'
 import JobCreationForm from '../components/JobCreationForm.jsx';

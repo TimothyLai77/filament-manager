@@ -1,9 +1,9 @@
 import { Button, Input, Stack, Card, Text, Field, Fieldset } from '@chakra-ui/react'
-import { asyncNewSpoolAtom, newSpoolBaseAtom } from '../atoms.js'
+import { asyncNewSpoolAtom, newSpoolBaseAtom } from '@/atoms/atoms.js'
 import { useAtom, atom } from 'jotai'
 import { useEffect, useState } from 'react'
 import { Toaster, toaster } from "../components/ui/toaster";
-import { finalSelectedSpoolAtom, newJobBaseAtom, asyncNewJobAtom, loadableSelectedSpoolDetailsAtom } from '../atoms.js';
+import { finalSelectedSpoolAtom, newJobBaseAtom, asyncNewJobAtom, loadableSelectedSpoolDetailsAtom } from '@/atoms/atoms.js';
 import SpoolDetailCard from './SpoolDetailCard.jsx';
 const JobCreationForm = () => {
 
