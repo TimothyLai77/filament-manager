@@ -1,14 +1,17 @@
 import { Tag, Box, Card, FormatNumber, Text, Button } from "@chakra-ui/react";
 import { useAtom } from "jotai";
-import { finalJobArrayAtom } from "@/atoms/atoms";
+import { finalJobArrayAtom, finalSelectedSpoolAtom } from "@/atoms/atoms";
 import EditJobDialog from "./EditJobDialog";
 const JobList = () => {
     const [getJobs] = useAtom(finalJobArrayAtom)
-
+    const [spool] = useAtom(finalSelectedSpoolAtom);
     if (getJobs.state === 'hasError') return <h1>error loading history</h1>
     if (getJobs.state === 'loading') return <h1>loading</h1>
+
     const jobsArray = getJobs.data;
-    console.log(jobsArray)
+
+    const displayEditJobButton = !spool.data.isEmpty;
+
 
     return (
         jobsArray.toReversed().map((job, index) => {
@@ -46,10 +49,15 @@ const JobList = () => {
                                 <Tag.Label>{job.id}</Tag.Label>
                             </Tag.Root>
                         </Box>
+                        {
+                            displayEditJobButton ?
+                                <Box display="flex" justifyContent="flex-end">
+                                    <EditJobDialog job={job} />
+                                </Box>
+                                :
+                                <></>
+                        }
 
-                        <Box display="flex" justifyContent="flex-end">
-                            <EditJobDialog job={job} />
-                        </Box>
                     </Card.Body>
 
 
