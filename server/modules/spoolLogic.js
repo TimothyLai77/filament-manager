@@ -201,6 +201,44 @@ const incrementJobCount = async (id) => {
     return spool;
 }
 
+
+const getSpoolAttributes = async () => {
+    try{
+
+        const spools = await Spool.findAll({
+            attributes: ['brand', 'material', 'colour', 'finish']
+        });
+
+   
+        const brandSet = new Set();
+        const materialSet = new Set();
+        const colourSet = new Set();
+        const finishSet = new Set();
+        
+        // loop through spool array returned by db, and add each attribute to the set
+        spools.forEach((s) => {
+            brandSet.add(s.brand); // idk i'm just gonna leave these as strings "prusament" and "Prusament" will be separate.
+            materialSet.add(s.material.toUpperCase()) // materials are always in upper case
+            colourSet.add(s.colour.toLowerCase()) // "purple" and "Purple" should just be one colour
+            if(s.finish != null) finishSet.add(s.finish.toLowerCase()) // same thing for finishes
+        });
+
+        // put set data into js arays.
+        const data = {
+            brands : [...brandSet],
+            materials : [...materialSet],
+            colours: [...colourSet],
+            finishes : [...finishSet]
+        }
+
+
+        return data;
+    }catch (e){
+        throw e
+    }
+}
+
+
 const markSpoolAsEmpty = async (id) => {
     try {
         const spool = await Spool.findByPk(id);
@@ -249,4 +287,4 @@ const editSpool = async (id, newDataObj) => {
 }
 
 
-export { changeFilamentAmount, getFinishedSpools, getActiveSpools, markSpoolAsEmpty, createSpool, getSpoolById, getSpools, deleteSpool, decreaseFilament, editSpool, incrementJobCount };
+export { getSpoolAttributes, changeFilamentAmount, getFinishedSpools, getActiveSpools, markSpoolAsEmpty, createSpool, getSpoolById, getSpools, deleteSpool, decreaseFilament, editSpool, incrementJobCount };

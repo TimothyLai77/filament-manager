@@ -9,8 +9,20 @@ const {
     editSpool,
     markSpoolAsEmpty,
     getActiveSpools,
-    getFinishedSpools
+    getFinishedSpools,
+    getSpoolAttributes
 } = require('../modules/spoolLogic.js');
+
+
+router.get('/spools/attributes', async (req, res) => {
+    try{
+        console.log("GET: /spools/attributes");
+        attributes = await getSpoolAttributes();
+        res.send(attributes);
+    }catch (e) {
+        res.status(500).send(e)
+    }
+})
 
 router.put('/spools/mark-finished/:spoolId', async (req, res) => {
     try {
