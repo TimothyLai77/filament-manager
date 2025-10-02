@@ -1,5 +1,5 @@
 import { Button, Input, Stack, Card, Text, Field, Fieldset } from '@chakra-ui/react'
-import { asyncNewSpoolAtom, newSpoolBaseAtom, finalSpoolArrayAtom } from '@/atoms/atoms.js'
+import { asyncNewSpoolAtom, newSpoolBaseAtom, finalSpoolArrayAtom, asyncSpoolAttributeAtom } from '@/atoms/atoms.js'
 import { useAtom, atom } from 'jotai'
 import { useEffect, useState } from 'react'
 import { Toaster, toaster } from "../components/ui/toaster";
@@ -15,12 +15,14 @@ const SpoolCreationForm = () => {
     const [initialWeight, setInitialWeight] = useState(1000);
     const [cost, setCost] = useState(0);
     const [spoolArray, refreshSpoolArray] = useAtom(finalSpoolArrayAtom)
+    const [existingSpoolAttributes, refreshSpoolAttributes] = useAtom(asyncSpoolAttributeAtom);
 
     const [, setData] = useAtom(asyncNewSpoolAtom);
     // todo: hmmm i don't think this is the proper way... 
     const [newSpool, setNewSpool] = useAtom(newSpoolBaseAtom);
     const navigate = useNavigate();
 
+    
     useEffect(() => {
         //console.log(newSpool)
         if (newSpool == null) return;
