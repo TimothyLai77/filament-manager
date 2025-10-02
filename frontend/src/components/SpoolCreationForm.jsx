@@ -1,4 +1,4 @@
-import { Button, Input, Stack, Card, Text, Field, Fieldset } from '@chakra-ui/react'
+import { Button, Input, Stack, Card, Text, Field, Fieldset, Combobox, useListCollection, useFilter, Portal } from '@chakra-ui/react'
 import { asyncNewSpoolAtom, newSpoolBaseAtom, finalSpoolArrayAtom, asyncSpoolAttributeAtom } from '@/atoms/atoms.js'
 import { useAtom, atom } from 'jotai'
 import { useEffect, useState } from 'react'
@@ -22,7 +22,7 @@ const SpoolCreationForm = () => {
     const [newSpool, setNewSpool] = useAtom(newSpoolBaseAtom);
     const navigate = useNavigate();
 
-    
+
     useEffect(() => {
         //console.log(newSpool)
         if (newSpool == null) return;
@@ -52,7 +52,28 @@ const SpoolCreationForm = () => {
 
 
     }, [newSpool])
+   const frameworks = [
+  { label: "React", value: "react" },
+  { label: "Solid", value: "solid" },
+  { label: "Vue", value: "vue" },
+  { label: "Angular", value: "angular" },
+  { label: "Svelte", value: "svelte" },
+  { label: "Preact", value: "preact" },
+  { label: "Qwik", value: "qwik" },
+  { label: "Lit", value: "lit" },
+  { label: "Alpine.js", value: "alpinejs" },
+  { label: "Ember", value: "ember" },
+  { label: "Next.js", value: "nextjs" },
+]
 
+    // for the elastic search, idk this is what chakra had for their combobox example
+    const { contains } = useFilter({ sensitivity: "base" })
+    const { collection, filter } = useListCollection({
+        initialItems: frameworks,
+        filter: contains,
+    })
+
+ 
     const checkPayload = (payload) => {
         if (payload.name === '') return false;
         if (payload.brand === '') return false;
@@ -101,6 +122,33 @@ const SpoolCreationForm = () => {
     const generateFields = () => {
         return (
             <Fieldset.Root>
+                <Combobox.Root
+                    collection={collection}
+                    onInputValueChange={(e) => filter(e.inputValue)}
+                    width="320px"
+                >
+                    <Combobox.Label>Select framework</Combobox.Label>
+                    <Combobox.Control>
+                        <Combobox.Input placeholder="Type to search" />
+                        <Combobox.IndicatorGroup>
+                            <Combobox.ClearTrigger />
+                            <Combobox.Trigger />
+                        </Combobox.IndicatorGroup>
+                    </Combobox.Control>
+                    <Portal>
+                        <Combobox.Positioner>
+                            <Combobox.Content>
+                                <Combobox.Empty>No items found</Combobox.Empty>
+                                {collection.items.map((item) => (
+                                    <Combobox.Item item={item} key={item.value}>
+                                        {item.label}
+                                        <Combobox.ItemIndicator />
+                                    </Combobox.Item>
+                                ))}
+                            </Combobox.Content>
+                        </Combobox.Positioner>
+                    </Portal>
+                </Combobox.Root>
                 <Field.Root>
                     <Field.Label>Name</Field.Label>
                     <Input
