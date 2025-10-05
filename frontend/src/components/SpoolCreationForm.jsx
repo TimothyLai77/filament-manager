@@ -4,7 +4,7 @@ import { useAtom, atom } from 'jotai'
 import { useEffect, useState } from 'react'
 import { Toaster, toaster } from "../components/ui/toaster";
 import { Navigate, useNavigate } from 'react-router-dom';
-
+import SpoolAttributeInput from './SpoolAttributeInput'
 const SpoolCreationForm = () => {
 
     const [name, setName] = useState('');
@@ -52,28 +52,10 @@ const SpoolCreationForm = () => {
 
 
     }, [newSpool])
-   const frameworks = [
-  { label: "React", value: "react" },
-  { label: "Solid", value: "solid" },
-  { label: "Vue", value: "vue" },
-  { label: "Angular", value: "angular" },
-  { label: "Svelte", value: "svelte" },
-  { label: "Preact", value: "preact" },
-  { label: "Qwik", value: "qwik" },
-  { label: "Lit", value: "lit" },
-  { label: "Alpine.js", value: "alpinejs" },
-  { label: "Ember", value: "ember" },
-  { label: "Next.js", value: "nextjs" },
-]
 
-    // for the elastic search, idk this is what chakra had for their combobox example
-    const { contains } = useFilter({ sensitivity: "base" })
-    const { collection, filter } = useListCollection({
-        initialItems: frameworks,
-        filter: contains,
-    })
 
- 
+
+
     const checkPayload = (payload) => {
         if (payload.name === '') return false;
         if (payload.brand === '') return false;
@@ -122,33 +104,7 @@ const SpoolCreationForm = () => {
     const generateFields = () => {
         return (
             <Fieldset.Root>
-                <Combobox.Root
-                    collection={collection}
-                    onInputValueChange={(e) => filter(e.inputValue)}
-                    width="320px"
-                >
-                    <Combobox.Label>Select framework</Combobox.Label>
-                    <Combobox.Control>
-                        <Combobox.Input placeholder="Type to search" />
-                        <Combobox.IndicatorGroup>
-                            <Combobox.ClearTrigger />
-                            <Combobox.Trigger />
-                        </Combobox.IndicatorGroup>
-                    </Combobox.Control>
-                    <Portal>
-                        <Combobox.Positioner>
-                            <Combobox.Content>
-                                <Combobox.Empty>No items found</Combobox.Empty>
-                                {collection.items.map((item) => (
-                                    <Combobox.Item item={item} key={item.value}>
-                                        {item.label}
-                                        <Combobox.ItemIndicator />
-                                    </Combobox.Item>
-                                ))}
-                            </Combobox.Content>
-                        </Combobox.Positioner>
-                    </Portal>
-                </Combobox.Root>
+                <SpoolAttributeInput inputLabel={'Brand'} />
                 <Field.Root>
                     <Field.Label>Name</Field.Label>
                     <Input
