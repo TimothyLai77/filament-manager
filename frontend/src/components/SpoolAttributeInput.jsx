@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Combobox, useListCollection, useFilter, Portal } from "@chakra-ui/react";
+import { createListCollection, Listbox, useListCollection, useFilter, Input, Group, Button, Field, Popover, Portal } from "@chakra-ui/react";
 
 
 /**
@@ -7,20 +7,7 @@ import { Combobox, useListCollection, useFilter, Portal } from "@chakra-ui/react
  * i.e. on Brand, Material, Colour, Finish would have the dropdown when filling the inputs
  */
 
-// example for now
-const frameworks = [
-    { label: "React", value: "react" },
-    { label: "Solid", value: "solid" },
-    { label: "Vue", value: "vue" },
-    { label: "Angular", value: "angular" },
-    { label: "Svelte", value: "svelte" },
-    { label: "Preact", value: "preact" },
-    { label: "Qwik", value: "qwik" },
-    { label: "Lit", value: "lit" },
-    { label: "Alpine.js", value: "alpinejs" },
-    { label: "Ember", value: "ember" },
-    { label: "Next.js", value: "nextjs" },
-]
+
 
 const testList = [
     "PLA",
@@ -28,43 +15,55 @@ const testList = [
     "HT-PLA"
 ]
 
+const frameworks = createListCollection({
+    items: [
+        { label: "React.js", value: "react" },
+        { label: "Vue.js", value: "vue" },
+        { label: "Angular", value: "angular" },
+        { label: "Svelte", value: "svelte" },
+    ],
+})
+
 const SpoolAttributeInput = ({ inputLabel, list }) => {
     // for the elastic search, idk this is what chakra had for their combobox example
-    const { contains } = useFilter({ sensitivity: "base" })
-    const { collection, filter } = useListCollection({
-        initialItems: frameworks,
-        filter: contains,
-    })
 
     return (
         <>
-            <Combobox.Root
-                collection={collection}
-                onInputValueChange={(e) => filter(e.inputValue)}
-                width="XL"
-            >
-                <Combobox.Label>{inputLabel}</Combobox.Label>
-                <Combobox.Control>
-                    <Combobox.Input placeholder="Type to search" />
-                    <Combobox.IndicatorGroup>
+            <Field.Root>
+                <Field.Label>{inputLabel}</Field.Label>
+                <Group attached w="full" maxW="XL">
+                    <Input />
+                    <Popover.Root>
+                        <Popover.Trigger asChild>
+                            <Button variant="outline">
+                                Search Existing
+                            </Button>
+                        </Popover.Trigger>
 
-                        <Combobox.Trigger />
-                    </Combobox.IndicatorGroup>
-                </Combobox.Control>
-                <Portal>
-                    <Combobox.Positioner>
-                        <Combobox.Content>
-                            <Combobox.Empty>No items found</Combobox.Empty>
-                            {collection.items.map((item) => (
-                                <Combobox.Item item={item} key={item.value}>
-                                    {item.label}
-                                    <Combobox.ItemIndicator />
-                                </Combobox.Item>
-                            ))}
-                        </Combobox.Content>
-                    </Combobox.Positioner>
-                </Portal>
-            </Combobox.Root>
+                        <Portal>
+                            <Popover.Positioner>
+                                <Popover.Content>
+                                    <Popover.Arrow />
+                                    <Popover.Body>
+                                        <Listbox.Root collection={frameworks} width="320px">
+                                            <Listbox.Label>Select framework</Listbox.Label>
+                                            <Listbox.Content>
+                                                {frameworks.items.map((framework) => (
+                                                    <Listbox.Item item={framework} key={framework.value}>
+                                                        <Listbox.ItemText>{framework.label}</Listbox.ItemText>
+                                                        <Listbox.ItemIndicator />
+                                                    </Listbox.Item>
+                                                ))}
+                                            </Listbox.Content>
+                                        </Listbox.Root>
+                                    </Popover.Body>
+                                </Popover.Content>
+                            </Popover.Positioner>
+                        </Portal>
+                    </Popover.Root>
+
+                </Group>
+            </Field.Root>
         </>
     )
 }
