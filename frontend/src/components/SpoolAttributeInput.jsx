@@ -9,61 +9,54 @@ import { createListCollection, Listbox, useListCollection, useFilter, Input, Gro
 
 
 
-const testList = [
-    "PLA",
-    "PETG",
-    "HT-PLA"
-]
-
-const frameworks = createListCollection({
-    items: [
-        { label: "React.js", value: "react" },
-        { label: "Vue.js", value: "vue" },
-        { label: "Angular", value: "angular" },
-        { label: "Svelte", value: "svelte" },
-    ],
-})
 
 const SpoolAttributeInput = ({ inputLabel, list }) => {
-    // for the elastic search, idk this is what chakra had for their combobox example
+    const [selectedItem, setSelectedItem] = useState(null);
+    const { contains } = useFilter({ sensitivity: "base" })
+    const { collection, filter } = useListCollection({
+        initialItems: [
+            { label: "React.js", value: "react" },
+            { label: "Vue.js", value: "vue" },
+            { label: "Angular", value: "angular" },
+            { label: "Svelte", value: "svelte" },
+            { label: "Next.js", value: "nextjs" },
+            { label: "Nuxt.js", value: "nuxtjs" },
+            { label: "Remix", value: "remix" },
+            { label: "Gatsby", value: "gatsby" },
+            { label: "Ember.js", value: "ember" },
+            { label: "Preact", value: "preact" },
+        ],
+        filter: contains,
+    })
+
+    useEffect(() => {
+        console.log(selectedItem);
+
+    }, [selectedItem])
 
     return (
         <>
-            <Field.Root>
-                <Field.Label>{inputLabel}</Field.Label>
-                <Group attached w="full" maxW="XL">
-                    <Input />
-                    <Popover.Root>
-                        <Popover.Trigger asChild>
-                            <Button variant="outline">
-                                Search Existing
-                            </Button>
-                        </Popover.Trigger>
 
-                        <Portal>
-                            <Popover.Positioner>
-                                <Popover.Content>
-                                    <Popover.Arrow />
-                                    <Popover.Body>
-                                        <Listbox.Root collection={frameworks} width="320px">
-                                            <Listbox.Label>Select framework</Listbox.Label>
-                                            <Listbox.Content>
-                                                {frameworks.items.map((framework) => (
-                                                    <Listbox.Item item={framework} key={framework.value}>
-                                                        <Listbox.ItemText>{framework.label}</Listbox.ItemText>
-                                                        <Listbox.ItemIndicator />
-                                                    </Listbox.Item>
-                                                ))}
-                                            </Listbox.Content>
-                                        </Listbox.Root>
-                                    </Popover.Body>
-                                </Popover.Content>
-                            </Popover.Positioner>
-                        </Portal>
-                    </Popover.Root>
+            <Listbox.Root maxW="XL" collection={collection} onSelect={(choice) => setSelectedItem(choice)}>
+                <Listbox.Label>Select Framework</Listbox.Label>
+                <Listbox.Input
+                    as={Input}
+                    placeholder="Type to filter or custom..."
+                    onChange={(e) => filter(e.target.value)}
+                    value={selectedItem ? selectedItem.value : ""}
+                />
+                <Listbox.Content maxH="200px">
+                    {collection.items.map((attribute) => (
+                        <Listbox.Item item={attribute} key={attribute.value}>
+                            <Listbox.ItemText>{attribute.label}</Listbox.ItemText>
+                            <Listbox.ItemIndicator />
+                        </Listbox.Item>
+                    ))}
 
-                </Group>
-            </Field.Root>
+                    <Listbox.Empty>Nothing found</Listbox.Empty>
+                </Listbox.Content>
+            </Listbox.Root>
+
         </>
     )
 }
