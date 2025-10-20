@@ -9,7 +9,7 @@ import { createListCollection, Listbox, useListCollection, useFilter, Input, Gro
 
 
 // this is stupid
-const convertArrayToCollection = (array) => {
+const formatInputArray = (array) => {
     // convert the string array into objects for the collection
     const itemArray = []
     array.forEach(element => {
@@ -22,7 +22,10 @@ const convertArrayToCollection = (array) => {
 
 
 const SpoolAttributeInput = ({ inputLabel, list }) => {
+    // todo: remove later, this was just for testing. also make sure to change the input array back to passed prop
     const tempList = ["PLA", "PETG", "HT-PLA", "ABS"]
+
+
     const [inputValue, setInputValue] = useState('');
     const [selectedItem, setSelectedItem] = useState(null);
     const { contains } = useFilter({ sensitivity: "base" })
@@ -30,7 +33,7 @@ const SpoolAttributeInput = ({ inputLabel, list }) => {
     // I really don't like having to create a collection for the list to work, but the alternative is to get chakra's listbox
     // to work using arrays which is even more pain. esp. with filters and what not.
     const { collection, filter } = useListCollection({
-        initialItems: convertArrayToCollection(tempList),
+        initialItems: formatInputArray(tempList),
         filter: contains,
     })
 
