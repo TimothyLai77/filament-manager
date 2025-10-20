@@ -78,6 +78,7 @@ const SpoolAttributeInput = ({ inputLabel, list }) => {
                     onChange={handleInputChange}
                     value={inputValue}
                     onFocus={handleFocus}
+                    // react throws a warning, about this just uses onBlur internally.. But swapping onFocusOut to onBlur has different behaviour...
                     onFocusOut={handleBlur}
                 />
                 {
