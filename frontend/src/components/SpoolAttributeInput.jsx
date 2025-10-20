@@ -23,6 +23,7 @@ const convertArrayToCollection = (array) => {
 
 const SpoolAttributeInput = ({ inputLabel, list }) => {
     const tempList = ["PLA", "PETG", "HT-PLA", "ABS"]
+    const [inputValue, setInputValue] = useState('');
     const [selectedItem, setSelectedItem] = useState(null);
     const { contains } = useFilter({ sensitivity: "base" })
 
@@ -38,16 +39,31 @@ const SpoolAttributeInput = ({ inputLabel, list }) => {
 
     }, [selectedItem])
 
+
+    // Handle input changes
+    const handleInputChange = (e) => {
+        const value = e.target.value;
+        setInputValue(value);
+        filter(value);
+    };
+
+    // Handle item selection
+    const handleSelect = (choice) => {
+        setSelectedItem(choice);
+        setInputValue(choice.value);
+    };
+
+
     return (
         <>
 
-            <Listbox.Root maxW="XL" collection={collection} onSelect={(choice) => setSelectedItem(choice)}>
+            <Listbox.Root maxW="XL" collection={collection} onSelect={handleSelect}>
                 <Listbox.Label>Select Framework</Listbox.Label>
                 <Listbox.Input
                     as={Input}
                     placeholder="Type to filter or custom..."
-                    onChange={(e) => filter(e.target.value)}
-                    value={selectedItem ? selectedItem.value : ""}
+                    onChange={handleInputChange}
+                    value={inputValue}
                 />
                 <Listbox.Content maxH="200px">
                     {collection.items.map((attribute) => (
