@@ -25,7 +25,7 @@ const SpoolAttributeInput = ({ inputLabel, list }) => {
     // todo: remove later, this was just for testing. also make sure to change the input array back to passed prop
     const tempList = ["PLA", "PETG", "HT-PLA", "ABS"]
 
-
+    const [isFocused, setFocus] = useState(false)
     const [inputValue, setInputValue] = useState('');
     const [selectedItem, setSelectedItem] = useState(null);
     const { contains } = useFilter({ sensitivity: "base" })
@@ -54,30 +54,49 @@ const SpoolAttributeInput = ({ inputLabel, list }) => {
     const handleSelect = (choice) => {
         setSelectedItem(choice);
         setInputValue(choice.value);
+        setFocus(false)
     };
 
+    const handleFocus = () => {
+        setFocus(true)
+    }
+
+
+
+    const handleBlur = () => {
+        setFocus(false)
+    }
 
     return (
         <>
 
             <Listbox.Root maxW="XL" collection={collection} onSelect={handleSelect}>
-                <Listbox.Label>Select Framework</Listbox.Label>
+                <Listbox.Label>{inputLabel}</Listbox.Label>
                 <Listbox.Input
                     as={Input}
                     placeholder="Type to filter or custom..."
                     onChange={handleInputChange}
                     value={inputValue}
+                    onFocus={handleFocus}
+                    onFocusOut={handleBlur}
                 />
-                <Listbox.Content maxH="200px">
-                    {collection.items.map((attribute) => (
-                        <Listbox.Item item={attribute} key={attribute.value}>
-                            <Listbox.ItemText>{attribute.label}</Listbox.ItemText>
-                            <Listbox.ItemIndicator />
-                        </Listbox.Item>
-                    ))}
+                {
+                    // only render the drop down menu when the input is in focus
+                    isFocused ?
+                        (<Listbox.Content maxH="200px">
+                            {collection.items.map((attribute) => (
+                                <Listbox.Item item={attribute} key={attribute.value}>
+                                    <Listbox.ItemText>{attribute.label}</Listbox.ItemText>
 
-                    <Listbox.Empty>Nothing found</Listbox.Empty>
-                </Listbox.Content>
+                                </Listbox.Item>
+                            ))}
+
+                            <Listbox.Empty>Nothing found. {`Creating '${inputValue}'`}</Listbox.Empty>
+                        </Listbox.Content>
+                        ) :
+                        // else render nothing
+                        <></>
+                }
             </Listbox.Root>
 
         </>
