@@ -8,24 +8,28 @@ import { createListCollection, Listbox, useListCollection, useFilter, Input, Gro
  */
 
 
+// this is stupid
+const convertArrayToCollection = (array) => {
+    // convert the string array into objects for the collection
+    const itemArray = []
+    array.forEach(element => {
+        itemArray.push({
+            label: `${element}`, value: `${element}` // really dumb, but i just have a simple list.
+        })
+    });
+    return itemArray;
+}
 
 
 const SpoolAttributeInput = ({ inputLabel, list }) => {
+    const tempList = ["PLA", "PETG", "HT-PLA", "ABS"]
     const [selectedItem, setSelectedItem] = useState(null);
     const { contains } = useFilter({ sensitivity: "base" })
+
+    // I really don't like having to create a collection for the list to work, but the alternative is to get chakra's listbox
+    // to work using arrays which is even more pain. esp. with filters and what not.
     const { collection, filter } = useListCollection({
-        initialItems: [
-            { label: "React.js", value: "react" },
-            { label: "Vue.js", value: "vue" },
-            { label: "Angular", value: "angular" },
-            { label: "Svelte", value: "svelte" },
-            { label: "Next.js", value: "nextjs" },
-            { label: "Nuxt.js", value: "nuxtjs" },
-            { label: "Remix", value: "remix" },
-            { label: "Gatsby", value: "gatsby" },
-            { label: "Ember.js", value: "ember" },
-            { label: "Preact", value: "preact" },
-        ],
+        initialItems: convertArrayToCollection(tempList),
         filter: contains,
     })
 
