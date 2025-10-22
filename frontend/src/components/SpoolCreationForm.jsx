@@ -1,11 +1,22 @@
 import { Button, Input, Stack, Card, Text, Field, Fieldset, Combobox, useListCollection, useFilter, Portal } from '@chakra-ui/react'
 import { asyncNewSpoolAtom, newSpoolBaseAtom, finalSpoolArrayAtom, asyncSpoolAttributeAtom } from '@/atoms/atoms.js'
 import { useAtom, atom } from 'jotai'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Toaster, toaster } from "../components/ui/toaster";
 import { Navigate, useNavigate } from 'react-router-dom';
 import SpoolAttributeInput from './SpoolAttributeInput'
 const SpoolCreationForm = () => {
+
+    const [formData, setFormData] = useState({
+        name: '',
+        brand: '',
+        material: '',
+        colour: '',
+        finish: '',
+        initialWeight: 1000,
+        cost: 0.0,
+    });
+
 
     const [name, setName] = useState('');
     const [brand, setBrand] = useState('');
@@ -21,7 +32,6 @@ const SpoolCreationForm = () => {
     // todo: hmmm i don't think this is the proper way... 
     const [newSpool, setNewSpool] = useAtom(newSpoolBaseAtom);
     const navigate = useNavigate();
-
 
     useEffect(() => {
         //console.log(newSpool)
@@ -100,54 +110,44 @@ const SpoolCreationForm = () => {
         setCost(0);
     }
 
-    //todo: clean this up so its dynamically generated
+
+
+    const handleChange = useCallback((field, value) => {
+        setFormData(formData => ({
+            ...formData, // copies the old fields
+            [field]: value, // update target field with new value
+        }));
+    }, []);
+
+
+
     const generateFields = () => {
         return (
+
             <Fieldset.Root>
-                <SpoolAttributeInput inputLabel={'Brand'} />
                 <Field.Root>
                     <Field.Label>Name</Field.Label>
                     <Input
-                        onChange={(e) => setName(e.target.value)}
-                        value={name}
+                        onChange={(e) => handleChange('name', e.target.value)}
+                        value={formData.name}
                     />
-
-                    <Field.Label>Brand</Field.Label>
-                    <Input
-                        onChange={(e) => setBrand(e.target.value)}
-                        value={brand}
-                    />
-
-                    <Field.Label>Material</Field.Label>
-                    <Input
-                        onChange={(e) => setMaterial(e.target.value)}
-                        value={material}
-                    />
-
-                    <Field.Label>Colour</Field.Label>
-                    <Input
-                        onChange={(e) => setColour(e.target.value)}
-                        value={colour}
-                    />
-
-                    <Field.Label>Finish (optional)</Field.Label>
-                    <Input
-                        onChange={(e) => setFinish(e.target.value)}
-                        value={finish}
-                    />
-
+                    <SpoolAttributeInput inputLabel={'Brand'} updateForm={(value) => handleChange('brand', value)} list={['Bambu', 'eSun', 'Creality']} />
+                    <SpoolAttributeInput inputLabel={'Material'} updateForm={(value) => handleChange('material', value)} list={['PLA', 'PETG', 'HT-PLA']} />
+                    <SpoolAttributeInput inputLabel={'Colour'} updateForm={(value) => handleChange('colour', value)} list={['White', 'Black', 'Purple']} />
+                    <SpoolAttributeInput inputLabel={'Finish'} updateForm={(value) => handleChange('finish', value)} list={['Matte', 'Silk', 'Galaxy']} />
                     <Field.Label>Initial Weight (g)</Field.Label>
                     <Input
-                        onChange={(e) => setInitialWeight(e.target.value)}
-                        value={initialWeight}
+                        onChange={(e) => handleChange('initalWeight', e.target.value)}
+                        value={formData.initialWeight}
                     />
 
                     <Field.Label>Cost ($)</Field.Label>
                     <Input
-                        onChange={(e) => setCost(e.target.value)}
-                        value={cost}
+                        onChange={(e) => handleChange('cost', e.target.value)}
+                        value={formData.cost}
                     />
                 </Field.Root>
+
                 <Button marginTop={5} type="submit" onClick={handleSubmit}>Submit</Button>
             </Fieldset.Root>
         );

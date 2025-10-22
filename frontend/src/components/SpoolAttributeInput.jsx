@@ -21,9 +21,9 @@ const formatInputArray = (array) => {
 }
 
 
-const SpoolAttributeInput = ({ inputLabel, list }) => {
+const SpoolAttributeInput = ({ inputLabel, updateForm, list }) => {
     // todo: remove later, this was just for testing. also make sure to change the input array back to passed prop
-    const tempList = ["PLA", "PETG", "HT-PLA", "ABS"]
+
 
     const [isFocused, setFocus] = useState(false)
     const [inputValue, setInputValue] = useState('');
@@ -33,26 +33,26 @@ const SpoolAttributeInput = ({ inputLabel, list }) => {
     // I really don't like having to create a collection for the list to work, but the alternative is to get chakra's listbox
     // to work using arrays which is even more pain. esp. with filters and what not.
     const { collection, filter } = useListCollection({
-        initialItems: formatInputArray(tempList),
+        initialItems: formatInputArray(list),
         filter: contains,
     })
 
-    useEffect(() => {
-        console.log(selectedItem);
-
-    }, [selectedItem])
 
 
     // Handle input changes
     const handleInputChange = (e) => {
         const value = e.target.value;
+
         setInputValue(value);
+        updateForm(value); // call the parents' setState to pass the field value up
         filter(value);
     };
 
     // Handle item selection
     const handleSelect = (choice) => {
         setSelectedItem(choice);
+
+        updateForm(choice.value)
         setInputValue(choice.value);
         setFocus(false)
     };
@@ -103,7 +103,5 @@ const SpoolAttributeInput = ({ inputLabel, list }) => {
         </>
     )
 }
-// getting the data back to the parent for later, but make a state in the parent, and pass those
-// state setter functions as props
-// for later : https://dev.to/bcostaaa01/how-to-pass-props-from-child-to-parent-component-in-react-1ci4
+
 export default SpoolAttributeInput;
