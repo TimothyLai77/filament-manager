@@ -27,15 +27,20 @@ const SpoolCreationForm = () => {
     const [cost, setCost] = useState(0);
     const [spoolArray, refreshSpoolArray] = useAtom(finalSpoolArrayAtom)
     const [existingSpoolAttributes, refreshSpoolAttributes] = useAtom(asyncSpoolAttributeAtom);
+    const [spoolAttributes] = useAtom(asyncSpoolAttributeAtom)
+
 
     const [, setData] = useAtom(asyncNewSpoolAtom);
     // todo: hmmm i don't think this is the proper way... 
     const [newSpool, setNewSpool] = useAtom(newSpoolBaseAtom);
     const navigate = useNavigate();
 
+
+
     useEffect(() => {
         //console.log(newSpool)
         if (newSpool == null) return;
+
 
         // this is kinda ????? but I get a flush sync warning without the timer
         // just defers the rendering to the next cycle apparnetly?
@@ -121,7 +126,15 @@ const SpoolCreationForm = () => {
 
 
 
+
     const generateFields = () => {
+        console.log(spoolAttributes)
+        const brandList = spoolAttributes.brands;
+        const materialList = spoolAttributes.materials;
+        const colourList = spoolAttributes.colours;
+        const finishList = spoolAttributes.finishes;
+        console.log(brandList)
+
         return (
 
             <Fieldset.Root>
@@ -131,10 +144,10 @@ const SpoolCreationForm = () => {
                         onChange={(e) => handleChange('name', e.target.value)}
                         value={formData.name}
                     />
-                    <SpoolAttributeInput inputLabel={'Brand'} updateForm={(value) => handleChange('brand', value)} list={['Bambu', 'eSun', 'Creality']} />
-                    <SpoolAttributeInput inputLabel={'Material'} updateForm={(value) => handleChange('material', value)} list={['PLA', 'PETG', 'HT-PLA']} />
-                    <SpoolAttributeInput inputLabel={'Colour'} updateForm={(value) => handleChange('colour', value)} list={['White', 'Black', 'Purple']} />
-                    <SpoolAttributeInput inputLabel={'Finish'} updateForm={(value) => handleChange('finish', value)} list={['Matte', 'Silk', 'Galaxy']} />
+                    <SpoolAttributeInput inputLabel={'Brand'} updateForm={(value) => handleChange('brand', value)} list={brandList} />
+                    <SpoolAttributeInput inputLabel={'Material'} updateForm={(value) => handleChange('material', value)} list={materialList} />
+                    <SpoolAttributeInput inputLabel={'Colour'} updateForm={(value) => handleChange('colour', value)} list={colourList} />
+                    <SpoolAttributeInput inputLabel={'Finish'} updateForm={(value) => handleChange('finish', value)} list={finishList} />
                     <Field.Label>Initial Weight (g)</Field.Label>
                     <Input
                         onChange={(e) => handleChange('initalWeight', e.target.value)}
