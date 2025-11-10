@@ -18,13 +18,13 @@ const SpoolCreationForm = () => {
     });
 
 
-    const [name, setName] = useState('');
-    const [brand, setBrand] = useState('');
-    const [material, setMaterial] = useState('');
-    const [colour, setColour] = useState('');
-    const [finish, setFinish] = useState('');
-    const [initialWeight, setInitialWeight] = useState(1000);
-    const [cost, setCost] = useState(0);
+    // const [name, setName] = useState('');
+    // const [brand, setBrand] = useState('');
+    // const [material, setMaterial] = useState('');
+    // const [colour, setColour] = useState('');
+    // const [finish, setFinish] = useState('');
+    // const [initialWeight, setInitialWeight] = useState(1000);
+    // const [cost, setCost] = useState(0);
     const [spoolArray, refreshSpoolArray] = useAtom(finalSpoolArrayAtom)
     const [existingSpoolAttributes, refreshSpoolAttributes] = useAtom(asyncSpoolAttributeAtom);
     const [spoolAttributes] = useAtom(asyncSpoolAttributeAtom)
@@ -82,14 +82,16 @@ const SpoolCreationForm = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        // this is kinda stupid, the formData state already has everything, but i don't know when to parse the final weight and cost
+        // so im just putting it in another object and checking then.
         const payload = {
-            name: name,
-            brand: brand,
-            material: material,
-            colour: colour,
-            finish: finish ? finish : null,
-            initialWeight: parseFloat(initialWeight),
-            cost: parseFloat(cost)
+            name: formData.name,
+            brand: formData.brand,
+            material: formData.material,
+            colour: formData.colour,
+            finish: formData.finish != '' ? formData.finish : null,
+            initialWeight: parseFloat(formData.initialWeight),
+            cost: parseFloat(formData.cost)
         }
         if (checkPayload(payload)) {
             //console.log(payload)
@@ -128,12 +130,12 @@ const SpoolCreationForm = () => {
 
 
     const generateFields = () => {
-        console.log(spoolAttributes)
+
         const brandList = spoolAttributes.brands;
         const materialList = spoolAttributes.materials;
         const colourList = spoolAttributes.colours;
         const finishList = spoolAttributes.finishes;
-        console.log(brandList)
+
 
         return (
 
