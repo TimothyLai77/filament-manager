@@ -119,7 +119,7 @@ export const markSpoolAsFinishedAtom = atom(
 )
 
 // Atom for getting the attributes for elastic search 
-export const asyncSpoolAttributeAtom = atomWithRefresh(
+export const asyncSpoolAttributeAtom = atom(
     async () => {
         const response = await fetch('/api/spools/attributes');
         const data = await response.json();
