@@ -61,7 +61,8 @@ const SpoolCreationForm = () => {
                     description: "New spool added to database.",
                     type: "success"
                 });
-                clearInputs();
+                // clearInputs();
+                refreshSpoolAttributes();
                 refreshSpoolArray();
             }
         }, 0);
@@ -98,14 +99,6 @@ const SpoolCreationForm = () => {
             //console.log(payload)
             // writes the payload to the atom, and jotai handles it? (i should've wrote more comments lol i don't remember how any of this works)
             setData(payload)
-
-            // 
-            clearInputs();
-
-            // atomWithRefresh with no params in the set function will refresh
-            // kinda janky but whatever. 
-            refreshSpoolAttributes();
-            refreshSpoolArray();
         } else {
             console.log('form error')
             toaster.create({
@@ -116,7 +109,7 @@ const SpoolCreationForm = () => {
         }
     }
 
-
+    // TODO: uh this wont work, i need to clear the <input> in the SpoolAttributeInput component
     const clearInputs = () => {
         setFormData(defaultFormData);
     }
