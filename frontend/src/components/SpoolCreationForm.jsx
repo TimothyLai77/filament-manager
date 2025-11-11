@@ -7,7 +7,7 @@ import { Navigate, useNavigate } from 'react-router-dom';
 import SpoolAttributeInput from './SpoolAttributeInput'
 const SpoolCreationForm = () => {
 
-    const [formData, setFormData] = useState({
+    const defaultFormData = {
         name: '',
         brand: '',
         material: '',
@@ -15,7 +15,9 @@ const SpoolCreationForm = () => {
         finish: '',
         initialWeight: 1000,
         cost: 0.0,
-    });
+    }
+
+    const [formData, setFormData] = useState(defaultFormData);
 
 
     // const [name, setName] = useState('');
@@ -26,8 +28,7 @@ const SpoolCreationForm = () => {
     // const [initialWeight, setInitialWeight] = useState(1000);
     // const [cost, setCost] = useState(0);
     const [spoolArray, refreshSpoolArray] = useAtom(finalSpoolArrayAtom)
-    const [existingSpoolAttributes, refreshSpoolAttributes] = useAtom(asyncSpoolAttributeAtom);
-    const [spoolAttributes] = useAtom(asyncSpoolAttributeAtom)
+    const [spoolAttributes, refreshSpoolAttributes] = useAtom(asyncSpoolAttributeAtom)
 
 
     const [, setData] = useAtom(asyncNewSpoolAtom);
@@ -95,7 +96,16 @@ const SpoolCreationForm = () => {
         }
         if (checkPayload(payload)) {
             //console.log(payload)
+            // writes the payload to the atom, and jotai handles it? (i should've wrote more comments lol i don't remember how any of this works)
             setData(payload)
+
+            // 
+            clearInputs();
+
+            // atomWithRefresh with no params in the set function will refresh
+            // kinda janky but whatever. 
+            refreshSpoolAttributes();
+            refreshSpoolArray();
         } else {
             console.log('form error')
             toaster.create({
@@ -108,13 +118,7 @@ const SpoolCreationForm = () => {
 
 
     const clearInputs = () => {
-        setName('');
-        setBrand('');
-        setMaterial('');
-        setColour('');
-        setFinish('');
-        setInitialWeight(1000);
-        setCost(0);
+        setFormData(defaultFormData);
     }
 
 
