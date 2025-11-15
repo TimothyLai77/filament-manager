@@ -1,29 +1,34 @@
-import { spoolTabSelectorAtom, finalSpoolArrayAtom, finalFinishedSpoolArrayAtom } from "@/atoms/atoms.js"
 import { Box, Flex, Table, Card, Button, HStack, ProgressCircle, Separator } from "@chakra-ui/react"
 import { MdModeEdit, MdLibraryAdd, MdInfoOutline } from "react-icons/md";
-import { useAtom, atom } from 'jotai'
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from "react";
 
-const SpoolList = () => {
-    const navigate = useNavigate();
-    const [activeSpools] = useAtom(finalSpoolArrayAtom)
-    const [finishedSpools] = useAtom(finalFinishedSpoolArrayAtom);
+import { useSelector, useDispatch } from 'react-redux'
+import { fetchActiveSpoolList } from '../features/spools/spoolSlice'
 
-    const [selectedTab] = useAtom(spoolTabSelectorAtom);
-    const [spools, setSpools] = useState({ state: 'loading', data: [] });
+const SpoolList = () => {
+    const dispatch = useDispatch();
+    // note to self: these are the 
+    const { spoolList, loading, error } = useSelector((state) => state.spools)
+    const navigate = useNavigate();
+
+    // TODO:    const [finishedSpools] = useAtom(finalFinishedSpoolArrayAtom);
+
+    //TODO: const [selectedTab] = useAtom(spoolTabSelectorAtom);
+    //TODO: const [spools, setSpools] = useState({ state: 'loading', data: [] });
 
     useEffect(() => {
-        if (selectedTab == 'active') setSpools(activeSpools);
-        if (selectedTab == 'finished') setSpools(finishedSpools);
-    }, [selectedTab, activeSpools, finishedSpools])
+        dispatch(fetchActiveSpoolList());
+    }, [dispatch])
 
-    if (!spools) return <h1>Loading...</h1>;
-    if (spools.state === 'hasError') return <h1>Something really broke...</h1>
-    if (spools.state === 'loading') return <h1>loading</h1>
-    const spoolList = spools.data;
 
-    spoolList.sort((s1, s2) => Date.parse(s2.createdAt) - Date.parse(s1.createdAt))
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error: {error}</p>;
+
+
+    console.log(spoolList);
+    const sortedSpoolList = [...spoolList];
+    sortedSpoolList.sort((s1, s2) => Date.parse(s2.createdAt) - Date.parse(s1.createdAt))
 
     return (
         <>
@@ -45,7 +50,7 @@ const SpoolList = () => {
                         </Table.Header>
 
                         <Table.Body>
-                            {spoolList.map((spool) => (
+                            {sortedSpoolList.map((spool) => (
                                 <Table.Row key={spool.id}>
                                     <Table.Cell>{spool.name}</Table.Cell>
                                     <Table.Cell>{spool.brand}</Table.Cell>
