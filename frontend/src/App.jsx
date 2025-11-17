@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import SpoolPage from './pages/SpoolPage';
 import CreateSpoolPage from './pages/CreateSpoolPage'
 import CreateJobPage from './pages/CreateJobPage'
-import JobHistoryPage from "./pages/JobHistoryPage";
+import SpoolDetailsPage from "./pages/SpoolDetailsPage";
 import { ChakraProvider, defaultSystem } from '@chakra-ui/react'
 import {
   createSystem,
@@ -42,7 +42,7 @@ function App() {
               <Route path='/' element={<SpoolPage />} />
               <Route path='/create-spool' element={<CreateSpoolPage />} />
               <Route path='/create-job/:spoolId' element={<CreateJobPage />} />
-              <Route path='/details/:spoolId' element={<JobHistoryPage />} />
+              <Route path='/details/:spoolId' element={<SpoolDetailsPage />} />
             </Routes>
           </BrowserRouter>
         </ColorModeProvider>

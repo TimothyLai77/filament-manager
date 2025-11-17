@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import SpoolDetailCard from "../components/SpoolDetailCard";
 import TopNavBar from "../components/TopNavBar";
 import { fetchSpoolById, setSelectedSpool } from "@/features/spools/spoolSlice";
-const JobHistoryPage = () => {
+const SpoolDetailsPage = () => {
     const { spoolId } = useParams();
     const dispatch = useDispatch();
 
@@ -28,4 +28,4 @@ const JobHistoryPage = () => {
         </>
     );
 }
-export default JobHistoryPage;
+export default SpoolDetailsPage;
