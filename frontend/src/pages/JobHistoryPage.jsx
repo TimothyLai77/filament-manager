@@ -1,26 +1,28 @@
-import JobList from "../components/JobList";
 import { Stack } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
-import { useAtom } from "jotai";
-import { selectedSpoolAtom, showSpoolManagementButtonsAtom } from "@/atoms/atoms";
+import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import SpoolDetailCard from "../components/SpoolDetailCard";
 import TopNavBar from "../components/TopNavBar";
+import { fetchSpoolById, setSelectedSpool } from "@/features/spools/spoolSlice";
 const JobHistoryPage = () => {
     const { spoolId } = useParams();
-    const [, setSelectedSpool] = useAtom(selectedSpoolAtom);
-    const [, setShowEditButton] = useAtom(showSpoolManagementButtonsAtom);
+    const dispatch = useDispatch();
+
     useEffect(() => {
-        setShowEditButton(true)
-        setSelectedSpool(spoolId);
-    }, [])
+        // fetch spool details for the child, and place it in store
+        dispatch(fetchSpoolById(spoolId));
+        // todo: decide if i really need this or not.
+        //setSelectedSpool(spoolId);
+    }, [dispatch])
+
 
     return (
         <>
             <TopNavBar />
             <Stack margin={5}>
                 <SpoolDetailCard />
-                <JobList />
+                {/* <JobList /> */}
             </Stack>
 
         </>
