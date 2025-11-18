@@ -5,34 +5,32 @@ import { useEffect, useState } from "react";
 
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchActiveSpoolList } from '../features/spools/spoolSlice'
-
-const SpoolList = () => {
+export const VARIANTS = {
+    active: 'active',
+    finished: 'finished'
+};
+const SpoolList = ({ listType }) => {
     const dispatch = useDispatch();
     // note to self: these are the 
-    const { spoolList, loading, error } = useSelector((state) => state.spools)
+    const { spoolList, finishedSpoolList, loading, error } = useSelector((state) => state.spools)
     const navigate = useNavigate();
-
-    // TODO:    const [finishedSpools] = useAtom(finalFinishedSpoolArrayAtom);
-
-    //TODO: const [selectedTab] = useAtom(spoolTabSelectorAtom);
-    //TODO: const [spools, setSpools] = useState({ state: 'loading', data: [] });
-
-    useEffect(() => {
-        dispatch(fetchActiveSpoolList());
-    }, [dispatch])
-
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
 
-
-    console.log(spoolList);
-    const sortedSpoolList = [...spoolList];
+    var sortedSpoolList = [];
+    if (listType === VARIANTS.finished) {
+        // if the list type is set to render finished spools put that inthe array.
+        sortedSpoolList = [...finishedSpoolList];
+    } else {
+        // default will be the active spools
+        sortedSpoolList = [...spoolList];
+    }
+    //console.log(spoolList);
     sortedSpoolList.sort((s1, s2) => Date.parse(s2.createdAt) - Date.parse(s1.createdAt))
 
     return (
         <>
-
             <Box margin={5} borderWidth="1px">
                 <Table.ScrollArea margin={5} borderWidth="0px">
                     <Table.Root interactive>
@@ -86,6 +84,7 @@ const SpoolList = () => {
                                                 Details
                                             </Button>
                                             {
+                                                // check the current spool status and decide to render the create job button or not
                                                 !spool.isEmpty ?
                                                     <Button size="xs"
                                                         onClick={() => {

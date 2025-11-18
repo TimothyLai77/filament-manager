@@ -1,20 +1,31 @@
-import SpoolList from '../components/SpoolList'
+import SpoolList, { VARIANTS } from '../components/SpoolList'
 import { Tabs, Box, Card, Flex, HStack, Button, Separator, Text, useTabs } from '@chakra-ui/react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useAtom } from 'jotai';
+import { useState } from 'react';
 import { spoolTabSelectorAtom } from '@/atoms/atoms';
 import { useEffect } from 'react';
-import TopNavBar from '../components/TopNavBar';
-const SpoolPage = () => {
-  const [, setTab] = useAtom(spoolTabSelectorAtom);
 
+import { useDispatch } from 'react-redux';
+import TopNavBar from '../components/TopNavBar';
+import { fetchActiveSpoolList, fetchFinishedSpoolsList } from '@/features/spools/spoolSlice';
+const SpoolPage = () => {
+  const dispatch = useDispatch();
+
+  //const [, setTab] = useAtom(spoolTabSelectorAtom);
+
+  // Chakra UI hook 
   const tabs = useTabs({
-    defaultValue: "active"
+    defaultValue: VARIANTS.active
   })
 
+
+
   useEffect(() => {
-    setTab(tabs.value)
-  }, [tabs])
+    dispatch(fetchActiveSpoolList());
+    dispatch(fetchFinishedSpoolsList());
+  }, [])
+
 
   const titleCard = (isActiveFilament) => {
     const navigate = useNavigate();
@@ -53,23 +64,23 @@ const SpoolPage = () => {
         <Tabs.RootProvider value={tabs} lazyMount fitted variant="enclosed">
           <Flex justify="center" width="100%">
             <Tabs.List display="flex" justifyContent="center">
-              <Tabs.Trigger value="active">
+              <Tabs.Trigger value={VARIANTS.active}>
                 Active
               </Tabs.Trigger>
-              <Tabs.Trigger value="finished">
+              <Tabs.Trigger value={VARIANTS.finished}>
                 Finished Spools
               </Tabs.Trigger>
             </Tabs.List>
           </Flex>
-          <Tabs.Content value="active">
+          <Tabs.Content value={VARIANTS.active}>
             {titleCard(true)}
           </Tabs.Content>
-          <Tabs.Content value="finished">
+          <Tabs.Content value={VARIANTS.finished}>
             {titleCard(false)}
           </Tabs.Content>
         </Tabs.RootProvider>
       </Box>
-      <SpoolList />
+      <SpoolList listType={tabs.value} />
     </>
   )
 }
