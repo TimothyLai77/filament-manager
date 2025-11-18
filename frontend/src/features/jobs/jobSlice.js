@@ -2,11 +2,39 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 
 const initialState = {
     jobList: [],
+    submittedJob: null,
     loading: false,
     error: null
 }
 
+// Create a new job given the spool
+// Payload should be:
+/**
+ * {
+        'spoolId': 'spool-xxxxxxxx',
+        'name': '...',
+        'filamentAmountUsed': xx.xx
+        'cost': xx.xx // can also leave as null to let backend calculate it
+ * }
+ */
+export const createJob = createAsyncThunk(
+    '/api/jobs/create',
+    async (payload) => {
+        try {
+            const response = await fetch('/api/jobs/create', {
+                method: 'POST',
+                body: JSON.stringify(payload)
+            })
+        } catch (err) {
+            return err;
+        }
+    }
+)
 
+
+
+
+// Fetch the list of jobs that a spool has been used in
 export const fetchJobListById = createAsyncThunk(
     'api/jobs/history/SpoolId',
     async (spoolId) => {
@@ -29,6 +57,7 @@ export const jobSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
+            // FETCH JOB LIST
             .addCase(fetchJobListById.pending, (state) => {
                 state.loading = true;
             })
@@ -41,6 +70,21 @@ export const jobSlice = createSlice({
                 state.loading = false;
                 state.payload.error = action.payload
             })
+
+            // SUBMIT JOB  
+            .addCase(createJob.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(createJob.fulfilled, (state, action) => {
+                state.loading = false;
+                state.submittedJob = action.payload;
+            })
+            .addCase(createJob.rejected, (state, action) => {
+                state.loading = false;
+                state.payload.error = action.payload
+            })
+
+
     }
 })
 
