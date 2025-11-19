@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 
 const initialState = {
     jobList: [],
-    submittedJob: null,
+    submittedJob: null, // needed for the toast confirmation on job creation
     loading: false,
     error: null
 }
@@ -23,8 +23,12 @@ export const createJob = createAsyncThunk(
         try {
             const response = await fetch('/api/jobs/create', {
                 method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
                 body: JSON.stringify(payload)
             })
+            return response.json();
         } catch (err) {
             return err;
         }
@@ -73,6 +77,7 @@ export const jobSlice = createSlice({
 
             // SUBMIT JOB  
             .addCase(createJob.pending, (state) => {
+                state.submittedJob = null; // not sure if this is needed, but reset the submission to null if it errors
                 state.loading = true;
             })
             .addCase(createJob.fulfilled, (state, action) => {
