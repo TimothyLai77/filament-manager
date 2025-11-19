@@ -34,7 +34,7 @@ const JobCreationForm = () => {
     // use effect to auto calculate how much the job will cost (updates on 'filament amount' change) 
     useEffect(() => {
         setCost(costPerGram * filamentAmount);
-    }, [filamentAmount])
+    }, [filamentAmount, spoolDetails])
 
 
     // use effect for toast on job submit
