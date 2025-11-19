@@ -1,49 +1,59 @@
 import { Button, Input, Stack, Card, Text, Field, Fieldset } from '@chakra-ui/react'
-import { asyncNewSpoolAtom, newSpoolBaseAtom } from '@/atoms/atoms.js'
-import { useAtom, atom } from 'jotai'
-import { useEffect, useState } from 'react'
 import { Toaster, toaster } from "../components/ui/toaster";
-import { finalSelectedSpoolAtom, newJobBaseAtom, asyncNewJobAtom, loadableSelectedSpoolDetailsAtom } from '@/atoms/atoms.js';
-import SpoolDetailCard from './SpoolDetailCard.jsx';
-const JobCreationForm = () => {
+import { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
 
+import { createJob } from '@/features/jobs/jobSlice';
+import { fetchSpoolById } from '@/features/spools/spoolSlice';
+
+
+const checkPayload = (payload) => {
+    // idk there's probably a better way but my brain isn't working
+    const spoolRegex = new RegExp("^(spool-).+$");
+    if (!spoolRegex.test(payload.spoolId)) return false;
+    if (payload.name === '' || payload.name === null) return false;
+    if (payload.filamentAmountUsed <= 0 || isNaN(payload.filamentAmountUsed)) return false;
+    if (isNaN(payload.cost)) return false;
+    return true;
+}
+
+
+const JobCreationForm = () => {
+    const dispatch = useDispatch();
+    const { spoolDetails, loading, error } = useSelector((state) => state.spools);
+    const { submittedJob } = useSelector((state) => state.jobs);
+
+    // react useStates for the form
+    // todo: probably refactor this into a single object useState. like what is done in the spool creation.
     const [name, setName] = useState('');
-    const [spoolDetails, refreshSpool] = useAtom(finalSelectedSpoolAtom)
     const [filamentAmount, setFilamentAmount] = useState('');
     const [cost, setCost] = useState(0);
 
 
-    const [, setData] = useAtom(asyncNewJobAtom);
-    // todo: hmmm i don't think this is the proper way... 
-    const [newJob] = useAtom(newJobBaseAtom);
 
-    let costPerGram = 0;
-    let allowJobCreation = false;
-    if (spoolDetails.state === 'hasData') {
-        costPerGram = spoolDetails.data.cost / spoolDetails.data.initialWeight;
-        if (!spoolDetails.data.isEmpty) allowJobCreation = true;
-    }
-
-
+    // use effect to auto calculate how much the job will cost (updates on 'filament amount' change) 
     useEffect(() => {
         setCost(costPerGram * filamentAmount);
     }, [filamentAmount])
 
 
+    // use effect for toast on job submit
     useEffect(() => {
         //console.log(newSpool)
-        if (newJob == null) return;
+        if (submittedJob == null) return;
 
         // this is kinda ????? but I get a flush sync warning without the timer
         // just defers the rendering to the next cycle apparnetly?
         setTimeout(() => {
-            if (newJob instanceof Error) {
+            if (submittedJob instanceof Error) {
                 toaster.create({
                     title: "Error",
-                    description: `something went wrong: ` + newJob.message,
+                    description: `something went wrong: ` + submittedJob.message,
                     type: "error"
                 })
             } else {
+                // dispatch a fetch request to the spool detials to refresh the data.
+                dispatch(fetchSpoolById(spoolDetails.id));
                 toaster.create({
                     title: "Success",
                     description: "New job added to database.",
@@ -55,33 +65,40 @@ const JobCreationForm = () => {
         }, 0);
 
 
-    }, [newJob])
+    }, [submittedJob])
 
-    const checkPayload = (payload) => {
-        // idk there's probably a better way but my brain isn't working
-        const spoolRegex = new RegExp("^(spool-).+$");
-        if (!spoolRegex.test(payload.spoolId)) return false;
-        if (payload.name === '' || payload.name === null) return false;
-        if (payload.filamentAmountUsed <= 0 || isNaN(payload.filamentAmountUsed)) return false;
-        if (isNaN(payload.cost)) return false;
-        return true;
-    }
+    // wait for redux store loads
+    if (loading) return <h1>loading...</h1>
+    if (error) return <h1>error</h1>
+
+    // Get spool details and decide if the spool is able to be used (isEmpty is false)
+    // and calcualte cost/g used
+    const costPerGram = spoolDetails.cost / spoolDetails.initialWeight;
+    const allowJobCreation = !spoolDetails.isEmpty
+
+
+
+
     const clearInputs = () => {
         setName('')
         setFilamentAmount('')
         setCost(0);
     }
+
+
     const handleSubmit = (e) => {
         e.preventDefault();
         const payload = {
             name: name,
-            spoolId: spoolDetails.data.id,
+            spoolId: spoolDetails.id,
             filamentAmountUsed: parseFloat(filamentAmount),
             cost: parseFloat(cost)
         }
         console.log(payload);
         if (checkPayload(payload)) {
-            setData(payload);
+            // actual form submission
+            dispatch(createJob(payload));
+
         } else {
             console.log('form error')
             toaster.create({
