@@ -54,13 +54,13 @@ const JobCreationForm = () => {
             } else {
                 // dispatch a fetch request to the spool detials to refresh the data.
                 dispatch(fetchSpoolById(spoolDetails.id));
+
                 toaster.create({
                     title: "Success",
                     description: "New job added to database.",
                     type: "success"
                 });
-                refreshSpool()
-                clearInputs()
+
             }
         }, 0);
 
@@ -98,7 +98,7 @@ const JobCreationForm = () => {
         if (checkPayload(payload)) {
             // actual form submission
             dispatch(createJob(payload));
-
+            clearInputs()
         } else {
             console.log('form error')
             toaster.create({
