@@ -10,19 +10,6 @@ const initialState = {
 }
 
 
-export const markSpoolAsFinished = createAsyncThunk(
-    'api/spools/mark-finished/:spoolId',
-    async (spoolId) => {
-        try {
-            const response = await fetch(`api/spools/mark-finished/${spoolId}`, {
-                method: 'POST',
-            })
-            return response.json();
-        } catch (err) {
-            return err;
-        }
-    }
-)
 
 // Get the list of finished/empty spools
 export const fetchFinishedSpoolsList = createAsyncThunk(
@@ -116,18 +103,6 @@ export const spoolSlice = createSlice({
                 state.error = action.payload
             })
 
-            // MARK SPOOL AS FINISHED
-            .addCase(markSpoolAsFinished.pending, (state) => {
-                state.loading = true;
-            })
-            .addCase(markSpoolAsFinished.fulfilled, (state, action) => {
-                state.loading = false;
-                // not sure on this, but i guesss just have components select this and watch it in a useeffect for the asyncthunk to finish?
-                state.spoolDetails = action.payload;
-            })
-            .addCase(markSpoolAsFinished.rejected, (state, action) => {
-                state.error = action.payload
-            })
     }
 })
 
