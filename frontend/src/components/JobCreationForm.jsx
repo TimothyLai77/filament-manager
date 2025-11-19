@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createJob } from '@/features/jobs/jobSlice';
 import { fetchSpoolById } from '@/features/spools/spoolSlice';
 
-
+// Check if payload is valid (no, empty fields, both amount used and cost are numbers)
 const checkPayload = (payload) => {
     // idk there's probably a better way but my brain isn't working
     const spoolRegex = new RegExp("^(spool-).+$");
@@ -42,8 +42,8 @@ const JobCreationForm = () => {
         //console.log(newSpool)
         if (submittedJob == null) return;
 
-        // this is kinda ????? but I get a flush sync warning without the timer
-        // just defers the rendering to the next cycle apparnetly?
+        // This is still really dumb. But putting in too short of a delay (0ms, or no setTimeout at all) 
+        // fires the dispatch and the page re-renders before the toast can do anything.
         setTimeout(() => {
             if (submittedJob instanceof Error) {
                 toaster.create({
@@ -52,19 +52,16 @@ const JobCreationForm = () => {
                     type: "error"
                 })
             } else {
-                // dispatch a fetch request to the spool detials to refresh the data.
-                dispatch(fetchSpoolById(spoolDetails.id));
-
                 toaster.create({
                     title: "Success",
                     description: "New job added to database.",
                     type: "success"
                 });
-
             }
-        }, 0);
+        }, 100);
 
-
+        // dispatch a fetch request to the spool detials to refresh the data.
+        dispatch(fetchSpoolById(spoolDetails.id));
     }, [submittedJob])
 
     // wait for redux store loads
@@ -78,14 +75,15 @@ const JobCreationForm = () => {
 
 
 
-
+    // clear the input fields by changing the states
     const clearInputs = () => {
         setName('')
         setFilamentAmount('')
         setCost(0);
     }
 
-
+    // Handle submission of form, check the payload, and send the dispatch to redux also clear inputs.
+    // will present a toast on form input errors
     const handleSubmit = (e) => {
         e.preventDefault();
         const payload = {
@@ -94,13 +92,13 @@ const JobCreationForm = () => {
             filamentAmountUsed: parseFloat(filamentAmount),
             cost: parseFloat(cost)
         }
-        console.log(payload);
         if (checkPayload(payload)) {
             // actual form submission
+            //console.log('form payload ok, submitting.')
             dispatch(createJob(payload));
             clearInputs()
         } else {
-            console.log('form error')
+            //console.log('form error')
             toaster.create({
                 title: "Form Error",
                 description: "double check fields",
