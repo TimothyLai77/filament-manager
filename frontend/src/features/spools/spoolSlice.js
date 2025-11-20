@@ -54,7 +54,7 @@ export const fetchActiveSpoolList = createAsyncThunk(
 
 
 export const spoolSlice = createSlice({
-    name: "jobs",
+    name: "spools",
     initialState,
     reducers: {
         setSelectedSpool: (state, action) => {

@@ -20,11 +20,11 @@ export const markSpoolAsFinished = createAsyncThunk(
         }
     }
 )
-
+s
 
 
 export const markSpoolFinishedSlice = createSlice({
-    name: "jobs",
+    name: "markSpoolFinished",
     initialState,
     reducers: {
 
