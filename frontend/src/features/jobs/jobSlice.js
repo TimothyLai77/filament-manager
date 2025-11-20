@@ -7,6 +7,7 @@ const initialState = {
     error: null
 }
 
+// todo: move into its own slice
 // Create a new job given the spool
 // Payload should be:
 /**
