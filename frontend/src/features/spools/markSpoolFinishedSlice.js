@@ -8,9 +8,9 @@ const initialState = {
 // mark the spool as finished 
 export const markSpoolAsFinished = createAsyncThunk(
     'api/spools/mark-finished/:spoolId',
-    async (spoolId) => {
+    async ({ spoolId }) => {
         try {
-            const response = await fetch(`api/spools/mark-finished/${spoolId}`, {
+            const response = await fetch(`/api/spools/mark-finished/${spoolId}`, {
                 method: 'PUT',
             })
             // backend returns the same spool, with the updated isEmpty set to true (on success)
@@ -20,7 +20,7 @@ export const markSpoolAsFinished = createAsyncThunk(
         }
     }
 )
-s
+
 
 
 export const markSpoolFinishedSlice = createSlice({
@@ -38,8 +38,8 @@ export const markSpoolFinishedSlice = createSlice({
             })
             .addCase(markSpoolAsFinished.fulfilled, (state, action) => {
                 state.loading = false;
-                // Not sure about putting another variable in the state, just for the one feature. Or this asyncthunk+reducer shoudl be its own feature
-                state.spoolDetails.isEmpty ? state.successMarkedFinished = true : state.successMarkedFinished = false
+                // check the returned object from backend that the boolean is set to true. 
+                action.payload.isEmpty ? state.successMarkedFinished = true : state.successMarkedFinished = false
             })
             .addCase(markSpoolAsFinished.rejected, (state, action) => {
                 state.error = action.payload

@@ -7,26 +7,34 @@ import {
     Text
 } from "@chakra-ui/react";
 import { MdCheck } from "react-icons/md"
-import { useAtom } from "jotai";
-import { markSpoolAsFinishedAtom, finalSelectedSpoolAtom, selectedSpoolAtom } from "@/atoms/atoms";
-import { useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
-
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import { useEffect } from "react";
+import { markSpoolAsFinished } from "@/features/spools/markSpoolFinishedSlice";
 const MarkSpoolAsFinishedButton = () => {
+    const spoolId = useParams();
+    const dispatch = useDispatch();
+    const { successMarkedFinished, loading, error } = useSelector((state) => state.markSpoolFinished)
     const navigate = useNavigate()
-    const [spool] = useAtom(finalSelectedSpoolAtom);
-    const [, markSpool] = useAtom(markSpoolAsFinishedAtom);
-    const [, setSelectedSpool] = useAtom(selectedSpoolAtom)
-    const handleConfirm = async () => {
-
-        if ((await markSpool(spool.data.id)).isEmpty) {
-            // setSelectedSpool('') // set selected spool to none.
-            navigate('/') // go back
-        } else {
-            console.log('pain')
-        }
-
+    // const [spool] = useAtom(finalSelectedSpoolAtom);
+    // const [, markSpool] = useAtom(markSpoolAsFinishedAtom);
+    // const [, setSelectedSpool] = useAtom(selectedSpoolAtom)
+    const handleConfirm = () => {
+        dispatch(markSpoolAsFinished(spoolId));
     }
+
+    useEffect(() => {
+        if (successMarkedFinished == null) return;
+        if (successMarkedFinished) {
+            navigate('/'); // spool marked successfully go back to main page
+        } else {
+            console.log('spool did not mark as finished successfully')
+        }
+    }, [successMarkedFinished])
+
+    if (loading) return <></>
+    if (error) return <h1>error</h1>
 
 
     return (
