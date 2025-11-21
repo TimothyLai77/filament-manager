@@ -9,7 +9,7 @@ const initialState = {
 
 export const editJob = createAsyncThunk(
     '/API/jobs/edit/:jobId',
-    async (payload) => {
+    async (payload, thunkAPI) => {
         try {
             const response = await fetch(`/api/jobs/edit/${payload.jobId}`, {
                 method: "PUT",
@@ -18,6 +18,7 @@ export const editJob = createAsyncThunk(
                 },
                 body: JSON.stringify(payload)
             });
+            if (response.status == 500) return thunkAPI.rejectWithValue("status 500 error")
             return response.json();
         } catch (err) {
             return err
@@ -47,9 +48,6 @@ export const editJobSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload
             })
-
-
-
     }
 })
 
