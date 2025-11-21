@@ -11,8 +11,12 @@ export const editJob = createAsyncThunk(
     '/API/jobs/edit/:jobId',
     async (payload) => {
         try {
-            const response = await fetch(`/api/jobs/edit${payload.jobId}`, {
-                method: "PUT"
+            const response = await fetch(`/api/jobs/edit/${payload.jobId}`, {
+                method: "PUT",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
             });
             return response.json();
         } catch (err) {
