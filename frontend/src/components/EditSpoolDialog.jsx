@@ -1,35 +1,31 @@
 import { Input, Fieldset, Field, Box, CloseButton, Dialog, Portal, Button } from '@chakra-ui/react'
 import { MdModeEdit } from "react-icons/md";
-import { useAtom } from 'jotai';
-import { asyncPutSpoolEditAtom, loadableSelectedSpoolDetailsAtom } from '@/atoms/atoms'
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { editSpool } from '@/features/spools/editSpoolSlice';
+
 const EditSpoolDialog = () => {
-    const [spool] = useAtom(loadableSelectedSpoolDetailsAtom);
-    if (spool.state === 'loading') {
-        return (
-            <h1>Loading...</h1>
-        );
-    }
-    if (spool.state === 'hasError') {
-        return (
-            <h1>Error</h1>
-        )
-    }
-    const spoolData = spool.data
 
-    const [name, setName] = useState(spoolData.name);
-    const [brand, setBrand] = useState(spoolData.brand);
-    const [material, setMaterial] = useState(spoolData.material);
-    const [colour, setColour] = useState(spoolData.colour);
+    const dispatch = useDispatch();
+    const { spoolDetails, loading, error } = useSelector((state) => state.spools)
+
+    // todo: probably should just be a single useState object.
+    const [name, setName] = useState(spoolDetails.name);
+    const [brand, setBrand] = useState(spoolDetails.brand);
+    const [material, setMaterial] = useState(spoolDetails.material);
+    const [colour, setColour] = useState(spoolDetails.colour);
     // finish can be optional, and null values in inputs are not good
-    const [finish, setFinish] = useState(spoolData.finish !== null ? spoolData.finish : '');
-    const [initialWeight, setInitialWeight] = useState(spoolData.initialWeight);
-    const [cost, setCost] = useState(spoolData.cost);
-    const [filamentUsed, setFilamentUsed] = useState(spoolData.filamentUsed)
+    const [finish, setFinish] = useState(spoolDetails.finish !== null ? spoolDetails.finish : '');
+    const [initialWeight, setInitialWeight] = useState(spoolDetails.initialWeight);
+    const [cost, setCost] = useState(spoolDetails.cost);
+    const [filamentUsed, setFilamentUsed] = useState(spoolDetails.filamentUsed)
 
-    const [, setPayload] = useAtom(asyncPutSpoolEditAtom);
 
-    // pain
+    if (loading) return <h1>loading...</h1>
+    if (error) return <h1>error</h1>
+
+
+    // verify the payload 
     const verifyPayload = (payload) => {
         if (payload.name === '') return false;
         if (payload.brand === '') return false;
@@ -48,9 +44,9 @@ const EditSpoolDialog = () => {
     }
 
     const handleSave = () => {
-        console.log(spoolData)
+        console.log(spoolDetails)
         const payload = {
-            id: spoolData.id,
+            id: spoolDetails.id,
             name: name,
             brand: brand,
             material: material,
@@ -62,7 +58,7 @@ const EditSpoolDialog = () => {
         }
         if (verifyPayload(payload)) {
             //console.log('valid payload')
-            setPayload(payload)
+            dispatch(editSpool(payload))
         } else {
             console.log('invalid payload', payload);
         }
@@ -138,7 +134,7 @@ const EditSpoolDialog = () => {
                 <Dialog.Positioner>
                     <Dialog.Content>
                         <Dialog.Header>
-                            <Dialog.Title>Edit Spool: {`${spoolData.name}`}</Dialog.Title>
+                            <Dialog.Title>Edit Spool: {`${spoolDetails.name}`}</Dialog.Title>
                         </Dialog.Header>
                         <Dialog.Body>
                             {form()}
