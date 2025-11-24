@@ -61,6 +61,8 @@ const EditJobDialog = ({ job }) => {
 
             // dispatch the edit job
             dispatch(editJob(payload))
+            //todo: With the old state library, I had it reset the fields on error
+            // never put it back with redux, so maybe one day. 
         } else {
             console.log('invalid payload', payload);
         }
