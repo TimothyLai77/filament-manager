@@ -1,7 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-
+import { fetchSpoolById } from '@/features/spools/spoolSlice';
+import { fetchJobListById } from '@/features/jobs/jobSlice';
 const initialState = {
-    returnedJob: null,
+    editSuccess: null,
     loading: false,
     error: null
 }
@@ -9,7 +10,7 @@ const initialState = {
 
 export const editJob = createAsyncThunk(
     '/API/jobs/edit/:jobId',
-    async (payload, thunkAPI) => {
+    async (payload, { dispatch, getState, rejectWithValue }) => {
         try {
             const response = await fetch(`/api/jobs/edit/${payload.jobId}`, {
                 method: "PUT",
@@ -18,8 +19,16 @@ export const editJob = createAsyncThunk(
                 },
                 body: JSON.stringify(payload)
             });
-            if (response.status == 500) return thunkAPI.rejectWithValue("status 500 error")
-            return response.json();
+            if (response.status == 200) {
+                const state = getState()
+                // refresh the job list & spool details with the updated data
+                dispatch(fetchSpoolById(state.spools.spoolDetails.id));
+                dispatch(fetchJobListById(state.spools.spoolDetails.id));
+                return response.json();
+            } else {
+                return rejectWithValue(500)
+            }
+
         } catch (err) {
             return err
         }
@@ -36,15 +45,16 @@ export const editJobSlice = createSlice({
         builder
             // EDIT JOB
             .addCase(editJob.pending, (state) => {
-                state.returnedJob = null;
+                state.editSuccess = false;
                 state.loading = true;
             })
-            .addCase(editJob.fulfilled, (state, action) => {
+            .addCase(editJob.fulfilled, (state) => {
                 // push the returned data to jobList
-                state.loading = false;
-                state.returnedJob = action.payload;
+                state.editSuccess = true;
+
             })
             .addCase(editJob.rejected, (state, action) => {
+                state.editSuccess = false;
                 state.loading = false;
                 state.error = action.payload
             })

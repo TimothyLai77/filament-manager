@@ -7,7 +7,7 @@ import { fetchSpoolById } from '@/features/spools/spoolSlice';
 import { fetchJobListById } from '@/features/jobs/jobSlice';
 const EditJobDialog = ({ job }) => {
     const dispatch = useDispatch();
-    const { submittedJob } = useSelector((state) => state.editJobs)
+    const { editSuccess } = useSelector((state) => state.editJobs)
     const { spoolDetails, loading, error } = useSelector((state) => state.spools)
     // todo: change this into a single useState object
     const [name, setName] = useState(job.name);
@@ -58,24 +58,13 @@ const EditJobDialog = ({ job }) => {
         }
         if (verifyPayload(payload)) {
             console.log('valid payload')
-            /**
-             * Dispatch the edit to the server, and wait for completion.
-             * Then `editJob.fulfilled.match(editResult)` will be true if the asyncThunk was fulfilled.
-             * Lastly, send the other two dispatches to refresh the rest of the UI. 
-             */
-            const editResult = await dispatch(editJob(payload))
-            if (editJob.fulfilled.match(editResult)) {
-                // if the asyncthunk fulfilled update the rest of the data
-                dispatch(fetchSpoolById(spoolDetails.id));
-                dispatch(fetchJobListById(spoolDetails.id));
-            } else {
-                // if the server returned error, the thunk will rejectWithValue and just reset the input field.
-                resetFields();
-            }
 
+            // dispatch the edit job
+            dispatch(editJob(payload))
         } else {
             console.log('invalid payload', payload);
         }
+
     }
 
     const form = () => {
