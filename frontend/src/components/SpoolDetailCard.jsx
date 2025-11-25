@@ -7,7 +7,6 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector } from "react-redux";
 
 const SpoolDetailCard = () => {
-    // TODO:    const [showEditButton] = useAtom(showSpoolManagementButtonsAtom)
 
     const { spoolDetails, loading, error } = useSelector((state) => state.spools)
     const navigate = useNavigate();
