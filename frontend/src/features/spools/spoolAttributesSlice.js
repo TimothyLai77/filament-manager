@@ -1,9 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 const initialState = {
-    loading: null,
+    spoolAttributes: [],
+    loading: false,
     error: null,
-    attributes: []
+
 }
 
 export const fetchSpoolAttributes = createAsyncThunk(
@@ -34,8 +35,9 @@ export const fetchSpoolAttributesSlice = createSlice({
             })
 
             .addCase(fetchSpoolAttributes.fulfilled, (state, action) => {
+
+                state.spoolAttributes = action.payload
                 state.loading = false;
-                state.attributes = action.payload
             })
             .addCase(fetchSpoolAttributes.rejected, (state, action) => {
                 state.loading = false;
