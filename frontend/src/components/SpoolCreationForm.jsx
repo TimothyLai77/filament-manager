@@ -25,37 +25,7 @@ const SpoolCreationForm = () => {
     const navigate = useNavigate();
 
 
-    // useEffect(() => {
-    //     //console.log(newSpool)
-    //     if (newSpool == null) return;
 
-
-    //     // this is kinda ????? but I get a flush sync warning without the timer
-    //     // just defers the rendering to the next cycle apparnetly?
-    //     setTimeout(() => {
-    //         if (newSpool instanceof Error) {
-    //             toaster.create({
-    //                 title: "Error",
-    //                 description: `something went wrong: ` + newSpool.message,
-    //                 type: "error"
-    //             })
-    //         } else {
-    //             // clear the state so when navigating back to spool creation page it won't show
-    //             // a toast
-    //             setNewSpool(null);
-    //             toaster.create({
-    //                 title: "Success",
-    //                 description: "New spool added to database.",
-    //                 type: "success"
-    //             });
-    //             // clearInputs();
-    //             refreshSpoolAttributes();
-    //             refreshSpoolArray();
-    //         }
-    //     }, 0);
-
-
-    // }, [newSpool])
 
     // fetch spool attributes
     useEffect(() => {
