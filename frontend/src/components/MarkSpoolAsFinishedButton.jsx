@@ -17,9 +17,6 @@ const MarkSpoolAsFinishedButton = () => {
     const dispatch = useDispatch();
     const { successMarkedFinished, loading, error } = useSelector((state) => state.markSpoolFinished)
     const navigate = useNavigate()
-    // const [spool] = useAtom(finalSelectedSpoolAtom);
-    // const [, markSpool] = useAtom(markSpoolAsFinishedAtom);
-    // const [, setSelectedSpool] = useAtom(selectedSpoolAtom)
     const handleConfirm = () => {
         dispatch(markSpoolAsFinished(spoolId));
     }

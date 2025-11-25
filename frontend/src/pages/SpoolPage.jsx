@@ -12,8 +12,6 @@ import { fetchActiveSpoolList, fetchFinishedSpoolsList } from '@/features/spools
 const SpoolPage = () => {
   const dispatch = useDispatch();
 
-  //const [, setTab] = useAtom(spoolTabSelectorAtom);
-
   // Chakra UI hook 
   const tabs = useTabs({
     defaultValue: VARIANTS.active

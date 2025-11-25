@@ -2,8 +2,6 @@ import { Tag, Box, Card, FormatNumber, Text, Button } from "@chakra-ui/react";
 import EditJobDialog from "./EditJobDialog";
 import { useSelector } from "react-redux";
 const JobList = () => {
-    // const [getJobs] = useAtom(finalJobArrayAtom)
-    // const [spool] = useAtom(finalSelectedSpoolAtom);
     const { jobLoading, jobError, jobList } = useSelector((state) => state.jobs)
     const { spoolLoading, spoolError, spoolDetails } = useSelector((state) => state.spools)
     if (jobLoading || spoolLoading) return <h1>loading...</h1>
@@ -11,7 +9,7 @@ const JobList = () => {
 
     // boolean to decide whether to render the edit job button. Should not display for a spool marked as empty/finished
     const displayEditJobButton = !spoolDetails.isEmpty;
-    
+
 
     return (
         jobList.toReversed().map((job, index) => {

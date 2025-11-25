@@ -1,7 +1,5 @@
 import { Box, Stack } from '@chakra-ui/react'
-
 import { useParams } from 'react-router-dom';
-
 import TopNavBar from '../components/TopNavBar.jsx';
 import SpoolDetailCard from '../components/SpoolDetailCard.jsx'
 import JobCreationForm from '../components/JobCreationForm.jsx';
@@ -12,13 +10,7 @@ const CreateJobPage = () => {
     const { spoolId } = useParams();
     const dispatch = useDispatch();
 
-    //const [, setSelectedSpool] = useAtom(selectedSpoolAtom);
-    //todo: i have no idea what the show edit button atom was for?
-    //const [, setShowEditButton] = useAtom(showSpoolManagementButtonsAtom);
-    // useEffect(() => {
-    //     setShowEditButton(false);
-    //     setSelectedSpool(spoolId);
-    // }, [])
+
 
     useEffect(() => {
         // top level dispatch to get the spooldetails
