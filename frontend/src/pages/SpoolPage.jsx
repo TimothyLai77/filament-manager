@@ -1,9 +1,7 @@
 import SpoolList, { VARIANTS } from '../components/SpoolList'
 import { Tabs, Box, Card, Flex, HStack, Button, Separator, Text, useTabs } from '@chakra-ui/react';
 import { Navigate, useNavigate } from 'react-router-dom';
-import { useAtom } from 'jotai';
 import { useState } from 'react';
-import { spoolTabSelectorAtom } from '@/atoms/atoms';
 import { useEffect } from 'react';
 
 import { useDispatch } from 'react-redux';
