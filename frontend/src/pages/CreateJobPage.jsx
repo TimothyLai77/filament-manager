@@ -1,19 +1,23 @@
 import { Box, Stack } from '@chakra-ui/react'
-import { useAtom } from 'jotai';
 import { useParams } from 'react-router-dom';
-import { selectedSpoolAtom, showSpoolManagementButtonsAtom } from '@/atoms/atoms.js'
 import TopNavBar from '../components/TopNavBar.jsx';
 import SpoolDetailCard from '../components/SpoolDetailCard.jsx'
 import JobCreationForm from '../components/JobCreationForm.jsx';
 import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { fetchSpoolById } from '@/features/spools/spoolSlice.js';
 const CreateJobPage = () => {
     const { spoolId } = useParams();
-    const [, setSelectedSpool] = useAtom(selectedSpoolAtom);
-    const [, setShowEditButton] = useAtom(showSpoolManagementButtonsAtom);
+    const dispatch = useDispatch();
+
+
+
     useEffect(() => {
-        setShowEditButton(false);
-        setSelectedSpool(spoolId);
-    }, [])
+        // top level dispatch to get the spooldetails
+        // if user ever went to site/create-spoo/spoolId directly
+        dispatch(fetchSpoolById(spoolId));
+    }, [dispatch])
+
 
     return (
         <>
@@ -24,12 +28,15 @@ const CreateJobPage = () => {
                 margin={5}
                 gap={5}
             >
+                {/* left side that re-displays the the spool details */}
                 <Box flex={1}>
                     <SpoolDetailCard />
-                </Box>
 
+                </Box>
+                {/* right side shows the job creation form */}
                 <Box flex={1}>
                     <JobCreationForm />
+
                 </Box>
 
 

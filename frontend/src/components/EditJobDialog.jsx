@@ -1,16 +1,20 @@
 import { Tag, Text, Input, Fieldset, Field, Box, CloseButton, Dialog, Portal, Button } from '@chakra-ui/react'
 import { MdModeEdit } from "react-icons/md";
-import { useAtom } from 'jotai';
-import { asyncEditJobAtom, finalSelectedSpoolAtom, loadableSelectedSpoolDetailsAtom } from '@/atoms/atoms'
 import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { editJob } from '@/features/jobs/editJobSlice';
+import { fetchSpoolById } from '@/features/spools/spoolSlice';
+import { fetchJobListById } from '@/features/jobs/jobSlice';
 const EditJobDialog = ({ job }) => {
-    const [, setPayload] = useAtom(asyncEditJobAtom);
-
-    const [selectedSpool] = useAtom(finalSelectedSpoolAtom);
+    const dispatch = useDispatch();
+    const { editSuccess } = useSelector((state) => state.editJobs)
+    const { spoolDetails, loading, error } = useSelector((state) => state.spools)
+    // todo: change this into a single useState object
     const [name, setName] = useState(job.name);
     const [filamentUsed, setFilamentUsed] = useState(job.filamentAmountUsed);
     const [cost, setCost] = useState(job.cost);
 
+    // create a copy of the job passed from props
     const initialValues = {
         name: job.name,
         filamentAmountUsed: job.filamentAmountUsed,
@@ -18,10 +22,9 @@ const EditJobDialog = ({ job }) => {
     };
 
     let costPerGram = 0.0;
-    if (selectedSpool.state === 'hasData') {
-        costPerGram = selectedSpool.data.cost / selectedSpool.data.initialWeight;
-    }
 
+
+    // on cancel reset the values ot the original values before any edits
     const resetFields = () => {
         setName(initialValues.name);
         setFilamentUsed(initialValues.filamentAmountUsed)
@@ -34,6 +37,10 @@ const EditJobDialog = ({ job }) => {
     }, [filamentUsed])
 
 
+
+    if (loading) return <></>
+    if (error) return <></>
+    costPerGram = spoolDetails.cost / spoolDetails.initialWeight;
     const verifyPayload = (payload) => {
         if (payload.jobId == '' || !payload.jobId) return false;
         if (payload.name == '') return false;
@@ -42,7 +49,7 @@ const EditJobDialog = ({ job }) => {
         return true;
     }
 
-    const handleSave = () => {
+    const handleSave = async () => {
         const payload = {
             jobId: job.id,
             name: name,
@@ -51,10 +58,15 @@ const EditJobDialog = ({ job }) => {
         }
         if (verifyPayload(payload)) {
             console.log('valid payload')
-            setPayload(payload)
+
+            // dispatch the edit job
+            dispatch(editJob(payload))
+            //todo: With the old state library, I had it reset the fields on error
+            // never put it back with redux, so maybe one day. 
         } else {
             console.log('invalid payload', payload);
         }
+
     }
 
     const form = () => {

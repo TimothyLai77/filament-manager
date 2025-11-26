@@ -1,55 +1,40 @@
-import { Button, Input, Stack, Card, Text, Field, Fieldset } from '@chakra-ui/react'
-import { asyncNewSpoolAtom, newSpoolBaseAtom, finalSpoolArrayAtom } from '@/atoms/atoms.js'
-import { useAtom, atom } from 'jotai'
-import { useEffect, useState } from 'react'
+import { Button, Input, Stack, Card, Text, Field, Fieldset, Combobox, useListCollection, useFilter, Portal } from '@chakra-ui/react'
+import { useCallback, useEffect, useState } from 'react'
 import { Toaster, toaster } from "../components/ui/toaster";
 import { Navigate, useNavigate } from 'react-router-dom';
-
+import { useDispatch, useSelector } from 'react-redux';
+import SpoolAttributeInput from './SpoolAttributeInput'
+import { createSpool } from '@/features/spools/createSpoolSlice';
+import { fetchSpoolAttributes } from '@/features/spools/spoolAttributesSlice';
 const SpoolCreationForm = () => {
+    const dispatch = useDispatch();
+    const { spoolAttributes, loading, error } = useSelector((state) => state.spoolAttributes)
+    const defaultFormData = {
+        name: '',
+        brand: '',
+        material: '',
+        colour: '',
+        finish: '',
+        initialWeight: 1000,
+        cost: 0.0,
+    }
 
-    const [name, setName] = useState('');
-    const [brand, setBrand] = useState('');
-    const [material, setMaterial] = useState('');
-    const [colour, setColour] = useState('');
-    const [finish, setFinish] = useState('');
-    const [initialWeight, setInitialWeight] = useState(1000);
-    const [cost, setCost] = useState(0);
-    const [spoolArray, refreshSpoolArray] = useAtom(finalSpoolArrayAtom)
+    const [formData, setFormData] = useState(defaultFormData);
 
-    const [, setData] = useAtom(asyncNewSpoolAtom);
-    // todo: hmmm i don't think this is the proper way... 
-    const [newSpool, setNewSpool] = useAtom(newSpoolBaseAtom);
+
     const navigate = useNavigate();
 
+
+
+
+    // fetch spool attributes
     useEffect(() => {
-        //console.log(newSpool)
-        if (newSpool == null) return;
-
-        // this is kinda ????? but I get a flush sync warning without the timer
-        // just defers the rendering to the next cycle apparnetly?
-        setTimeout(() => {
-            if (newSpool instanceof Error) {
-                toaster.create({
-                    title: "Error",
-                    description: `something went wrong: ` + newSpool.message,
-                    type: "error"
-                })
-            } else {
-                // clear the state so when navigating back to spool creation page it won't show
-                // a toast
-                setNewSpool(null);
-                toaster.create({
-                    title: "Success",
-                    description: "New spool added to database.",
-                    type: "success"
-                });
-                clearInputs();
-                refreshSpoolArray();
-            }
-        }, 0);
+        dispatch(fetchSpoolAttributes())
+    }, [dispatch])
 
 
-    }, [newSpool])
+
+
 
     const checkPayload = (payload) => {
         if (payload.name === '') return false;
@@ -60,20 +45,43 @@ const SpoolCreationForm = () => {
         return true;
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+        // this is kinda stupid, the formData state already has everything, but i don't know when to parse the final weight and cost
+        // so im just putting it in another object and checking then.
         const payload = {
-            name: name,
-            brand: brand,
-            material: material,
-            colour: colour,
-            finish: finish ? finish : null,
-            initialWeight: parseFloat(initialWeight),
-            cost: parseFloat(cost)
+            name: formData.name,
+            brand: formData.brand,
+            material: formData.material,
+            colour: formData.colour,
+            finish: formData.finish != '' ? formData.finish : null,
+            initialWeight: parseFloat(formData.initialWeight),
+            cost: parseFloat(formData.cost)
         }
         if (checkPayload(payload)) {
             //console.log(payload)
-            setData(payload)
+            // dispatch the payload to redux
+
+            // no idea if this is right or not 
+            // https://redux-toolkit.js.org/api/createAsyncThunk#unwrapping-result-actions
+            try {
+                const dispatchResult = await dispatch(createSpool(payload)).unwrap()
+                toaster.create({
+                    title: "Success",
+                    description: "New spool added to database.",
+                    type: "success"
+                });
+            } catch (rejectedValueOrSerializedError) {
+                toaster.create({
+                    title: "Error",
+                    description: `something went wrong: ` + newSpool.message,
+                    type: "error"
+                })
+                console.log(dispatchResult)
+            }
+
+
+
         } else {
             console.log('form error')
             toaster.create({
@@ -84,68 +92,23 @@ const SpoolCreationForm = () => {
         }
     }
 
-
+    // TODO: uh this wont work, i need to clear the <input> in the SpoolAttributeInput component
     const clearInputs = () => {
-        setName('');
-        setBrand('');
-        setMaterial('');
-        setColour('');
-        setFinish('');
-        setInitialWeight(1000);
-        setCost(0);
+        setFormData(defaultFormData);
     }
 
-    //todo: clean this up so its dynamically generated
-    const generateFields = () => {
-        return (
-            <Fieldset.Root>
-                <Field.Root>
-                    <Field.Label>Name</Field.Label>
-                    <Input
-                        onChange={(e) => setName(e.target.value)}
-                        value={name}
-                    />
 
-                    <Field.Label>Brand</Field.Label>
-                    <Input
-                        onChange={(e) => setBrand(e.target.value)}
-                        value={brand}
-                    />
 
-                    <Field.Label>Material</Field.Label>
-                    <Input
-                        onChange={(e) => setMaterial(e.target.value)}
-                        value={material}
-                    />
+    const handleChange = useCallback((field, value) => {
+        setFormData(formData => ({
+            ...formData, // copies the old fields
+            [field]: value, // update target field with new value
+        }));
+    }, []);
 
-                    <Field.Label>Colour</Field.Label>
-                    <Input
-                        onChange={(e) => setColour(e.target.value)}
-                        value={colour}
-                    />
-
-                    <Field.Label>Finish (optional)</Field.Label>
-                    <Input
-                        onChange={(e) => setFinish(e.target.value)}
-                        value={finish}
-                    />
-
-                    <Field.Label>Initial Weight (g)</Field.Label>
-                    <Input
-                        onChange={(e) => setInitialWeight(e.target.value)}
-                        value={initialWeight}
-                    />
-
-                    <Field.Label>Cost ($)</Field.Label>
-                    <Input
-                        onChange={(e) => setCost(e.target.value)}
-                        value={cost}
-                    />
-                </Field.Root>
-                <Button marginTop={5} type="submit" onClick={handleSubmit}>Submit</Button>
-            </Fieldset.Root>
-        );
-    }
+    // wait for redux 
+    if (loading || spoolAttributes.length < 1) return <h1>loading...</h1>
+    if (error) return <h1>error</h1>
 
 
 
@@ -158,7 +121,32 @@ const SpoolCreationForm = () => {
                         <Text fontWeight="bold">Add New Filament</Text>
                     </Card.Title>
                     <Stack margin={5}>
-                        {generateFields()}
+                        <Fieldset.Root>
+                            <Field.Root>
+                                <Field.Label>Name</Field.Label>
+                                <Input
+                                    onChange={(e) => handleChange('name', e.target.value)}
+                                    value={formData.name}
+                                />
+                                <SpoolAttributeInput inputLabel={'Brand'} updateForm={(value) => handleChange('brand', value)} list={spoolAttributes.brands} />
+                                <SpoolAttributeInput inputLabel={'Material'} updateForm={(value) => handleChange('material', value)} list={spoolAttributes.materials} />
+                                <SpoolAttributeInput inputLabel={'Colour'} updateForm={(value) => handleChange('colour', value)} list={spoolAttributes.colours} />
+                                <SpoolAttributeInput inputLabel={'Finish'} updateForm={(value) => handleChange('finish', value)} list={spoolAttributes.finishes} />
+                                <Field.Label>Initial Weight (g)</Field.Label>
+                                <Input
+                                    onChange={(e) => handleChange('initalWeight', e.target.value)}
+                                    value={formData.initialWeight}
+                                />
+
+                                <Field.Label>Cost ($)</Field.Label>
+                                <Input
+                                    onChange={(e) => handleChange('cost', e.target.value)}
+                                    value={formData.cost}
+                                />
+                            </Field.Root>
+
+                            <Button marginTop={5} type="submit" onClick={handleSubmit}>Submit</Button>
+                        </Fieldset.Root>
                     </Stack>
                 </Card.Body>
             </Card.Root>
