@@ -1,6 +1,11 @@
 # Filament Manager
 manage filament for 3d printing. 
 
+
+# Screenshots
+![dashboard](project-resources/dashboard.png)
+![spoolpage](project-resources/spoolpage.png)
+
 # Installation (Docker):
 1. copy `template.env` into a `.env` and change the database password.
 2. (Optional) Change the app port in the `.env`
