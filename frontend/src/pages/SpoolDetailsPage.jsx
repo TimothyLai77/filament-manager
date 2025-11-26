@@ -17,7 +17,7 @@ const SpoolDetailsPage = () => {
         dispatch(fetchJobListById(spoolId));
         // todo: decide if i really need this or not.
         //setSelectedSpool(spoolId);
-    }, [dispatch])
+    }, [dispatch, spoolId])
 
 
     return (
