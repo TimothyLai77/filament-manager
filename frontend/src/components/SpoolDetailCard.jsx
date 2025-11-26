@@ -1,38 +1,26 @@
-import { selectedSpoolAtom, showSpoolManagementButtonsAtom, finalSelectedSpoolAtom } from '../atoms.js';
-import { useAtom } from 'jotai';
 import { useEffect, useState } from 'react';
 import { MdLibraryAdd } from 'react-icons/md';
 import { Flex, Button, Tag, Text, Box, Card, Progress, Stat, FormatNumber, HStack, Stack } from '@chakra-ui/react';
 import EditSpoolDialog from './EditSpoolDialog.jsx';
 import MarkSpoolAsFinishedButton from './MarkSpoolAsFinishedButton.jsx';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from "react-redux";
+
 const SpoolDetailCard = () => {
-    const [showEditButton] = useAtom(showSpoolManagementButtonsAtom)
-    const [selectedSpool] = useAtom(selectedSpoolAtom);
-    //const [spool] = useAtom(loadableSelectedSpoolDetailsAtom);
-    const [spool] = useAtom(finalSelectedSpoolAtom);
+
+    const { spoolDetails, loading, error } = useSelector((state) => state.spools)
     const navigate = useNavigate();
+
+    if (loading) return <h1>loading...</h1>
+    if (error) return <h1>error something went wrong</h1>
 
 
     const spoolText = () => {
-        if (spool.state === 'loading') {
-            return (
-                <h1>Loading...</h1>
-            );
-        }
-        if (spool.state === 'hasError') {
-            return (
-                <h1>Error</h1>
-            )
-        }
-        const spoolData = spool.data
-        //console.log(spoolData)
-
-        let percentLeft = spoolData.filamentLeft / spoolData.initialWeight * 100
-        let costPerGram = spoolData.cost / spoolData.initialWeight
+        let percentLeft = spoolDetails.filamentLeft / spoolDetails.initialWeight * 100
+        let costPerGram = spoolDetails.cost / spoolDetails.initialWeight
 
         const displayButtons = () => {
-            if (showEditButton && !spoolData.isEmpty) {
+            if (!spoolDetails.isEmpty) {
                 return (
                     <Flex wrap="wrap" display="flex" justifyContent="flex-end" gap="5">
 
@@ -42,7 +30,7 @@ const SpoolDetailCard = () => {
                         <Button
                             onClick={() => {
                                 //setSelectedSpool(spool.id);
-                                navigate(`/create-job/${spoolData.id}`);
+                                navigate(`/create-job/${spoolDetails.id}`);
 
                             }}
                         >
@@ -60,12 +48,12 @@ const SpoolDetailCard = () => {
         return (
             <>
                 <Card.Title as="span" textStyle="3xl">
-                    {spoolData.isEmpty ? <Text textStyle="4xl" color='red' >Status: Spool Finished</Text> : <></>}
-                    {`Selected Spool: ${spoolData.name}`}
+                    {spoolDetails.isEmpty ? <Text textStyle="4xl" color='red' >Status: Spool Finished</Text> : <></>}
+                    {`Selected Spool: ${spoolDetails.name}`}
                 </Card.Title>
                 <Box>
                     <Tag.Root>
-                        <Tag.Label>{spoolData.id}</Tag.Label>
+                        <Tag.Label>{spoolDetails.id}</Tag.Label>
                     </Tag.Root>
                 </Box>
 
@@ -73,12 +61,12 @@ const SpoolDetailCard = () => {
                     <Stat.Label textStyle="md">Filament Left / Total</Stat.Label>
                     <Stat.ValueText textStyle="lg">
                         <Box marginRight={1}>
-                            <FormatNumber value={spoolData.filamentLeft} style="unit" unit="gram" />
+                            <FormatNumber value={spoolDetails.filamentLeft} style="unit" unit="gram" />
                         </Box>
                         {' / '}
                         <Box marginLeft={1}>
 
-                            <FormatNumber value={`${spoolData.initialWeight}`} style="unit" unit="gram" />
+                            <FormatNumber value={`${spoolDetails.initialWeight}`} style="unit" unit="gram" />
                         </Box>
                     </Stat.ValueText>
                     <Progress.Root value={percentLeft} shape="full">
@@ -96,7 +84,7 @@ const SpoolDetailCard = () => {
                         <Stat.Label textStyle="md">{`Spool Cost`}</Stat.Label>
                         <Stat.ValueText textStyle="lg">
                             <Box marginRight={1}>
-                                <FormatNumber value={spoolData.cost} style="currency" currency="USD" />
+                                <FormatNumber value={spoolDetails.cost} style="currency" currency="USD" />
                             </Box>
                         </Stat.ValueText>
                     </Stat.Root>
@@ -119,21 +107,21 @@ const SpoolDetailCard = () => {
                 <Stack marginTop={3}>
                     <Box>
                         <Text as="span" textStyle="lg" fontWeight="bold">Material: </Text>
-                        <Text textStyle="lg" as="span">{spoolData.material}</Text>
+                        <Text textStyle="lg" as="span">{spoolDetails.material}</Text>
                     </Box>
 
                     <Box>
                         <Text as="span" textStyle="lg" fontWeight="bold">Colour: </Text>
-                        <Text textStyle="lg" as="span">{spoolData.colour}</Text>
+                        <Text textStyle="lg" as="span">{spoolDetails.colour}</Text>
                     </Box>
                     <Box>
                         <Text as="span" textStyle="lg" fontWeight="bold">Finish: </Text>
-                        <Text textStyle="lg" as="span">{spoolData.finish ? spoolData.finish : 'None'}</Text>
+                        <Text textStyle="lg" as="span">{spoolDetails.finish ? spoolDetails.finish : 'None'}</Text>
                     </Box>
 
                     <Box>
                         <Text as="span" textStyle="lg" fontWeight="bold">Date Added: </Text>
-                        <Text textStyle="lg" as="span">{spoolData.dateAdded}</Text>
+                        <Text textStyle="lg" as="span">{spoolDetails.dateAdded}</Text>
 
                     </Box>
                     {displayButtons()}

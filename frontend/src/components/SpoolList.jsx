@@ -1,33 +1,36 @@
-import { spoolTabSelectorAtom, finalSpoolArrayAtom, finalFinishedSpoolArrayAtom } from "../atoms.js"
 import { Box, Flex, Table, Card, Button, HStack, ProgressCircle, Separator } from "@chakra-ui/react"
 import { MdModeEdit, MdLibraryAdd, MdInfoOutline } from "react-icons/md";
-import { useAtom, atom } from 'jotai'
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from "react";
 
-const SpoolList = () => {
+import { useSelector, useDispatch } from 'react-redux'
+import { fetchActiveSpoolList } from '../features/spools/spoolSlice'
+export const VARIANTS = {
+    active: 'active',
+    finished: 'finished'
+};
+const SpoolList = ({ listType }) => {
+    const dispatch = useDispatch();
+    // note to self: these are the 
+    const { spoolList, finishedSpoolList, loading, error } = useSelector((state) => state.spools)
     const navigate = useNavigate();
-    const [activeSpools] = useAtom(finalSpoolArrayAtom)
-    const [finishedSpools] = useAtom(finalFinishedSpoolArrayAtom);
 
-    const [selectedTab] = useAtom(spoolTabSelectorAtom);
-    const [spools, setSpools] = useState({ state: 'loading', data: [] });
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error: {error}</p>;
 
-    useEffect(() => {
-        if (selectedTab == 'active') setSpools(activeSpools);
-        if (selectedTab == 'finished') setSpools(finishedSpools);
-    }, [selectedTab, activeSpools, finishedSpools])
-
-    if (!spools) return <h1>Loading...</h1>;
-    if (spools.state === 'hasError') return <h1>Something really broke...</h1>
-    if (spools.state === 'loading') return <h1>loading</h1>
-    const spoolList = spools.data;
-
-    spoolList.sort((s1, s2) => Date.parse(s2.createdAt) - Date.parse(s1.createdAt))
+    var sortedSpoolList = [];
+    if (listType === VARIANTS.finished) {
+        // if the list type is set to render finished spools put that inthe array.
+        sortedSpoolList = [...finishedSpoolList];
+    } else {
+        // default will be the active spools
+        sortedSpoolList = [...spoolList];
+    }
+    //console.log(spoolList);
+    sortedSpoolList.sort((s1, s2) => Date.parse(s2.createdAt) - Date.parse(s1.createdAt))
 
     return (
         <>
-
             <Box margin={5} borderWidth="1px">
                 <Table.ScrollArea margin={5} borderWidth="0px">
                     <Table.Root interactive>
@@ -45,7 +48,7 @@ const SpoolList = () => {
                         </Table.Header>
 
                         <Table.Body>
-                            {spoolList.map((spool) => (
+                            {sortedSpoolList.map((spool) => (
                                 <Table.Row key={spool.id}>
                                     <Table.Cell>{spool.name}</Table.Cell>
                                     <Table.Cell>{spool.brand}</Table.Cell>
@@ -81,6 +84,7 @@ const SpoolList = () => {
                                                 Details
                                             </Button>
                                             {
+                                                // check the current spool status and decide to render the create job button or not
                                                 !spool.isEmpty ?
                                                     <Button size="xs"
                                                         onClick={() => {

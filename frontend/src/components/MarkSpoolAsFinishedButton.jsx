@@ -1,66 +1,71 @@
-import { 
+import {
     Button,
     Box,
     Dialog,
     Portal,
     CloseButton,
     Text
- } from "@chakra-ui/react";
+} from "@chakra-ui/react";
 import { MdCheck } from "react-icons/md"
-import { useAtom } from "jotai";
-import { markSpoolAsFinishedAtom, finalSelectedSpoolAtom ,selectedSpoolAtom} from "../atoms";
-import { useEffect,useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
-
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import { useEffect } from "react";
+import { markSpoolAsFinished } from "@/features/spools/markSpoolFinishedSlice";
 const MarkSpoolAsFinishedButton = () => {
+    const spoolId = useParams();
+    const dispatch = useDispatch();
+    const { successMarkedFinished, loading, error } = useSelector((state) => state.markSpoolFinished)
     const navigate = useNavigate()
-    const [spool] = useAtom(finalSelectedSpoolAtom);
-    const [,markSpool] = useAtom(markSpoolAsFinishedAtom);
-    const [,setSelectedSpool] = useAtom(selectedSpoolAtom)
-    const handleConfirm = async () => {
-
-        if((await markSpool(spool.data.id)).isEmpty){
-            // setSelectedSpool('') // set selected spool to none.
-            navigate('/') // go back
-        }else{
-            console.log('pain')
-        }
-        
+    const handleConfirm = () => {
+        dispatch(markSpoolAsFinished(spoolId));
     }
 
+    useEffect(() => {
+        if (successMarkedFinished == null) return;
+        if (successMarkedFinished) {
+            navigate('/'); // spool marked successfully go back to main page
+        } else {
+            console.log('spool did not mark as finished successfully')
+        }
+    }, [successMarkedFinished])
 
-    return(
+    if (loading) return <></>
+    if (error) return <h1>error</h1>
+
+
+    return (
         <Dialog.Root>
             <Dialog.Trigger asChild>
-            <Button>
-                <MdCheck / >
-                Mark spool as Finished
-            </Button>
+                <Button>
+                    <MdCheck />
+                    Mark spool as Finished
+                </Button>
             </Dialog.Trigger>
             <Portal>
-            <Dialog.Backdrop />
-            <Dialog.Positioner>
-            <Dialog.Content>
-                <Dialog.Header>
-                <Dialog.Title>Confirm: Mark Spool as Finished?</Dialog.Title>
-                </Dialog.Header>
-                <Dialog.Body>
-                    <Text>
-                        This will remove the spool from the list and the action is unreversable.
-                    </Text>
-                </Dialog.Body>
-                <Dialog.Footer>
-                <Dialog.ActionTrigger asChild>
-                    <Button variant="outline">Cancel</Button>
-                </Dialog.ActionTrigger>
-                <Button onClick={handleConfirm}>Mark spool as Finished</Button>
-                </Dialog.Footer>
-                <Dialog.CloseTrigger asChild>
-                <CloseButton size="sm" />
-                </Dialog.CloseTrigger>
-            </Dialog.Content>
-            </Dialog.Positioner>
-        </Portal>
+                <Dialog.Backdrop />
+                <Dialog.Positioner>
+                    <Dialog.Content>
+                        <Dialog.Header>
+                            <Dialog.Title>Confirm: Mark Spool as Finished?</Dialog.Title>
+                        </Dialog.Header>
+                        <Dialog.Body>
+                            <Text>
+                                This will remove the spool from the list and the action is unreversable.
+                            </Text>
+                        </Dialog.Body>
+                        <Dialog.Footer>
+                            <Dialog.ActionTrigger asChild>
+                                <Button variant="outline">Cancel</Button>
+                            </Dialog.ActionTrigger>
+                            <Button onClick={handleConfirm}>Mark spool as Finished</Button>
+                        </Dialog.Footer>
+                        <Dialog.CloseTrigger asChild>
+                            <CloseButton size="sm" />
+                        </Dialog.CloseTrigger>
+                    </Dialog.Content>
+                </Dialog.Positioner>
+            </Portal>
         </Dialog.Root>
     )
 }

@@ -1,22 +1,23 @@
 import { Tag, Box, Card, FormatNumber, Text, Button } from "@chakra-ui/react";
-import { useAtom } from "jotai";
-import { finalJobArrayAtom } from "../atoms";
 import EditJobDialog from "./EditJobDialog";
+import { useSelector } from "react-redux";
 const JobList = () => {
-    const [getJobs] = useAtom(finalJobArrayAtom)
+    const { jobLoading, jobError, jobList } = useSelector((state) => state.jobs)
+    const { spoolLoading, spoolError, spoolDetails } = useSelector((state) => state.spools)
+    if (jobLoading || spoolLoading) return <h1>loading...</h1>
+    if (jobError || spoolError) return <h1>error loading job history</h1>
 
-    if (getJobs.state === 'hasError') return <h1>error loading history</h1>
-    if (getJobs.state === 'loading') return <h1>loading</h1>
-    const jobsArray = getJobs.data;
-    console.log(jobsArray)
+    // boolean to decide whether to render the edit job button. Should not display for a spool marked as empty/finished
+    const displayEditJobButton = !spoolDetails.isEmpty;
+
 
     return (
-        jobsArray.toReversed().map((job, index) => {
+        jobList.toReversed().map((job, index) => {
             return (
                 <Card.Root key={job.id}>
                     <Card.Body>
                         <Card.Title textStyle="2xl">
-                            #{jobsArray.length - index}: {job.name}
+                            #{jobList.length - index}: {job.name}
                         </Card.Title>
 
                         <Box>
@@ -46,10 +47,15 @@ const JobList = () => {
                                 <Tag.Label>{job.id}</Tag.Label>
                             </Tag.Root>
                         </Box>
+                        {
+                            displayEditJobButton ?
+                                <Box display="flex" justifyContent="flex-end">
+                                    <EditJobDialog job={job} />
+                                </Box>
+                                :
+                                <></>
+                        }
 
-                        <Box display="flex" justifyContent="flex-end">
-                            <EditJobDialog job={job} />
-                        </Box>
                     </Card.Body>
 
 
