@@ -10,16 +10,26 @@ const {
     markSpoolAsEmpty,
     getActiveSpools,
     getFinishedSpools,
-    getSpoolAttributes
+    getSpoolAttributes,
+    deleteSpool
 } = require('../modules/spoolLogic.js');
 
 
+router.delete('/spools/:spoolId', async (req, res) => {
+    try {
+        console.log(`DELETE /spools/${req.params.spoolId}`);
+        const stauts = await deleteSpool(req.params.spoolId);
+    } catch (error) {
+        res.status(500).send(error)
+    }
+})
+
 router.get('/spools/attributes', async (req, res) => {
-    try{
+    try {
         console.log("GET: /spools/attributes");
         attributes = await getSpoolAttributes();
         res.send(attributes);
-    }catch (e) {
+    } catch (e) {
         res.status(500).send(e)
     }
 })
