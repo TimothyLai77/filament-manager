@@ -78,7 +78,25 @@ const createJob = async (spoolId, dataObj) => {
     }
 }
 
-
+/**
+ * given a spool ID find all jobs that are associated with it and delete them
+ */
+const deleteJobsAssociatedWithSpool = async (spoolId) => {
+    try {
+        // find the spool to see if it exists. not really needed
+        const spool = await Spool.findByPk(spoolId);
+        if (!spool) throw new SpoolNotFoundError;
+        // destroy any jobs associated with the spool
+        await Job.destroy({
+            where: {
+                spoolId: spool.id
+            }
+        })
+        return true;
+    } catch (error) {
+        throw error;
+    }
+}
 
 const deleteJob = async (id) => {
     try {
@@ -120,4 +138,4 @@ const editJob = async (jobId, newData) => {
 
 }
 
-export { editJob, createJob, deleteJob, getJobsBySpool, getJobs }
+export { deleteJobsAssociatedWithSpool, editJob, createJob, deleteJob, getJobsBySpool, getJobs }
