@@ -136,12 +136,11 @@ const deleteSpool = async (id) => {
         // destroy all jobs that are associated with the spool to be deleted
         await deleteJobsAssociatedWithSpool(id);
         //debug: actually delete the spool after
-        Spool.destroy({
+        await Spool.destroy({
             where: {
                 id: id
             }
         });
-        return true;
     } catch (e) {
         return e;
     }
