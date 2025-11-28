@@ -7,18 +7,19 @@ const initialState = {
 }
 
 
-const deleteSpool = createAsyncThunk(
+export const deleteSpool = createAsyncThunk(
     '/api/spools/deleteSpool',
-    async (spoolId, { dispatch, rejectWithValue }) => {
+    async ({ spoolId }, { dispatch, rejectWithValue }) => {
         const response = await fetch(`/api/spools/${spoolId}`, {
             method: "DELETE"
         });
-        if (response.status.ok) {
+        if (response.ok) {
             // refetch the spool lists from the database
             dispatch(fetchActiveSpoolList);
             dispatch(fetchFinishedSpoolsList);
         } else {
             // this seems like a lazy way to do it?
+
             rejectWithValue(response.status);
         }
     }
