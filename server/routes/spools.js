@@ -18,7 +18,8 @@ const {
 router.delete('/spools/:spoolId', async (req, res) => {
     try {
         console.log(`DELETE /spools/${req.params.spoolId}`);
-        const stauts = await deleteSpool(req.params.spoolId);
+        await deleteSpool(req.params.spoolId);
+        res.status(200).send();
     } catch (error) {
         res.status(500).send(error)
     }
