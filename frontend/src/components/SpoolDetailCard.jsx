@@ -5,7 +5,7 @@ import EditSpoolDialog from './EditSpoolDialog.jsx';
 import MarkSpoolAsFinishedButton from './MarkSpoolAsFinishedButton.jsx';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from "react-redux";
-
+import { DeleteSpoolButton } from './DeleteSpoolButton.jsx';
 const SpoolDetailCard = () => {
 
     const { spoolDetails, loading, error } = useSelector((state) => state.spools)
@@ -20,6 +20,7 @@ const SpoolDetailCard = () => {
         let costPerGram = spoolDetails.cost / spoolDetails.initialWeight
 
         const displayButtons = () => {
+            // Render Edit, Create Job, and Mark as Finished buttons and when spool is NOT empty
             if (!spoolDetails.isEmpty) {
                 return (
                     <Flex wrap="wrap" display="flex" justifyContent="flex-end" gap="5">
@@ -42,6 +43,11 @@ const SpoolDetailCard = () => {
 
                 )
 
+            } else {
+                // spool is empty display delete button
+                return (
+                    <DeleteSpoolButton />
+                );
             }
         }
 
