@@ -6,6 +6,7 @@ import editJobReducer from '@/features/jobs/editJobSlice'
 import editSpoolReducer from '@/features/spools/editSpoolSlice'
 import fetchSpoolAttributeReducer from '@/features/spools/spoolAttributesSlice'
 import createSpoolReducer from '@/features/spools/createSpoolSlice'
+import deleteSpoolReducer from '@/features/spools/deleteSpool'
 export const store = configureStore({
     reducer: {
         spools: spoolReducer,
@@ -14,7 +15,8 @@ export const store = configureStore({
         editSpools: editSpoolReducer,
         markSpoolFinished: markSpoolFinishedReducer,
         spoolAttributes: fetchSpoolAttributeReducer,
-        createSpools: createSpoolReducer
+        createSpools: createSpoolReducer,
+        deleteSpool: deleteSpoolReducer
     },
 })
 
