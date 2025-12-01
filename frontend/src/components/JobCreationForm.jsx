@@ -21,7 +21,6 @@ const checkPayload = (payload) => {
 const JobCreationForm = () => {
     const dispatch = useDispatch();
     const { spoolDetails, loading, error } = useSelector((state) => state.spools);
-    const { submittedJob } = useSelector((state) => state.jobs);
 
     // react useStates for the form
     // todo: probably refactor this into a single object useState. like what is done in the spool creation.
@@ -36,33 +35,6 @@ const JobCreationForm = () => {
         setCost(costPerGram * filamentAmount);
     }, [filamentAmount, spoolDetails])
 
-
-    // use effect for toast on job submit
-    useEffect(() => {
-        //console.log(newSpool)
-        if (submittedJob == null) return;
-
-        // This is still really dumb. But putting in too short of a delay (0ms, or no setTimeout at all) 
-        // fires the dispatch and the page re-renders before the toast can do anything.
-        setTimeout(() => {
-            if (submittedJob instanceof Error) {
-                toaster.create({
-                    title: "Error",
-                    description: `something went wrong: ` + submittedJob.message,
-                    type: "error"
-                })
-            } else {
-                toaster.create({
-                    title: "Success",
-                    description: "New job added to database.",
-                    type: "success"
-                });
-            }
-        }, 100);
-
-        // dispatch a fetch request to the spool detials to refresh the data.
-        dispatch(fetchSpoolById(spoolDetails.id));
-    }, [submittedJob])
 
     // wait for redux store loads
     if (loading) return <h1>loading...</h1>
@@ -84,7 +56,7 @@ const JobCreationForm = () => {
 
     // Handle submission of form, check the payload, and send the dispatch to redux also clear inputs.
     // will present a toast on form input errors
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const payload = {
             name: name,
@@ -93,12 +65,26 @@ const JobCreationForm = () => {
             cost: parseFloat(cost)
         }
         if (checkPayload(payload)) {
-            // actual form submission
-            //console.log('form payload ok, submitting.')
-            dispatch(createJob(payload));
+            // payload valid, try to submit and unwrap the promise from redux
+            try {
+                await dispatch(createJob(payload)).unwrap();
+                // on success display sucess toast
+                toaster.create({
+                    title: "Success",
+                    description: "New job added to database.",
+                    type: "success"
+                });
+            } catch (rejectedValueOrSerializedError) {
+                // something broke, display errror toast
+                toaster.create({
+                    title: "Error",
+                    description: `something went wrong: ` + rejectedValueOrSerializedError,
+                    type: "error"
+                })
+            }
             clearInputs()
         } else {
-            //console.log('form error')
+            // invalid payload, show toast
             toaster.create({
                 title: "Form Error",
                 description: "double check fields",
@@ -107,7 +93,8 @@ const JobCreationForm = () => {
         }
     }
 
-
+    if (loading) return <h1>loading...</h1>
+    if (error) return <h1>error</h1>
 
 
     //todo: clean this up so its dynamically generated
