@@ -1,8 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-
+import { fetchSpoolById } from '../spools/spoolSlice'
 const initialState = {
     jobList: [],
-    submittedJob: null, // needed for the toast confirmation on job creation
     loading: false,
     error: null
 }
@@ -20,7 +19,7 @@ const initialState = {
  */
 export const createJob = createAsyncThunk(
     '/api/jobs/create',
-    async (payload) => {
+    async (payload, { dispatch, rejectWithValue }) => {
         try {
             const response = await fetch('/api/jobs/create', {
                 method: 'POST',
@@ -29,7 +28,13 @@ export const createJob = createAsyncThunk(
                 },
                 body: JSON.stringify(payload)
             })
-            return response.json();
+            if (response.ok) {
+                // refetch the spool details
+                await dispatch(fetchSpoolById(payload.spoolId));
+                return response.json();
+            }
+            // not actually sure what to return here in this case...
+            return rejectWithValue(response)
         } catch (err) {
             return err;
         }
@@ -76,14 +81,13 @@ export const jobSlice = createSlice({
                 state.payload.error = action.payload
             })
 
-            // SUBMIT JOB  
+            // SUBMIT JOB, not sure if these reduces are even needed anymore.
             .addCase(createJob.pending, (state) => {
-                state.submittedJob = null; // not sure if this is needed, but reset the submission to null if it errors
                 state.loading = true;
             })
             .addCase(createJob.fulfilled, (state, action) => {
                 state.loading = false;
-                state.submittedJob = action.payload;
+
             })
             .addCase(createJob.rejected, (state, action) => {
                 state.loading = false;
