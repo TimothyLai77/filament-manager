@@ -1,9 +1,6 @@
-const { Sequelize, DataTypes, Model } = require('sequelize');
-const { database } = require('../../modules/database');
-class Job extends Model { }
 
-Job.init(
-    {
+module.exports = (sequelize, DataTypes) => {
+    const Job = sequelize.define('Job', {
         id: {
             type: DataTypes.STRING,
             primaryKey: true,
@@ -26,13 +23,22 @@ Job.init(
             allowNull: false
         },
         date: {
-            type: Sequelize.DataTypes.DATEONLY
+            type: DataTypes.DATEONLY
         }
     },
-    {
-        sequelize: database,
-        modelName: 'job'
-    }
-);
+        {
+            sequelize,
+            modelName: 'Job',
+            tableName: 'jobs',
+            timestamps: false
+        })
 
-exports.Job = Job;
+
+    Job.associate = (models) => {
+        Job.belongsTo(models.Spool, { foreignKey: 'spoolId' });
+    }
+    return Job;
+
+}
+
+

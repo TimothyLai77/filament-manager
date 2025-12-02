@@ -1,11 +1,10 @@
 import { Sequelize } from "sequelize";
 import uniqid from 'uniqid';
-import { Job } from "../data/models/Job.js";
-import { Spool } from "../data/models/Spool.js";
+import db from '../models/index.js'
 import { JobNotFoundError, SpoolNotFoundError } from "../errors/errors.js";
 import { changeFilamentAmount, decreaseFilament, incrementJobCount } from "./spoolLogic.js";
 
-
+const { Job, Spool } = db; // destructure job from the db
 /**
  * Returns an array of jobs that used a spool
  * @param {string} spoolId 
