@@ -1,8 +1,10 @@
 import { Sequelize, col } from "sequelize";
 import uniqid from 'uniqid';
-import { Spool } from '../data/models/Spool.js'
+// import { Spool } from '../data/models/Spool.js'
+import db from '../models/index.js'
 import { NotEnoughFilamentError, SpoolNotFoundError, TooMuchFilamentError } from '../errors/errors.js'
 import { deleteJobsAssociatedWithSpool } from "./jobLogic.js";
+const { Spool } = db; // destrucutre spool from db object
 /**
  * Get's spool when given an id. 
  * @param {string} id 
