@@ -60,7 +60,7 @@ module.exports = (sequelize, DataTypes) => {
             sequelize,
             modelName: 'Spool',
             tableName: 'spools',
-            timestamps: false
+
         }
     );
 

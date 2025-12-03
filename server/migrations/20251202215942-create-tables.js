@@ -1,5 +1,7 @@
 'use strict';
 
+const { DataTypes } = require('sequelize');
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
     async up(queryInterface, Sequelize) {
@@ -12,6 +14,15 @@ module.exports = {
             name: {
                 type: Sequelize.STRING,
                 allowNull: false
+            },
+            // the created at and updated at columns are sequelize auto gen, but only through
+            // seqeulize table creatoins. not the queryInterface as those are raw sql calls.
+            // need to manully add them here.
+            createdAt: {
+                type: DataTypes.DATE,
+            },
+            updatedAt: {
+                type: DataTypes.DATE
             }
         })
 
@@ -39,6 +50,12 @@ module.exports = {
             },
             date: {
                 type: Sequelize.Sequelize.DATEONLY
+            },
+            createdAt: {
+                type: DataTypes.DATE,
+            },
+            updatedAt: {
+                type: DataTypes.DATE
             }
         })
 
@@ -96,6 +113,12 @@ module.exports = {
             numberOfJobs: {
                 type: Sequelize.Sequelize.INTEGER,
                 defaultValue: 0
+            },
+            createdAt: {
+                type: DataTypes.DATE,
+            },
+            updatedAt: {
+                type: DataTypes.DATE
             }
         })
 
