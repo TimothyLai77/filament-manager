@@ -5,6 +5,14 @@ import { JobNotFoundError, SpoolNotFoundError } from "../errors/errors.js";
 import { changeFilamentAmount, decreaseFilament, incrementJobCount } from "./spoolLogic.js";
 
 const { Job, Spool } = db; // destructure job from the db
+
+
+
+
+const generateJobId = () => {
+    return uniqid('job-');
+}
+
 /**
  * Returns an array of jobs that used a spool
  * @param {string} spoolId 
@@ -62,7 +70,7 @@ const createJob = async (spoolId, dataObj) => {
         await decreaseFilament(spoolId, dataObj.filamentAmountUsed);
         await incrementJobCount(spoolId);
         const newJob = await Job.create({
-            id: uniqid('job-'),
+            id: generateJobId(),
             name: dataObj.name,
             filamentAmountUsed: dataObj.filamentAmountUsed,
             cost: cost.toFixed(4),
@@ -137,4 +145,4 @@ const editJob = async (jobId, newData) => {
 
 }
 
-export { deleteJobsAssociatedWithSpool, editJob, createJob, deleteJob, getJobsBySpool, getJobs }
+export { generateJobId, deleteJobsAssociatedWithSpool, editJob, createJob, deleteJob, getJobsBySpool, getJobs }

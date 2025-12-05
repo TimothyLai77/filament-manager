@@ -9,6 +9,7 @@ const session = require('express-session');
 const { runTests } = require('./tests/logicTest')
 const spool_routes = require('./routes/spools.js')
 const job_routes = require('./routes/jobs.js')
+const staged_job_routes = require('./routes/stagedJobs.js')
 const env = process.env;
 const PORT = env.APP_PORT;
 const CLIENT_FRONTEND_PATH = path.join(__dirname, "../", "frontend", "dist");
@@ -41,6 +42,7 @@ async function prepareApp() {
 
     app.use('/api/', spool_routes)
     app.use('/api/jobs/', job_routes);
+    app.use('/api/stagedJobs/', staged_job_routes)
     app.use(express.static(CLIENT_FRONTEND_PATH));
 
     // express 5? updated some internal packages and it breaks using the '*' as a path
