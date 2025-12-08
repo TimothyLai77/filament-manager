@@ -13,6 +13,18 @@ const getStagedJobs = async () => {
 }
 
 /**
+ * @param {id of staged job} id 
+ * @returns 
+ */
+const getStagedJobById = async (id) => {
+    try {
+        return await StagedJob.findByPk(id);
+    } catch (error) {
+        console.log(erro);
+    }
+}
+
+/**
  * add staged job to the database
  * @param {json payload} payload 
  * @returns returns the new stagejob object back on success.
@@ -53,5 +65,6 @@ const deleteStagedJob = async (id) => {
 export {
     getStagedJobs,
     addStagedJob,
-    deleteStagedJob
+    deleteStagedJob,
+    getStagedJobById
 }
