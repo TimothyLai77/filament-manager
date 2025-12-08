@@ -70,7 +70,8 @@ const createJob = async (spoolId, dataObj) => {
         await decreaseFilament(spoolId, dataObj.filamentAmountUsed);
         await incrementJobCount(spoolId);
         const newJob = await Job.create({
-            id: generateJobId(),
+            // JS loigcal OR assignment, if ID is passed in dataobj use that, else generate new one
+            id: dataObj.jobId ||= generateJobId(),
             name: dataObj.name,
             filamentAmountUsed: dataObj.filamentAmountUsed,
             cost: cost.toFixed(4),
