@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const { getStagedJobs, addStagedJob, deleteStagedJob } = require('../modules/stagedJobLogic')
+const { getStagedJobs, addStagedJob, deleteStagedJob } = require('../modules/stagedJobLogic');
+const { commitStagedJob } = require('../modules/jobManager');
 router.get('/', async (req, res) => {
     try {
         console.log('GET: /stagedJobs');
@@ -26,11 +27,21 @@ router.post('/', async (req, res) => {
  */
 router.delete('/:id', async (req, res) => {
     try {
-        console.log(`DELETE: /stagedjobs/${req.params.jobId}`);
-        await deleteStagedJob(req.params.jobId);
+        console.log(`DELETE: /stagedjobs/${req.params.id}`);
+        await deleteStagedJob(req.params.id);
         res.status(200).end();
     } catch (error) {
         res.status(500).send(error)
+    }
+});
+
+router.post('/commit/:id', async (req, res) => {
+    try {
+        console.log(`POST: /commit/${req.params.id}`);
+        const commitedJob = await commitStagedJob(req.body);
+        res.status(200).send(commitedJob);
+    } catch (error) {
+        res.status(500).send(error);
     }
 })
 
