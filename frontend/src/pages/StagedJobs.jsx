@@ -1,12 +1,12 @@
 import TopNavBar from "@/components/TopNavBar"
 
-const SpoolPage = () => {
+const StagedJobs = () => {
     return (
         <>
             <TopNavBar />
-            <h1>STAGED JOBS PAGE</h1>
+
         </>
     )
 }
 
-export default SpoolPage
+export default StagedJobs
