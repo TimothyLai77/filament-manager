@@ -6,7 +6,8 @@ router.get('/', async (req, res) => {
     try {
         console.log('GET: /stagedJobs');
         const jobList = await getStagedJobs();
-        res.status(200).send(jobList);
+        const formattedJobs = jobList.map(job => job.toJSON())
+        res.status(200).send(formattedJobs);
     } catch (error) {
         res.status(500).send(error)
     }
