@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { act } from "react";
 
 const initialState = {
     loading: null,
@@ -36,7 +37,7 @@ export const fetchStagedJobsSlice = createSlice({
             })
             .addCase(fetchStagedJobs.rejected, (state, action) => {
                 state.loading = false;
-                state.error = true;
+                state.error = action.payload;
             })
     }
 })
