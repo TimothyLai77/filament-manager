@@ -11,7 +11,8 @@ export const fetchStagedJobs = createAsyncThunk(
     '/api//stagedJobs',
     async () => {
         try {
-            return await fetch('/api/stagedJobs')
+            const response = await fetch('/api/stagedJobs')
+            return response.json();
         } catch (error) {
             return error
         }
