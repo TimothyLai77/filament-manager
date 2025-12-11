@@ -16,7 +16,7 @@ const StagedJobListEntry = ({ id, name, filamentUsed, date }) => {
                     </VStack>
 
                     <Text>Filament Used: {filamentUsed}g</Text>
-                    <Text>{date}</Text>
+                    <Text>{date.toString()}</Text>
                     <Spacer />
                     <HStack>
                         <Button size={'sm'}>
