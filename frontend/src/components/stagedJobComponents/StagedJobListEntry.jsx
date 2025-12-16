@@ -1,8 +1,13 @@
 import { Button, Card, Heading, Tag, Text, HStack, Spacer, VStack } from "@chakra-ui/react"
 import { MdOutlineDelete, MdCheck } from "react-icons/md";
 import { useSelector } from "react-redux"
+import { deleteStagedJob } from "@/features/stagedJobs/deleteStagedJobSlice";
+import { useDispatch } from "react-redux";
 const StagedJobListEntry = ({ id, name, filamentUsed, date }) => {
-
+    const dispatch = useDispatch();
+    const handleDelete = () => {
+        dispatch(deleteStagedJob(id));
+    }
     return (
         <Card.Root size="sm" minW={{ base: "100%", sm: "400px", md: "85%" }} flexDirection="row">
 
@@ -23,7 +28,7 @@ const StagedJobListEntry = ({ id, name, filamentUsed, date }) => {
                             <MdCheck />
                             Edit & Commit
                         </Button>
-                        <Button size={'sm'} colorPalette={"red"}>
+                        <Button size={'sm'} colorPalette={"red"} onClick={handleDelete}>
                             <MdOutlineDelete />
                             Delete
                         </Button>
