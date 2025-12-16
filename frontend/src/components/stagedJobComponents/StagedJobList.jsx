@@ -1,4 +1,4 @@
-import { VStack } from "@chakra-ui/react"
+import { VStack, Text, Box, Heading } from "@chakra-ui/react"
 import { fetchStagedJobs } from "@/features/stagedJobs/fetchStagedJobsSlice"
 import { useSelector } from "react-redux"
 import dayjs from "dayjs"
@@ -32,24 +32,34 @@ const StagedJobList = () => {
     }, {})
 
     return (
-        <>
+        <Box w={{ base: '99%', md: '98%' }} mx='auto'>
             {
-                Object.keys(jobsByDate).map(day => {
-                    return (
-                        <>
-                            <h1>{day}</h1>
-                            {
-                                jobsByDate[day].map(job => {
-                                    return <StagedJobListEntry key={job.id} id={job.id} name={job.name} filamentUsed={job.filamentUsed} date={job.date} />
-                                })
-                            }
-                        </>
-                    )
-                })
+                <VStack align="stretch" spacing={10}>
+                    {
+                        Object.keys(jobsByDate).map(day => {
+                            return (
+                                <Box>
+                                    <Heading>{day}</Heading>
+                                    {
+                                        <VStack align="stretch">
+                                            {
+                                                jobsByDate[day].map(job => {
+                                                    return <StagedJobListEntry key={job.id} id={job.id} name={job.name} filamentUsed={job.filamentUsed} date={job.date} />
+                                                })
+                                            }
+                                        </VStack>
+
+                                    }
+
+                                </Box>
+                            )
+                        })
+                    }
+                </VStack>
             }
 
 
-        </>
+        </Box>
 
 
     );
