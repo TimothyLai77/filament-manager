@@ -13,7 +13,13 @@ const StagedJobList = () => {
     if (loading) return <h1>loading...</h1>
     if (error) return <h1>error</h1>
 
-
+    if (stagedJobList.length == 0) {
+        return (
+            <Box justifyContent="center" display="flex" w={{ base: '99%', md: '98%' }} mx='auto' alignItems="center">
+                <Heading align='center'>No Staged Jobs</Heading>
+            </Box>
+        )
+    }
 
     let formattedList = stagedJobList.map(job => ({
         // copy everything over from the current job
