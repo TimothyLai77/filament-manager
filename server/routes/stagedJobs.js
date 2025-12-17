@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getStagedJobs, addStagedJob, deleteStagedJob } = require('../modules/stagedJobLogic');
+const { getStagedJobs, addStagedJob, deleteStagedJob, getStagedJobById } = require('../modules/stagedJobLogic');
 const { commitStagedJob } = require('../modules/jobManager');
 router.get('/', async (req, res) => {
     try {
@@ -12,6 +12,17 @@ router.get('/', async (req, res) => {
         res.status(500).send(error)
     }
 });
+
+
+router.get('/:jobId', async (req, res) => {
+    try {
+        console.log('GET: /stagedJobs/:jobId');
+        const job = await getStagedJobById(req.params.id);
+        res.status(200).send(job.toJSON());
+    } catch (error) {
+        res.status(500).send(error)
+    }
+})
 
 router.post('/', async (req, res) => {
     try {
