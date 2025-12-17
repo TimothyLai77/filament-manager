@@ -4,6 +4,7 @@ import CreateSpoolPage from './pages/CreateSpoolPage'
 import CreateJobPage from './pages/CreateJobPage'
 import SpoolDetailsPage from "./pages/SpoolDetailsPage";
 import StagedJobs from './pages/StagedJobs'
+import CommitStagedJobPage from "./pages/CommitStagedJobPage";
 import { ChakraProvider, defaultSystem } from '@chakra-ui/react'
 import {
   createSystem,
@@ -45,6 +46,7 @@ function App() {
               <Route path='/create-job/:spoolId' element={<CreateJobPage />} />
               <Route path='/details/:spoolId' element={<SpoolDetailsPage />} />
               <Route path='/staged/' element={<StagedJobs />} />
+              <Route path='/commit/:jobId' element={<CommitStagedJobPage />} />
             </Routes>
           </BrowserRouter>
         </ColorModeProvider>
