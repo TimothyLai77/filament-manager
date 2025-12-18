@@ -3,10 +3,16 @@ import { MdOutlineDelete, MdCheck } from "react-icons/md";
 import { useSelector } from "react-redux"
 import { deleteStagedJob } from "@/features/stagedJobs/deleteStagedJobSlice";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 const StagedJobListEntry = ({ id, name, filamentUsed, date }) => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const handleDelete = () => {
         dispatch(deleteStagedJob(id));
+    }
+    const handleCommit = () => {
+        // navigate to the edit and commit page, and then also pass in the object/state
+        navigate(`/commit/${id}`, { state: { id, name, filamentUsed, date } })
     }
     return (
         <Card.Root size="sm" minW={{ base: "100%", sm: "400px", md: "85%" }} flexDirection="row">
@@ -24,7 +30,7 @@ const StagedJobListEntry = ({ id, name, filamentUsed, date }) => {
                     <Text>{date.toString()}</Text>
                     <Spacer />
                     <HStack>
-                        <Button size={'sm'}>
+                        <Button onClick={handleCommit} size={'sm'}>
                             <MdCheck />
                             Edit & Commit
                         </Button>
