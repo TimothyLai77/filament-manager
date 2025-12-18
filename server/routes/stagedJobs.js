@@ -17,7 +17,7 @@ router.get('/', async (req, res) => {
 router.get('/:jobId', async (req, res) => {
     try {
         console.log('GET: /stagedJobs/:jobId');
-        const job = await getStagedJobById(req.params.id);
+        const job = await getStagedJobById(req.params.jobId);
         res.status(200).send(job.toJSON());
     } catch (error) {
         res.status(500).send(error)
