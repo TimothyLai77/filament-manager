@@ -6,11 +6,11 @@ import dayjs from "dayjs"
 import StagedJobListEntry from "./StagedJobListEntry"
 
 const StagedJobList = () => {
-    const { stagedJobList, loading, error } = useSelector((state) => state.fetchStagedJobs)
+    const { stagedJobList, listLoading, error } = useSelector((state) => state.fetchStagedJobs)
 
 
 
-    if (loading) return <h1>loading...</h1>
+    if (listLoading) return <h1>loading...</h1>
     if (error) return <h1>error</h1>
 
     if (stagedJobList.length == 0) {
