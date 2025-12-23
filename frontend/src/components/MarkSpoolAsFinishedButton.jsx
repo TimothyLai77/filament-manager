@@ -18,9 +18,10 @@ const MarkSpoolAsFinishedButton = () => {
     const { successMarkedFinished, loading, error } = useSelector((state) => state.markSpoolFinished)
     const navigate = useNavigate()
     const handleConfirm = async () => {
+        console.log('handle confirm run')
         try {
             // dispatch the call. unwrap the result. if there is no error navigatge back to the root page
-            const result = await dispatch(markSpoolAsFinished(spoolId)).unwrap();
+            await dispatch(markSpoolAsFinished(spoolId)).unwrap();
             navigate('/')
         } catch (rejectedValueOrSerializedError) {
             // idk what to do...
@@ -29,14 +30,6 @@ const MarkSpoolAsFinishedButton = () => {
 
     }
 
-    useEffect(() => {
-        if (successMarkedFinished == null) return;
-        if (successMarkedFinished) {
-            navigate('/'); // spool marked successfully go back to main page
-        } else {
-            console.log('spool did not mark as finished successfully')
-        }
-    }, [successMarkedFinished])
 
     if (loading) return <></>
     if (error) return <h1>error</h1>
