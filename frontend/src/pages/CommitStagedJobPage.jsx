@@ -4,6 +4,7 @@ import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchStagedJob } from "@/features/stagedJobs/fetchStagedJobsSlice";
+import JobCreationForm, { FORM_VARIANTS } from "@/components/JobCreationForm";
 
 const CommitStagedJobPage = () => {
 
@@ -26,6 +27,9 @@ const CommitStagedJobPage = () => {
                 <Text>Name: {stagedJobDetail.name}</Text>
                 <Text>Filament Used: {stagedJobDetail.filamentUsed}g</Text>
                 <Text>{stagedJobDetail.date}</Text>
+            </Box>
+            <Box>
+                <JobCreationForm formType={FORM_VARIANTS.staged} />
             </Box>
 
         </>

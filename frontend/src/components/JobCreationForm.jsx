@@ -6,6 +6,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createJob } from '@/features/jobs/jobSlice';
 import { fetchSpoolById } from '@/features/spools/spoolSlice';
 
+
+export const FORM_VARIANTS = {
+    new: 'new',
+    staged: 'staged'
+};
+
 // Check if payload is valid (no, empty fields, both amount used and cost are numbers)
 const checkPayload = (payload) => {
     // idk there's probably a better way but my brain isn't working
@@ -18,7 +24,8 @@ const checkPayload = (payload) => {
 }
 
 
-const JobCreationForm = () => {
+
+const JobCreationForm = ({ formType = FORM_VARIANTS.new }) => {
     const dispatch = useDispatch();
     const { spoolDetails, loading, error } = useSelector((state) => state.spools);
 
@@ -29,6 +36,7 @@ const JobCreationForm = () => {
     const [cost, setCost] = useState(0);
 
 
+    if (formType === FORM_VARIANTS.staged) return <h1>testing</h1>
 
     // use effect to auto calculate how much the job will cost (updates on 'filament amount' change) 
     useEffect(() => {
