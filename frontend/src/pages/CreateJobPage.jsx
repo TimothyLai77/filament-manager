@@ -2,13 +2,14 @@ import { Box, Stack } from '@chakra-ui/react'
 import { useParams } from 'react-router-dom';
 import TopNavBar from '../components/TopNavBar.jsx';
 import SpoolDetailCard from '../components/SpoolDetailCard.jsx'
-import JobCreationForm from '../components/JobCreationForm.jsx';
+import JobCreationForm, { FORM_VARIANTS } from '../components/JobCreationForm.jsx';
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { fetchSpoolById } from '@/features/spools/spoolSlice.js';
 const CreateJobPage = () => {
     const { spoolId } = useParams();
     const dispatch = useDispatch();
+    const { spoolDetails, loading, error } = useSelector((state) => state.spools);
 
 
 
@@ -18,6 +19,8 @@ const CreateJobPage = () => {
         dispatch(fetchSpoolById(spoolId));
     }, [dispatch])
 
+    if (loading) return <h1>loading...</h1>
+    if (error) return <h1>error</h1>
 
     return (
         <>
@@ -35,7 +38,7 @@ const CreateJobPage = () => {
                 </Box>
                 {/* right side shows the job creation form */}
                 <Box flex={1}>
-                    <JobCreationForm />
+                    <JobCreationForm formType={FORM_VARIANTS.new} spoolDetails={spoolDetails} />
 
                 </Box>
 
