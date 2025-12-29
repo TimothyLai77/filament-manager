@@ -5,6 +5,13 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { createJob } from '@/features/jobs/jobSlice';
 import { fetchSpoolById } from '@/features/spools/spoolSlice';
+import SpoolSelector from './spoolComponents/SpoolSelector';
+
+
+export const FORM_VARIANTS = {
+    new: 'new',
+    staged: 'staged'
+};
 
 // Check if payload is valid (no, empty fields, both amount used and cost are numbers)
 const checkPayload = (payload) => {
@@ -18,9 +25,9 @@ const checkPayload = (payload) => {
 }
 
 
-const JobCreationForm = () => {
+
+const JobCreationForm = ({ formType = FORM_VARIANTS.new, spoolDetails }) => {
     const dispatch = useDispatch();
-    const { spoolDetails, loading, error } = useSelector((state) => state.spools);
 
     // react useStates for the form
     // todo: probably refactor this into a single object useState. like what is done in the spool creation.
@@ -30,15 +37,13 @@ const JobCreationForm = () => {
 
 
 
+
     // use effect to auto calculate how much the job will cost (updates on 'filament amount' change) 
     useEffect(() => {
         setCost(costPerGram * filamentAmount);
     }, [filamentAmount, spoolDetails])
 
 
-    // wait for redux store loads
-    if (loading) return <h1>loading...</h1>
-    if (error) return <h1>error</h1>
 
     // Get spool details and decide if the spool is able to be used (isEmpty is false)
     // and calcualte cost/g used
@@ -93,15 +98,13 @@ const JobCreationForm = () => {
         }
     }
 
-    if (loading) return <h1>loading...</h1>
-    if (error) return <h1>error</h1>
-
 
     //todo: clean this up so its dynamically generated
     const generateFields = () => {
         return (
             <Fieldset.Root>
                 <Field.Root>
+
                     <Field.Label>Job Name</Field.Label>
                     <Input
                         onChange={(e) => setName(e.target.value)}
