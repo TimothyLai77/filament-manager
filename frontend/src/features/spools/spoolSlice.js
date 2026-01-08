@@ -59,6 +59,9 @@ export const spoolSlice = createSlice({
     reducers: {
         setSelectedSpool(state, action) {
             state.selectedSpool = action.payload;
+        },
+        clearSpoolDetails(state) {
+            state.spoolDetails = null;
         }
     },
     extraReducers: (builder) => {
@@ -106,5 +109,5 @@ export const spoolSlice = createSlice({
     }
 })
 
-export const { setSelectedSpool } = spoolSlice.actions
+export const { setSelectedSpool, clearSpoolDetails } = spoolSlice.actions
 export default spoolSlice.reducer;
