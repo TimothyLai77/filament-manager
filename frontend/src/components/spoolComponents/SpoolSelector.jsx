@@ -1,5 +1,7 @@
-
+import { useDispatch } from "react-redux"
+import { setSelectedSpool } from "@/features/spools/spoolSlice"
 import { Select, Box, Portal, useListCollection, Span, Stack } from "@chakra-ui/react"
+
 
 //TODO: make some helper functions and export them... instead of copy and pasting them.
 // this is REALLY stupid.
@@ -15,15 +17,17 @@ const formatInputArray = (array) => {
     return formattedArray;
 }
 
-const handleSelect = (e) => {
-    console.log(e)
-}
-
 
 const SpoolSelector = ({ spoolList }) => {
+    const dispatch = useDispatch();
     const { collection } = useListCollection({
         initialItems: formatInputArray(spoolList)
     })
+
+    const handleSelect = (e) => {
+        console.log(e.value)
+        dispatch(setSelectedSpool(e.value))
+    }
 
     return (
         <Box>
