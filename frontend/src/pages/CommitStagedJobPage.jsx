@@ -5,27 +5,41 @@ import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchStagedJob } from "@/features/stagedJobs/fetchStagedJobsSlice";
 import JobCreationForm, { FORM_VARIANTS } from "@/components/JobCreationForm";
-import { fetchActiveSpoolList } from "@/features/spools/spoolSlice";
+import { clearSpoolDetails, fetchActiveSpoolList, fetchSpoolById } from "@/features/spools/spoolSlice";
 import SpoolSelector from "@/components/spoolComponents/SpoolSelector";
+import { setSelectedSpool } from "@/features/spools/spoolSlice";
 
 const CommitStagedJobPage = () => {
 
     const { jobId } = useParams();
     const dispatch = useDispatch();
     const { detailLoading, error, stagedJobDetail } = useSelector((state) => state.fetchStagedJobs)
-    const { spoolList, spoolDetail, loading, error: spoolError } = useSelector((state) => state.spools)
+    const { spoolList, selectedSpool, spoolDetails, loading, error: spoolError } = useSelector((state) => state.spools)
+
     useEffect(() => {
+        // clear the state data
+        dispatch(clearSpoolDetails());
+        dispatch(setSelectedSpool(null));
+
         dispatch(fetchStagedJob(jobId));
         dispatch(fetchActiveSpoolList());
-    }, [dispatch, jobId])
+    }, [dispatch, jobId]);
+
+    useEffect(() => {
+        dispatch(fetchSpoolById(selectedSpool))
+    }, [selectedSpool])
+
+
 
     if (detailLoading || detailLoading == null) return <h1>loading...</h1>
     if (loading || loading == null) return <h1>loading...</h1>
     if (error || spoolError) return <h1>error</h1>
     console.log(stagedJobDetail)
+    console.log(spoolDetails)
     return (
         <>
             <TopNavBar />
+            <h1>DEBUG: Selected Spool: {selectedSpool ? selectedSpool : "select a spool"}</h1>
             <Box>
                 <Heading>Edit and Commit {jobId}</Heading>
                 <Text>Name: {stagedJobDetail.name}</Text>
@@ -36,8 +50,13 @@ const CommitStagedJobPage = () => {
                 <SpoolSelector spoolList={spoolList} />
             </Box>
             <Box>
+                {
+                    selectedSpool && spoolDetails ?
+                        <JobCreationForm formType={FORM_VARIANTS.staged} spoolDetails={spoolDetails} />
+                        :
+                        <></>
+                }
 
-                {/* <JobCreationForm formType={FORM_VARIANTS.staged} /> */}
             </Box>
 
         </>
