@@ -25,6 +25,7 @@ const CommitStagedJobPage = () => {
         dispatch(fetchActiveSpoolList());
     }, [dispatch, jobId]);
 
+    // fetch the spool information from the server, when a selection from the dropdown is picked
     useEffect(() => {
         dispatch(fetchSpoolById(selectedSpool))
     }, [selectedSpool])
@@ -32,7 +33,7 @@ const CommitStagedJobPage = () => {
 
 
     if (detailLoading || detailLoading == null) return <h1>loading...</h1>
-    if (loading || loading == null) return <h1>loading...</h1>
+    if ((loading && !spoolList) || loading == null) return <h1>loading...</h1>
     if (error || spoolError) return <h1>error</h1>
     console.log(stagedJobDetail)
     console.log(spoolDetails)
