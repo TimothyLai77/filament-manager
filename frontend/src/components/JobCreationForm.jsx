@@ -2,7 +2,7 @@ import { Button, Input, Stack, Card, Text, Field, Fieldset } from '@chakra-ui/re
 import { Toaster, toaster } from "../components/ui/toaster";
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-
+import { useNavigate } from 'react-router-dom';
 import { createJob } from '@/features/jobs/jobSlice';
 import { fetchSpoolById } from '@/features/spools/spoolSlice';
 import SpoolSelector from './spoolComponents/SpoolSelector';
@@ -29,7 +29,7 @@ const checkPayload = (payload) => {
 
 const JobCreationForm = ({ formType = FORM_VARIANTS.new, spoolDetails, jobDetails }) => {
     const dispatch = useDispatch();
-
+    const navigate = useNavigate();
     // react useStates for the form
     // todo: probably refactor this into a single object useState. like what is done in the spool creation.
     // if the job detail was passed as a prop then use those as the default values. else zero the fields
@@ -81,6 +81,12 @@ const JobCreationForm = ({ formType = FORM_VARIANTS.new, spoolDetails, jobDetail
                     description: "New job added to database.",
                     type: "success"
                 });
+
+                // if user is committing a staged job then navigate to the spool details spool that was used.
+                if (formType === FORM_VARIANTS.staged) {
+                    navigate(`/details/${spoolDetails.id}`)
+                }
+                // todo: send a dispatch to the server, to let the know the job is moved. 
             } catch (rejectedValueOrSerializedError) {
                 // something broke, display errror toast
                 toaster.create({
