@@ -1,7 +1,7 @@
 import TopNavBar from "@/components/TopNavBar"
 import { useDispatch } from "react-redux"
 import { useEffect } from "react"
-import { fetchStagedJobs } from "@/features/stagedJobs/fetchStagedJobsSlice"
+import { fetchStagedJobs } from "@/features/stagedJobs/stagedJobSlice"
 
 import StagedJobList from "@/components/stagedJobComponents/StagedJobList"
 const StagedJobs = () => {

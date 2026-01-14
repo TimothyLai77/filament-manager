@@ -1,3 +1,4 @@
+import StagedJobs from "@/pages/StagedJobs";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { act } from "react";
 
@@ -7,7 +8,24 @@ const initialState = {
     error: null,
     stagedJobList: [],
     stagedJobDetail: null,
+    // loading/error for delete thunk
+    deleteLoading: null,
+    deleteError: null,
 }
+
+export const deleteStagedJob = createAsyncThunk(
+    '/api/stagedjobs/delete',
+    async (id, { rejectWithValue, dispatch }) => {
+        const response = await fetch(`/api/stagedJobs/${id}`, {
+            method: 'DELETE'
+        });
+        if (response.ok) {
+            dispatch(fetchStagedJobs())
+        } else {
+            rejectWithValue(response.status)
+        }
+    }
+)
 
 
 export const fetchStagedJob = createAsyncThunk(
@@ -35,7 +53,7 @@ export const fetchStagedJobs = createAsyncThunk(
     }
 )
 
-export const fetchStagedJobsSlice = createSlice({
+export const stagedJobSlice = createSlice({
     name: "stagedjobs",
     initialState,
     reducers: {
@@ -73,7 +91,21 @@ export const fetchStagedJobsSlice = createSlice({
                 state.detailLoading = false;
                 state.error = action.payload;
             })
+
+            // DELETE STAGED JOBS
+            .addCase(deleteStagedJob.pending, (state) => {
+                state.loading = true;
+                state.error = false;
+            })
+            .addCase(deleteStagedJob.fulfilled, (state) => {
+                state.loading = false;
+
+            })
+            .addCase(deleteStagedJob.rejected, (state) => {
+                state.loading = false;
+                state.error = true;
+            })
     }
 })
 
-export default fetchStagedJobsSlice.reducer
+export default stagedJobSlice.reducer
