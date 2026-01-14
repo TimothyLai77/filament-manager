@@ -1,7 +1,7 @@
 import { Button, Card, Heading, Tag, Text, HStack, Spacer, VStack } from "@chakra-ui/react"
 import { MdOutlineDelete, MdCheck } from "react-icons/md";
 import { useSelector } from "react-redux"
-import { deleteStagedJob } from "@/features/stagedJobs/deleteStagedJobSlice";
+import { deleteStagedJob } from "@/features/stagedJobs/stagedJobSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 const StagedJobListEntry = ({ id, name, filamentUsed, date }) => {

@@ -3,7 +3,7 @@ import { Box, Heading, Text } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchStagedJob } from "@/features/stagedJobs/fetchStagedJobsSlice";
+import { fetchStagedJob } from "@/features/stagedJobs/stagedJobSlice";
 import JobCreationForm, { FORM_VARIANTS } from "@/components/JobCreationForm";
 import { clearSpoolDetails, fetchActiveSpoolList, fetchSpoolById } from "@/features/spools/spoolSlice";
 import SpoolSelector from "@/components/spoolComponents/SpoolSelector";
@@ -13,7 +13,7 @@ const CommitStagedJobPage = () => {
 
     const { jobId } = useParams();
     const dispatch = useDispatch();
-    const { detailLoading, error, stagedJobDetail } = useSelector((state) => state.fetchStagedJobs)
+    const { detailLoading, deleteError, stagedJobDetail } = useSelector((state) => state.stagedJobs)
     const { spoolList, selectedSpool, spoolDetails, loading, error: spoolError } = useSelector((state) => state.spools)
 
     useEffect(() => {
@@ -34,7 +34,7 @@ const CommitStagedJobPage = () => {
 
     if (detailLoading || detailLoading == null) return <h1>loading...</h1>
     if ((loading && !spoolList) || loading == null) return <h1>loading...</h1>
-    if (error || spoolError) return <h1>error</h1>
+    if (deleteError || spoolError) return <h1>error</h1>
     console.log(stagedJobDetail)
     console.log(spoolDetails)
     return (

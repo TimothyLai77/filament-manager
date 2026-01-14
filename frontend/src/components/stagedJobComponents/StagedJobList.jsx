@@ -1,17 +1,18 @@
 import { VStack, Text, Box, Heading } from "@chakra-ui/react"
-import { fetchStagedJobs } from "@/features/stagedJobs/fetchStagedJobsSlice"
+import { fetchStagedJobs } from "@/features/stagedJobs/stagedJobSlice"
+
 import { useSelector } from "react-redux"
 
 import dayjs from "dayjs"
 import StagedJobListEntry from "./StagedJobListEntry"
 
 const StagedJobList = () => {
-    const { stagedJobList, listLoading, error } = useSelector((state) => state.fetchStagedJobs)
+    const { stagedJobList, listLoading, detailError } = useSelector((state) => state.stagedJobs)
 
 
 
     if (listLoading) return <h1>loading...</h1>
-    if (error) return <h1>error</h1>
+    if (detailError) return <h1>error</h1>
 
     if (stagedJobList.length == 0) {
         return (
