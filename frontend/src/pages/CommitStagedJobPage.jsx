@@ -53,7 +53,7 @@ const CommitStagedJobPage = () => {
             <Box>
                 {
                     selectedSpool && spoolDetails ?
-                        <JobCreationForm formType={FORM_VARIANTS.staged} spoolDetails={spoolDetails} />
+                        <JobCreationForm formType={FORM_VARIANTS.staged} spoolDetails={spoolDetails} jobDetails={stagedJobDetail} />
                         :
                         <></>
                 }

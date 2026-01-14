@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createJob } from '@/features/jobs/jobSlice';
 import { fetchSpoolById } from '@/features/spools/spoolSlice';
 import SpoolSelector from './spoolComponents/SpoolSelector';
+import { VARIANTS } from './SpoolList';
 
 
 export const FORM_VARIANTS = {
@@ -26,13 +27,14 @@ const checkPayload = (payload) => {
 
 
 
-const JobCreationForm = ({ formType = FORM_VARIANTS.new, spoolDetails }) => {
+const JobCreationForm = ({ formType = FORM_VARIANTS.new, spoolDetails, jobDetails }) => {
     const dispatch = useDispatch();
 
     // react useStates for the form
     // todo: probably refactor this into a single object useState. like what is done in the spool creation.
-    const [name, setName] = useState('');
-    const [filamentAmount, setFilamentAmount] = useState('');
+    // if the job detail was passed as a prop then use those as the default values. else zero the fields
+    const [name, setName] = jobDetails ? useState(jobDetails.name) : useState('');
+    const [filamentAmount, setFilamentAmount] = jobDetails ? useState(jobDetails.filamentUsed) : useState('');
     const [cost, setCost] = useState(0);
 
 
@@ -135,7 +137,13 @@ const JobCreationForm = ({ formType = FORM_VARIANTS.new, spoolDetails }) => {
                 <Card.Root minH="100%">
                     <Card.Body>
                         <Card.Title>
-                            <Text fontWeight="bold">Create New Job</Text>
+                            {
+                                formType === FORM_VARIANTS.new ?
+                                    <Text fontWeight="bold">Create New Job</Text>
+                                    :
+                                    <Text fontWeight="bold">Commit Staged Job</Text>
+                            }
+
                         </Card.Title>
                         <Stack margin={5}>
                             {generateFields()}
