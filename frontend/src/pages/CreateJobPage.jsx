@@ -16,10 +16,11 @@ const CreateJobPage = () => {
     useEffect(() => {
         // top level dispatch to get the spooldetails
         // if user ever went to site/create-spoo/spoolId directly
+        console.log('useefffect')
         dispatch(fetchSpoolById(spoolId));
-    }, [dispatch])
+    }, [dispatch, spoolId])
 
-    if (loading) return <h1>loading...</h1>
+    if (loading || !spoolDetails) return <h1>loading...</h1>
     if (error) return <h1>error</h1>
 
     return (
@@ -33,7 +34,7 @@ const CreateJobPage = () => {
             >
                 {/* left side that re-displays the the spool details */}
                 <Box flex={1}>
-                    <SpoolDetailCard />
+                    <SpoolDetailCard spoolDetails={spoolDetails} />
 
                 </Box>
                 {/* right side shows the job creation form */}
