@@ -13,6 +13,25 @@ const initialState = {
     deleteError: null,
 }
 
+
+export const commitStagedJob = createAsyncThunk(
+    '/api/stagedjobs/commit',
+    async (payload, { rejectWithValue }) => {
+        const response = await fetch(`/api/staged/commit/${payload.jobId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+        if (response.ok) {
+            return response.json();
+        } else {
+            rejectWithValue(response.status)
+        }
+    }
+)
+
+
 export const deleteStagedJob = createAsyncThunk(
     '/api/stagedjobs/delete',
     async (id, { rejectWithValue, dispatch }) => {
@@ -91,6 +110,8 @@ export const stagedJobSlice = createSlice({
                 state.detailLoading = false;
                 state.error = action.payload;
             })
+
+
 
             // DELETE STAGED JOBS
             .addCase(deleteStagedJob.pending, (state) => {
