@@ -47,9 +47,9 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
-router.post('/commit/:id', async (req, res) => {
+router.post('/commit/:jobId', async (req, res) => {
     try {
-        console.log(`POST: /commit/${req.params.id}`);
+        console.log(`POST: /commit/${req.params.jobId}`);
         const commitedJob = await commitStagedJob(req.body);
         res.status(200).send(commitedJob);
     } catch (error) {
