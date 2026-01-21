@@ -68,6 +68,7 @@ const JobCreationForm = ({ formType = FORM_VARIANTS.new, spoolDetails, jobDetail
     const handleCommit = async (e) => {
         e.preventDefault();
         const payload = {
+            jobId: jobDetails.id,
             name: name,
             spoolId: spoolDetails.id,
             filamentAmountUsed: parseFloat(filamentAmount),

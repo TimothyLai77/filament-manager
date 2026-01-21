@@ -17,11 +17,13 @@ const initialState = {
 export const commitStagedJob = createAsyncThunk(
     '/api/stagedjobs/commit',
     async (payload, { rejectWithValue }) => {
-        const response = await fetch(`/api/staged/commit/${payload.jobId}`, {
+
+        const response = await fetch(`/api/stagedJobs/commit/${payload.jobId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
+            body: JSON.stringify(payload)
         })
         if (response.ok) {
             return response.json();
