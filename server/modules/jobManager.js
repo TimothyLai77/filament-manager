@@ -11,7 +11,7 @@ const commitStagedJob = async (payload) => {
     const newJobData = {
         id: payload.jobId,
         name: payload.name,
-        filamentAmountUsed: payload.filamentUsed,
+        filamentAmountUsed: payload.filamentAmountUsed,
         cost: payload.cost,
     }
     // create the new job under the selected spool
