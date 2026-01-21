@@ -78,12 +78,13 @@ const JobCreationForm = ({ formType = FORM_VARIANTS.new, spoolDetails, jobDetail
             // payload valid, try to submit and unwrap the promise from redux
             try {
                 await dispatch(commitStagedJob(payload)).unwrap();
-                // on success display sucess toast
-                toaster.create({
-                    title: "Success",
-                    description: "New job commited to database.",
-                    type: "success"
-                });
+                // TODO: right now the page will switch to the spool detail page, and the toast will never show.
+                // idk. i can't be bothered to fix it.
+                // toaster.create({
+                //     title: "Success",
+                //     description: "New job commited to database.",
+                //     type: "success"
+                // });
 
                 // go to the spool that was commited to
                 navigate(`/details/${spoolDetails.id}`)
