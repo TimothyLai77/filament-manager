@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { createJob } from '@/features/jobs/jobSlice';
+import { commitStagedJob } from '@/features/stagedJobs/stagedJobSlice';
 import { fetchSpoolById } from '@/features/spools/spoolSlice';
 import SpoolSelector from './spoolComponents/SpoolSelector';
 import { VARIANTS } from './SpoolList';
@@ -61,9 +62,54 @@ const JobCreationForm = ({ formType = FORM_VARIANTS.new, spoolDetails, jobDetail
         setCost(0);
     }
 
+
+
+    // send the dispatch for the commitstagedjob. 
+    const handleCommit = async (e) => {
+        e.preventDefault();
+        const payload = {
+            name: name,
+            spoolId: spoolDetails.id,
+            filamentAmountUsed: parseFloat(filamentAmount),
+            cost: parseFloat(cost)
+        }
+        if (checkPayload(payload)) {
+            // payload valid, try to submit and unwrap the promise from redux
+            try {
+                await dispatch(commitStagedJob(payload)).unwrap();
+                // on success display sucess toast
+                toaster.create({
+                    title: "Success",
+                    description: "New job commited to database.",
+                    type: "success"
+                });
+
+                // go to the spool that was commited to
+                navigate(`/details/${spoolDetails.id}`)
+            } catch (rejectedValueOrSerializedError) {
+                // something broke, display errror toast
+                toaster.create({
+                    title: "Error",
+                    description: `something went wrong: ` + rejectedValueOrSerializedError,
+                    type: "error"
+                })
+            }
+            clearInputs()
+        } else {
+            // invalid payload, show toast
+            toaster.create({
+                title: "Form Error",
+                description: "double check fields",
+                type: "error"
+            })
+        }
+    }
+
+
     // Handle submission of form, check the payload, and send the dispatch to redux also clear inputs.
     // will present a toast on form input errors
-    const handleSubmit = async (e) => {
+    // this function for when formtype is new (a new job is being created.)
+    const handleCreate = async (e) => {
         e.preventDefault();
         const payload = {
             name: name,
@@ -81,12 +127,6 @@ const JobCreationForm = ({ formType = FORM_VARIANTS.new, spoolDetails, jobDetail
                     description: "New job added to database.",
                     type: "success"
                 });
-
-                // if user is committing a staged job then navigate to the spool details spool that was used.
-                if (formType === FORM_VARIANTS.staged) {
-                    navigate(`/details/${spoolDetails.id}`)
-                }
-                // todo: send a dispatch to the server, to let the know the job is moved. 
             } catch (rejectedValueOrSerializedError) {
                 // something broke, display errror toast
                 toaster.create({
@@ -131,7 +171,8 @@ const JobCreationForm = ({ formType = FORM_VARIANTS.new, spoolDetails, jobDetail
                         value={cost}
                     />
                 </Field.Root>
-                <Button marginTop={5} type="submit" onClick={handleSubmit}>Submit</Button>
+                {/* depending on what the form type is set to, call the respective form submission function. */}
+                <Button marginTop={5} type="submit" onClick={formType === FORM_VARIANTS.new ? handleCreate : handleCommit}>Submit</Button>
             </Fieldset.Root>
         );
     }
