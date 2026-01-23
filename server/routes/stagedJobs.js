@@ -1,16 +1,28 @@
 const express = require('express');
 const router = express.Router();
-const { getStagedJobs, addStagedJob, deleteStagedJob } = require('../modules/stagedJobLogic');
+const { getStagedJobs, addStagedJob, deleteStagedJob, getStagedJobById } = require('../modules/stagedJobLogic');
 const { commitStagedJob } = require('../modules/jobManager');
 router.get('/', async (req, res) => {
     try {
         console.log('GET: /stagedJobs');
         const jobList = await getStagedJobs();
-        res.status(200).send(jobList);
+        const formattedJobs = jobList.map(job => job.toJSON())
+        res.status(200).send(formattedJobs);
     } catch (error) {
         res.status(500).send(error)
     }
 });
+
+
+router.get('/:jobId', async (req, res) => {
+    try {
+        console.log('GET: /stagedJobs/:jobId');
+        const job = await getStagedJobById(req.params.jobId);
+        res.status(200).send(job.toJSON());
+    } catch (error) {
+        res.status(500).send(error)
+    }
+})
 
 router.post('/', async (req, res) => {
     try {
@@ -35,9 +47,9 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
-router.post('/commit/:id', async (req, res) => {
+router.post('/commit/:jobId', async (req, res) => {
     try {
-        console.log(`POST: /commit/${req.params.id}`);
+        console.log(`POST: /commit/${req.params.jobId}`);
         const commitedJob = await commitStagedJob(req.body);
         res.status(200).send(commitedJob);
     } catch (error) {

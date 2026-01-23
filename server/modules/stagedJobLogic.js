@@ -20,7 +20,7 @@ const getStagedJobById = async (id) => {
     try {
         return await StagedJob.findByPk(id);
     } catch (error) {
-        console.log(erro);
+        console.log(error);
     }
 }
 

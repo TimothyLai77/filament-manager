@@ -6,14 +6,10 @@ import MarkSpoolAsFinishedButton from './MarkSpoolAsFinishedButton.jsx';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from "react-redux";
 import { DeleteSpoolButton } from './DeleteSpoolButton.jsx';
-const SpoolDetailCard = () => {
+const SpoolDetailCard = ({ spoolDetails }) => {
 
-    const { spoolDetails, loading, error } = useSelector((state) => state.spools)
+
     const navigate = useNavigate();
-
-    if (loading) return <h1>loading...</h1>
-    if (error) return <h1>error something went wrong</h1>
-
 
     const spoolText = () => {
         let percentLeft = spoolDetails.filamentLeft / spoolDetails.initialWeight * 100
