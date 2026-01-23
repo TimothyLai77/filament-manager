@@ -96,7 +96,7 @@ const JobCreationForm = ({ formType = FORM_VARIANTS.new, spoolDetails, jobDetail
                     type: "error"
                 })
             }
-            clearInputs()
+
         } else {
             // invalid payload, show toast
             toaster.create({

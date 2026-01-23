@@ -28,7 +28,7 @@ export const commitStagedJob = createAsyncThunk(
         if (response.ok) {
             return response.json();
         } else {
-            rejectWithValue(response.status)
+            return rejectWithValue(response.status)
         }
     }
 )
@@ -43,7 +43,7 @@ export const deleteStagedJob = createAsyncThunk(
         if (response.ok) {
             dispatch(fetchStagedJobs())
         } else {
-            rejectWithValue(response.status)
+            return rejectWithValue(response.status)
         }
     }
 )
