@@ -31,7 +31,7 @@ const SpoolSelector = ({ spoolList }) => {
 
     return (
         <Box>
-            <Select.Root collection={collection} size="sm" width="320px" onSelect={handleSelect}>
+            <Select.Root collection={collection} size="lg" onSelect={handleSelect}>
                 <Select.HiddenSelect />
                 <Select.Control>
                     <Select.Trigger>

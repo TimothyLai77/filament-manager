@@ -1,5 +1,5 @@
 import TopNavBar from "@/components/TopNavBar";
-import { Box, Heading, Text } from "@chakra-ui/react";
+import { Box, Heading, Text, Card } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -39,26 +39,36 @@ const CommitStagedJobPage = () => {
     console.log(spoolDetails)
     return (
         <>
-            <TopNavBar />
-            <h1>DEBUG: Selected Spool: {selectedSpool ? selectedSpool : "select a spool"}</h1>
-            <Box>
-                <Heading>Edit and Commit {jobId}</Heading>
-                <Text>Name: {stagedJobDetail.name}</Text>
-                <Text>Filament Used: {stagedJobDetail.filamentUsed}g</Text>
-                <Text>{stagedJobDetail.date}</Text>
-            </Box>
-            <Box>
-                <SpoolSelector spoolList={spoolList} />
-            </Box>
-            <Box>
-                {
-                    selectedSpool && spoolDetails ?
-                        <JobCreationForm formType={FORM_VARIANTS.staged} spoolDetails={spoolDetails} jobDetails={stagedJobDetail} />
-                        :
-                        <></>
-                }
 
+            <TopNavBar />
+            <Box mx={10} my={10} spaceY={5}>
+                <Box>
+                    <Card.Root>
+                        <Card.Body>
+                            <Card.Title>
+                                Edit and Commit {jobId}
+                            </Card.Title>
+                            <Text>Name: {stagedJobDetail.name}</Text>
+                            <Text>Filament Used: {stagedJobDetail.filamentUsed}g</Text>
+                            <Text>{stagedJobDetail.date}</Text>
+                        </Card.Body>
+                    </Card.Root>
+
+                </Box>
+                <Box>
+                    <SpoolSelector spoolList={spoolList} />
+                </Box>
+                <Box>
+                    {
+                        selectedSpool && spoolDetails ?
+                            <JobCreationForm formType={FORM_VARIANTS.staged} spoolDetails={spoolDetails} jobDetails={stagedJobDetail} />
+                            :
+                            <></>
+                    }
+
+                </Box>
             </Box>
+
 
         </>
     )
