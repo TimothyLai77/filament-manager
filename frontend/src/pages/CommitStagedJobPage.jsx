@@ -27,7 +27,11 @@ const CommitStagedJobPage = () => {
 
     // fetch the spool information from the server, when a selection from the dropdown is picked
     useEffect(() => {
-        dispatch(fetchSpoolById(selectedSpool))
+        // the initial useeffect sets the selected spool to null, and this effect will fire.
+        if (selectedSpool != null) {
+            dispatch(fetchSpoolById(selectedSpool))
+        }
+
     }, [selectedSpool])
 
 
