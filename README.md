@@ -1,11 +1,12 @@
 # Filament Manager
-manage filament for 3d printing. 
+Manage filament for 3d printing. Use with https://github.com/TimothyLai77/filament-manager-orcaslicer-script as a post processing script in Orcaslicer to auto send staged jobs to Filamanet Manager. 
 
 
 # Screenshots
 ![dashboard](project-resources/dashboard.png)
 ![spoolpage](project-resources/spoolpage.png)
-
+![staging](project-resources/staged.png)
+![commit](project-resources/commit.png)
 # Installation (Docker):
 1. copy `template.env` into a `.env` and change the database password.
 2. (Optional) Change the app port in the `.env`
