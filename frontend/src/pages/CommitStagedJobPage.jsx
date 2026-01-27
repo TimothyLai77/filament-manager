@@ -8,6 +8,7 @@ import JobCreationForm, { FORM_VARIANTS } from "@/components/JobCreationForm";
 import { clearSpoolDetails, fetchActiveSpoolList, fetchSpoolById } from "@/features/spools/spoolSlice";
 import SpoolSelector from "@/components/spoolComponents/SpoolSelector";
 import { setSelectedSpool } from "@/features/spools/spoolSlice";
+import dayjs from "dayjs";
 
 const CommitStagedJobPage = () => {
 
@@ -39,8 +40,6 @@ const CommitStagedJobPage = () => {
     if (detailLoading || detailLoading == null) return <h1>loading...</h1>
     if ((loading && !spoolList) || loading == null) return <h1>loading...</h1>
     if (deleteError || spoolError) return <h1>error</h1>
-    console.log(stagedJobDetail)
-    console.log(spoolDetails)
     return (
         <>
 
@@ -54,7 +53,7 @@ const CommitStagedJobPage = () => {
                             </Card.Title>
                             <Text>Name: {stagedJobDetail.name}</Text>
                             <Text>Filament Used: {stagedJobDetail.filamentUsed}g</Text>
-                            <Text>{stagedJobDetail.date}</Text>
+                            <Text>{dayjs(stagedJobDetail.date).format('dddd, MMMM D, YYYY - h:mm a')}</Text>
                         </Card.Body>
                     </Card.Root>
 

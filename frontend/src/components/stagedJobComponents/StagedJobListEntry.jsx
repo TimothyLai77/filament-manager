@@ -4,6 +4,7 @@ import { useSelector } from "react-redux"
 import { deleteStagedJob } from "@/features/stagedJobs/stagedJobSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import dayjs from "dayjs";
 const StagedJobListEntry = ({ id, name, filamentUsed, date }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -27,7 +28,7 @@ const StagedJobListEntry = ({ id, name, filamentUsed, date }) => {
                     </VStack>
 
                     <Text>Filament Used: {filamentUsed}g</Text>
-                    <Text>{date.toString()}</Text>
+                    <Text>{dayjs(date).format('MMMM D, YYYY - h:mm a')}</Text>
                     <Spacer />
                     <HStack>
                         <Button onClick={handleCommit} size={'sm'}>
