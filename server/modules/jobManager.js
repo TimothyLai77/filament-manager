@@ -1,5 +1,7 @@
-import { getStagedJobById, deleteStagedJob } from './stagedJobLogic.js'
+import { getStagedJobById, deleteStagedJob, getOldStagedJobs } from './stagedJobLogic.js'
 import { createJob } from './jobLogic.js';
+import db from '../models/index.js';
+const { StagedJob } = db;
 
 const commitStagedJob = async (payload) => {
     // get the staged job object from seqeulize
@@ -24,5 +26,18 @@ const commitStagedJob = async (payload) => {
     await deleteStagedJob(payload.jobId);
     return commitedJob; // return the newly ocmmited job
 }
+/**
+ * Find and delete all staged jobs past the threshold in seconds
+ * @param {number} threshold when to start getting staged jobs from in seconds. 24 * 60 * 60 returns staged all jobs over a day old
+ */
+const cleanupOldStagedJobs = async (threshold) => {
+    const oldJobs = await getOldStagedJobs(threshold)
+    //console.log(oldJobs)
+    oldJobs.map((job) => {
+        console.log('auto-deleting staged job: ' + job.id)
+        deleteStagedJob(job.id)
+    })
 
-export { commitStagedJob }
+}
+
+export { commitStagedJob, cleanupOldStagedJobs }

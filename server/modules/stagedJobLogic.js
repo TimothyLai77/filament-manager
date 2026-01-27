@@ -3,13 +3,30 @@ import db from '../models/index.js'
 // dereference the stagedjob model object
 const { StagedJob } = db;
 import { generateJobId } from './jobLogic.js';
-
+import { Op } from "sequelize"
 /**
  * Get all staged jobs from the database, and put them in a list
  * @returns the list of all staged jobs in the database
  */
 const getStagedJobs = async () => {
     return await StagedJob.findAll();
+}
+
+/**
+ * 
+ * @param {number} threshold when to start getting staged jobs from in seconds. 24 * 60 * 60 returns staged all jobs over a day old
+ * @returns {Array} the array of staged jobs.
+ */
+const getOldStagedJobs = async (threshold) => {
+    const jobs = await StagedJob.findAll({
+        where: {
+            date: {
+                // find all dates that more than 3 days old from the time of check
+                [Op.lt]: new Date(new Date() - threshold * 1000)
+            }
+        }
+    })
+    return jobs;
 }
 
 /**
@@ -63,6 +80,7 @@ const deleteStagedJob = async (id) => {
 
 
 export {
+    getOldStagedJobs,
     getStagedJobs,
     addStagedJob,
     deleteStagedJob,
