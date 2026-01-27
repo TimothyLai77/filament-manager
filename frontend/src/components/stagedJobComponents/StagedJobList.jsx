@@ -46,7 +46,7 @@ const StagedJobList = () => {
     }, {})
 
     return (
-        <Box w={{ base: '99%', md: '98%' }} mx='auto'>
+        <Box mx='10'>
             {
                 <VStack align="stretch" spacing={10}>
                     {

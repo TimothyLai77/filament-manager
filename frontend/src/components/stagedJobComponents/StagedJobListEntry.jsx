@@ -1,4 +1,4 @@
-import { Button, Card, Heading, Tag, Text, HStack, Spacer, VStack } from "@chakra-ui/react"
+import { Button, Card, Box, Tag, Text, HStack, Spacer, VStack } from "@chakra-ui/react"
 import { MdOutlineDelete, MdCheck } from "react-icons/md";
 import { useSelector } from "react-redux"
 import { deleteStagedJob } from "@/features/stagedJobs/stagedJobSlice";
@@ -26,9 +26,11 @@ const StagedJobListEntry = ({ id, name, filamentUsed, date }) => {
                             <Tag.Label>{id}</Tag.Label>
                         </Tag.Root>
                     </VStack>
+                    <Box>
+                        <Text>Filament Used: {filamentUsed}g</Text>
+                        <Text>{dayjs(date).format('MMMM D, YYYY - h:mm a')}</Text>
+                    </Box>
 
-                    <Text>Filament Used: {filamentUsed}g</Text>
-                    <Text>{dayjs(date).format('MMMM D, YYYY - h:mm a')}</Text>
                     <Spacer />
                     <HStack>
                         <Button onClick={handleCommit} size={'sm'}>
