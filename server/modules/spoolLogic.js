@@ -1,8 +1,21 @@
 import { Sequelize, col } from "sequelize";
 import uniqid from 'uniqid';
-import { Spool } from '../data/models/Spool.js'
+// import { Spool } from '../data/models/Spool.js'
+import db from '../models/index.js'
 import { NotEnoughFilamentError, SpoolNotFoundError, TooMuchFilamentError } from '../errors/errors.js'
 import { deleteJobsAssociatedWithSpool } from "./jobLogic.js";
+const { Spool } = db; // destrucutre spool from db object
+
+
+/**
+ * Generates a spool id. 
+ * @returns spool id generated from uniq
+ */
+const generateSpoolId = () => {
+    return uniqid('spool-');
+}
+
+
 /**
  * Get's spool when given an id. 
  * @param {string} id 
@@ -102,7 +115,7 @@ const createSpool = async (newSpoolDataObj) => {
     try {
         console.log(newSpoolDataObj)
         const newSpool = await Spool.create({
-            id: uniqid('spool-'),
+            id: generateSpoolId(),
             name: newSpoolDataObj.name,
             brand: newSpoolDataObj.brand,
             material: newSpoolDataObj.material,
@@ -125,6 +138,8 @@ const createSpool = async (newSpoolDataObj) => {
 
 
 }
+
+
 
 /**
  * Delete a spool with the specified id. Will also fire the call to delete any jobs associated with this spool
@@ -292,4 +307,18 @@ const editSpool = async (id, newDataObj) => {
 
 
 
-export { getSpoolAttributes, changeFilamentAmount, getFinishedSpools, getActiveSpools, markSpoolAsEmpty, createSpool, getSpoolById, getSpools, deleteSpool, decreaseFilament, editSpool, incrementJobCount };
+export {
+    generateSpoolId,
+    getSpoolAttributes,
+    changeFilamentAmount,
+    getFinishedSpools,
+    getActiveSpools,
+    markSpoolAsEmpty,
+    createSpool,
+    getSpoolById,
+    getSpools,
+    deleteSpool,
+    decreaseFilament,
+    editSpool,
+    incrementJobCount
+};

@@ -18,5 +18,10 @@ WORKDIR /filament-manager/server/
 
 RUN npm install
 
+# apply sequelize database migrations
+#ORKDIR /filament-manager/server/setup/
+ENTRYPOINT ["bash", "entrypoint.sh"]
+
+#WORKDIR /filament-manager/server/
 #start the app
-CMD ["node", "server.js"]
+#CMD ["node", "server.js"]

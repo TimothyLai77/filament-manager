@@ -5,26 +5,30 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
 import SpoolDetailCard from "../components/SpoolDetailCard";
 import TopNavBar from "../components/TopNavBar";
-import { fetchSpoolById, setSelectedSpool } from "@/features/spools/spoolSlice";
+import { fetchSpoolById } from "@/features/spools/spoolSlice";
 import { fetchJobListById } from '@/features/jobs/jobSlice'
 const SpoolDetailsPage = () => {
     const { spoolId } = useParams();
     const dispatch = useDispatch();
+    const { spoolDetails, loading, error } = useSelector((state) => state.spools)
+
+
 
     useEffect(() => {
         // fetch spool details for the child, and place it in store
         dispatch(fetchSpoolById(spoolId));
         dispatch(fetchJobListById(spoolId));
-        // todo: decide if i really need this or not.
-        //setSelectedSpool(spoolId);
+
     }, [dispatch, spoolId])
+    if (loading || spoolDetails === null) return <h1>loading...</h1>
+    if (error) return <h1>error something went wrong</h1>
 
 
     return (
         <>
             <TopNavBar />
             <Stack margin={5}>
-                <SpoolDetailCard />
+                <SpoolDetailCard spoolDetails={spoolDetails} />
                 <JobList />
             </Stack>
 

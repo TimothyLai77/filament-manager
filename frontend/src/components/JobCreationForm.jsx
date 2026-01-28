@@ -2,9 +2,18 @@ import { Button, Input, Stack, Card, Text, Field, Fieldset } from '@chakra-ui/re
 import { Toaster, toaster } from "../components/ui/toaster";
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-
+import { useNavigate } from 'react-router-dom';
 import { createJob } from '@/features/jobs/jobSlice';
+import { commitStagedJob } from '@/features/stagedJobs/stagedJobSlice';
 import { fetchSpoolById } from '@/features/spools/spoolSlice';
+import SpoolSelector from './spoolComponents/SpoolSelector';
+import { VARIANTS } from './SpoolList';
+
+
+export const FORM_VARIANTS = {
+    new: 'new',
+    staged: 'staged'
+};
 
 // Check if payload is valid (no, empty fields, both amount used and cost are numbers)
 const checkPayload = (payload) => {
@@ -18,15 +27,17 @@ const checkPayload = (payload) => {
 }
 
 
-const JobCreationForm = () => {
-    const dispatch = useDispatch();
-    const { spoolDetails, loading, error } = useSelector((state) => state.spools);
 
+const JobCreationForm = ({ formType = FORM_VARIANTS.new, spoolDetails, jobDetails }) => {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
     // react useStates for the form
     // todo: probably refactor this into a single object useState. like what is done in the spool creation.
-    const [name, setName] = useState('');
-    const [filamentAmount, setFilamentAmount] = useState('');
+    // if the job detail was passed as a prop then use those as the default values. else zero the fields
+    const [name, setName] = jobDetails ? useState(jobDetails.name) : useState('');
+    const [filamentAmount, setFilamentAmount] = jobDetails ? useState(jobDetails.filamentUsed) : useState('');
     const [cost, setCost] = useState(0);
+
 
 
 
@@ -36,9 +47,6 @@ const JobCreationForm = () => {
     }, [filamentAmount, spoolDetails])
 
 
-    // wait for redux store loads
-    if (loading) return <h1>loading...</h1>
-    if (error) return <h1>error</h1>
 
     // Get spool details and decide if the spool is able to be used (isEmpty is false)
     // and calcualte cost/g used
@@ -54,9 +62,56 @@ const JobCreationForm = () => {
         setCost(0);
     }
 
+
+
+    // send the dispatch for the commitstagedjob. 
+    const handleCommit = async (e) => {
+        e.preventDefault();
+        const payload = {
+            jobId: jobDetails.id,
+            name: name,
+            spoolId: spoolDetails.id,
+            filamentAmountUsed: parseFloat(filamentAmount),
+            cost: parseFloat(cost)
+        }
+        if (checkPayload(payload)) {
+            // payload valid, try to submit and unwrap the promise from redux
+            try {
+                await dispatch(commitStagedJob(payload)).unwrap();
+                // TODO: right now the page will switch to the spool detail page, and the toast will never show.
+                // idk. i can't be bothered to fix it.
+                // toaster.create({
+                //     title: "Success",
+                //     description: "New job commited to database.",
+                //     type: "success"
+                // });
+
+                // go to the spool that was commited to
+                navigate(`/details/${spoolDetails.id}`)
+            } catch (rejectedValueOrSerializedError) {
+                // something broke, display errror toast
+                toaster.create({
+                    title: "Error",
+                    description: `something went wrong: ` + rejectedValueOrSerializedError,
+                    type: "error"
+                })
+            }
+
+        } else {
+            // invalid payload, show toast
+            toaster.create({
+                title: "Form Error",
+                description: "double check fields",
+                type: "error"
+            })
+        }
+    }
+
+
     // Handle submission of form, check the payload, and send the dispatch to redux also clear inputs.
     // will present a toast on form input errors
-    const handleSubmit = async (e) => {
+    // this function for when formtype is new (a new job is being created.)
+    const handleCreate = async (e) => {
         e.preventDefault();
         const payload = {
             name: name,
@@ -93,15 +148,13 @@ const JobCreationForm = () => {
         }
     }
 
-    if (loading) return <h1>loading...</h1>
-    if (error) return <h1>error</h1>
-
 
     //todo: clean this up so its dynamically generated
     const generateFields = () => {
         return (
             <Fieldset.Root>
                 <Field.Root>
+
                     <Field.Label>Job Name</Field.Label>
                     <Input
                         onChange={(e) => setName(e.target.value)}
@@ -120,7 +173,8 @@ const JobCreationForm = () => {
                         value={cost}
                     />
                 </Field.Root>
-                <Button marginTop={5} type="submit" onClick={handleSubmit}>Submit</Button>
+                {/* depending on what the form type is set to, call the respective form submission function. */}
+                <Button marginTop={5} type="submit" onClick={formType === FORM_VARIANTS.new ? handleCreate : handleCommit}>Submit</Button>
             </Fieldset.Root>
         );
     }
@@ -132,7 +186,13 @@ const JobCreationForm = () => {
                 <Card.Root minH="100%">
                     <Card.Body>
                         <Card.Title>
-                            <Text fontWeight="bold">Create New Job</Text>
+                            {
+                                formType === FORM_VARIANTS.new ?
+                                    <Text fontWeight="bold">Create New Job</Text>
+                                    :
+                                    <Text fontWeight="bold">Commit Staged Job</Text>
+                            }
+
                         </Card.Title>
                         <Stack margin={5}>
                             {generateFields()}
