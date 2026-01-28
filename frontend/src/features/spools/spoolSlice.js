@@ -47,7 +47,7 @@ export const fetchActiveSpoolList = createAsyncThunk(
             const response = await axios.get('/api/active-spools')
             return response.data
         } catch (err) {
-            throw err;
+            return err;
         }
 
     }
