@@ -20,7 +20,7 @@ const SpoolDetailsPage = () => {
         dispatch(fetchJobListById(spoolId));
 
     }, [dispatch, spoolId])
-    if (loading) return <h1>loading...</h1>
+    if (loading || spoolDetails === null) return <h1>loading...</h1>
     if (error) return <h1>error something went wrong</h1>
 
 
