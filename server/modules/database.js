@@ -48,20 +48,13 @@ async function connectToDb(modelList) {
     try {
         await sequelize.authenticate();
         console.log('Connection to Postgres has been established successfully.');
-
-        //syncing and initialize all models
-        // Iterate through modelList and create the table in the database if it doesn't exist
-        // does nothing if it already exists
-        await Promise.all(modelList.map(async (model) => {
-            await model.sync()
-            console.log(model.getTableName() + " synced")
-        }));
     } catch (error) {
         console.error('Unable to connect to the database:', error);
     }
 }
 
 const checkDbExists = async () => {
+    // create a raw postgres client
     const client = createClient();
     try {
         await client.connect();
@@ -91,7 +84,13 @@ const checkDbExists = async () => {
 /**
  * init a postgres database for the app, creates the database with the user and password
  * specified in the .env file
+ * 
+ * NOTE: 
+ * This isn't actually needed.... I'm gonna regret this, but as long as I use a docker postgres
+ * and just pass it the credentials and the database name in the environment vars
+ * it will auto create it on container start
  */
+
 const initDb = async () => {
     // this is kinda jank, but on first time init, need to use the default postgres db,
     //

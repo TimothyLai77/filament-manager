@@ -1,0 +1,60 @@
+const express = require('express');
+const router = express.Router();
+const { getStagedJobs, addStagedJob, deleteStagedJob, getStagedJobById } = require('../modules/stagedJobLogic');
+const { commitStagedJob } = require('../modules/jobManager');
+router.get('/', async (req, res) => {
+    try {
+        console.log('GET: /stagedJobs');
+        const jobList = await getStagedJobs();
+        const formattedJobs = jobList.map(job => job.toJSON())
+        res.status(200).send(formattedJobs);
+    } catch (error) {
+        res.status(500).send(error)
+    }
+});
+
+
+router.get('/:jobId', async (req, res) => {
+    try {
+        console.log('GET: /stagedJobs/:jobId');
+        const job = await getStagedJobById(req.params.jobId);
+        res.status(200).send(job.toJSON());
+    } catch (error) {
+        res.status(500).send(error)
+    }
+})
+
+router.post('/', async (req, res) => {
+    try {
+        console.log('POST: /stagedjobs');
+        const newJob = await addStagedJob(req.body)
+        res.status(200).send(newJob)
+    } catch (error) {
+        res.status(500).send(error)
+    }
+})
+
+/**
+ * route to delete the staged job given the id. 
+ */
+router.delete('/:id', async (req, res) => {
+    try {
+        console.log(`DELETE: /stagedjobs/${req.params.id}`);
+        await deleteStagedJob(req.params.id);
+        res.status(200).end();
+    } catch (error) {
+        res.status(500).send(error)
+    }
+});
+
+router.post('/commit/:jobId', async (req, res) => {
+    try {
+        console.log(`POST: /commit/${req.params.jobId}`);
+        const commitedJob = await commitStagedJob(req.body);
+        res.status(200).send(commitedJob);
+    } catch (error) {
+        res.status(500).send(error);
+    }
+})
+
+module.exports = router;

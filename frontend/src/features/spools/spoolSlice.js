@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
+import axios from 'axios';
 //TODO: maybe break this up into multiple features?
 const initialState = {
     spoolList: [],
@@ -43,10 +44,10 @@ export const fetchActiveSpoolList = createAsyncThunk(
     'api/active-spools',
     async () => {
         try {
-            const response = await fetch(`/api/active-spools`);
-            return response.json();
+            const response = await axios.get('/api/active-spools')
+            return response.data
         } catch (err) {
-            return err;
+            throw err;
         }
 
     }
@@ -57,8 +58,11 @@ export const spoolSlice = createSlice({
     name: "spools",
     initialState,
     reducers: {
-        setSelectedSpool: (state, action) => {
-            state.selectedSpool = action.payload
+        setSelectedSpool(state, action) {
+            state.selectedSpool = action.payload;
+        },
+        clearSpoolDetails(state) {
+            state.spoolDetails = null;
         }
     },
     extraReducers: (builder) => {
@@ -106,5 +110,5 @@ export const spoolSlice = createSlice({
     }
 })
 
-export const { setSelectedSpool } = spoolSlice.actions
+export const { setSelectedSpool, clearSpoolDetails } = spoolSlice.actions
 export default spoolSlice.reducer;

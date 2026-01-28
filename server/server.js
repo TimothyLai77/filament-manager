@@ -5,15 +5,16 @@ const path = require("path");
 
 const session = require('express-session');
 
-const { startSequelize } = require("./data/models/index");
-const { initDb, checkDbExists } = require('./modules/database');
+
 const { runTests } = require('./tests/logicTest')
 const spool_routes = require('./routes/spools.js')
 const job_routes = require('./routes/jobs.js')
+const staged_job_routes = require('./routes/stagedJobs.js')
 const env = process.env;
 const PORT = env.APP_PORT;
 const CLIENT_FRONTEND_PATH = path.join(__dirname, "../", "frontend", "dist");
-
+const db = require('./models/');
+const { cleanupOldStagedJobs } = require('./modules/jobManager.js');
 
 async function prepareApp() {
     console.log(`CLIENT_FRONTEND_PATH: ${CLIENT_FRONTEND_PATH}`);
@@ -24,22 +25,29 @@ async function prepareApp() {
 
     // ================== SEQUELIZE and DB ==================
     // check if the database exists if not setup
-    if (!(await checkDbExists())) {
-        console.log('db and user do not exist: ')
-        await initDb();
-    } else {
-        console.log('db and user already exist, skipping DB init')
-    }
+    // if (!(await checkDbExists())) {
+    //     console.log('db and user do not exist: ')
+    //     await initDb();
+    // } else {
+    //     console.log('db and user already exist, skipping DB init')
+    // }
 
     // Connect to postgres with sequelize for app functionality
-    await startSequelize();
+    //await startSequelize();
     //await runTests();
 
+    // ================== SERVER MAINTENCE CODE ==================
+    // call the function to clean up old staged jobs
+    setInterval(() => {
+        console.log('AUTORUN: cleaning up old staged jobs')
+        // auto prune staged jobs over 3 days.
+        cleanupOldStagedJobs(3 * 24 * 60 * 60);
+    }, 1000 * 7200); // run every 2 hours (7200 seconds).
+
     // ================== EXPRESS ==================
-
-
     app.use('/api/', spool_routes)
     app.use('/api/jobs/', job_routes);
+    app.use('/api/stagedJobs/', staged_job_routes)
     app.use(express.static(CLIENT_FRONTEND_PATH));
 
     // express 5? updated some internal packages and it breaks using the '*' as a path
