@@ -5,8 +5,11 @@ Manage filament for 3d printing. Use with https://github.com/TimothyLai77/filame
 # Screenshots
 ![dashboard](project-resources/dashboard.png)
 ![spoolpage](project-resources/spoolpage.png)
-![staging](project-resources/staged.png)
-![commit](project-resources/commit.png)
+
+
+### Staged Jobs Demo:
+![staging](project-resources/staged-jobs.gif)
+
 # Installation (Docker):
 1. copy `template.env` into a `.env` and change the database password.
 2. (Optional) Change the app port in the `.env`
